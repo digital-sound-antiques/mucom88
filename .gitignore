@@ -17,3 +17,8 @@ src/miniplay.exe
 xcode/miniosx.xcodeproj/xcuserdata
 xcode/DerivedData
 xcode/miniosx.xcodeproj/project.xcworkspace/xcuserdata
+
+src/mucom88.vcxproj.user
+src/.vs/
+src/Debug
+

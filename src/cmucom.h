@@ -274,7 +274,7 @@ public:
 	void InitFMVoice(unsigned char *voice = NULL);
 	int SaveFMVoice(void);
 	void StoreFMVoice(unsigned char *voice);
-	void CMucom::DumpFMVoice(int no);
+	void DumpFMVoice(int no);
 	MUCOM88_VOICEFORMAT *GetFMVoice(int no);
 	int UpdateFMVoice(int no, MUCOM88_VOICEFORMAT *voice);
 	int StoreFMVoiceFromEmbed(unsigned char *voicelist=NULL);

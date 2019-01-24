@@ -38,10 +38,14 @@ static const char *p[] = {
 	"       -w [filename] set output WAV file name",
 	"       -c [filename] compile mucom88 MML file name",
 	"       -i [filename] info print mucom88 MML file name",
+#ifdef MUCOM88WIN
+	"       -a [filename] add external plugin",
+#endif
 	"       -e Use external ROM files",
 	"       -s Use SCCI device",
 	"       -k Skip PCM load",
 	"       -x Record WAV file",
+	"       -d Dump used voice parameter",
 	"       -l [n] Set Recording lengh to n seconds ",
 	NULL };
 	int i;
@@ -56,13 +60,14 @@ int main( int argc, char *argv[] )
 {
 	char a1,a2;
 	int b,st;
-	int cmpopt,ppopt;
+	int cmpopt,ppopt,dumpopt;
 	int scci_opt;
 	char fname[1024];
 	const char *pcmfile;
 	const char *outfile;
 	const char *wavfile;
 	const char *voicefile;
+	const char *pluginfile;
 
 #if defined(USE_SDL) && defined(_WIN32)
 	freopen( "CON", "w", stdout );
@@ -103,11 +108,12 @@ int main( int argc, char *argv[] )
 
 	if (argc<2) { usage1();return -1; }
 
-	st = 0; ppopt = 0; cmpopt = 0; scci_opt = 0;
+	st = 0; ppopt = 0; cmpopt = 0; scci_opt = 0; dumpopt = 0;
 	pcmfile = MUCOM_DEFAULT_PCMFILE;
 	outfile = DEFAULT_OUTFILE;
 	wavfile = DEFAULT_OUTWAVE;
 	voicefile = NULL;
+	pluginfile = NULL;
 	fname[0] = 0;
 
 	int song_length = RENDER_SECONDS;
@@ -131,6 +137,9 @@ int main( int argc, char *argv[] )
 			case 'w':
 				wavfile = argv[b + 1]; b++;
 				break;
+			case 'a':
+				pluginfile = argv[b + 1]; b++;
+				break;
 			case 'l':
 				song_length = atoi(argv[b + 1]); b++;
 				break;
@@ -151,6 +160,9 @@ int main( int argc, char *argv[] )
 				break;
 			case 'x':
 				cmpopt |= MUCOM_CMPOPT_STEP;
+				break;
+			case 'd':
+				dumpopt = 1;
 				break;
 			default:
 				st=1;break;
@@ -174,6 +186,14 @@ int main( int argc, char *argv[] )
 	if (scci_opt) {
 		printf("Use SCCI.\n");
 		mucom.SetVMOption(MUCOM_OPTION_SCCI | MUCOM_OPTION_FMMUTE, 1);
+	}
+
+	if (pluginfile) {
+		printf("#Adding plugin %s.\n", pluginfile);
+		int plgres = mucom.AddPlugins(pluginfile,0);
+		if (plgres) {
+			printf( "#Error adding plugin.(%d)\n", plgres );
+		}
 	}
 
 	mucom.Reset(cmpopt);
@@ -203,24 +223,37 @@ int main( int argc, char *argv[] )
 			st = 1;
 		}
 	}
+
+	if (st) {
+		mucom.PrintInfoBuffer();
+		puts(mucom.GetMessageBuffer());
+		return st;
+	}
+
+	st = mucom.Play(0);
+	if (st == 0) {
+		if (dumpopt) {
+			int i, max;
+			unsigned char voicelist[32];
+			max = mucom.StoreFMVoiceFromEmbed(voicelist);
+			for (i = 0; i < max; i++) {
+				mucom.DumpFMVoice((int)(voicelist[i]));
+			}
+		}
+	}
+
 	mucom.PrintInfoBuffer();
 	puts(mucom.GetMessageBuffer());
 
-	if (st) return st;
-
-	if (cmpopt & MUCOM_CMPOPT_COMPILE) {
-		mucom.Reset(MUCOM_RESET_PLAYER);
-		mucom.Stop();
-	} else {
-		if (mucom.Play(0) < 0) return -1;
+	if (st == 0) {
+		if (cmpopt & MUCOM_CMPOPT_STEP) {
+			RecordWave(&mucom, wavfile, RENDER_RATE, song_length);
+		}
+		else {
+			mucom.PlayLoop();
+		}
 	}
 
-	if (cmpopt & MUCOM_CMPOPT_STEP) {
-		RecordWave(&mucom, wavfile, RENDER_RATE, song_length);
-	} else {
-		mucom.PlayLoop();
-	}
-
-	return 0;
+	return st;
 }
 

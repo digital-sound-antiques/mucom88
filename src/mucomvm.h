@@ -27,6 +27,9 @@ enum {
 #define VMBANK_MAX 4
 #define VMBANK_SIZE 0x4000
 
+#define VMPRGBANK_MAIN 0
+#define VMPRGBANK_SHADOW 1
+
 #define OPNACH_MAX 16
 #define OPNACH_FM 0
 #define OPNACH_PSG 6
@@ -48,6 +51,7 @@ public:
 	int CallAndHalt2(uint16_t adr, uint8_t code);
 	int CallAndHaltWithA(uint16_t adr, uint8_t areg);
 	int ExecUntilHalt(int times = 0x10000);
+	void SendMemoryToShadow(void);
 
 	//		仮想マシンコントロール
 	void Reset(void);
@@ -58,13 +62,17 @@ public:
 	int SendMem(const unsigned char *src, int adr, int size);
 	int SaveMem(const char *fname,int adr, int size);
 	int SaveMemExpand(const char *fname, int adr, int size, char *header, int hedsize, char *footer, int footsize, char *pcm, int pcmsize);
+	int KillFile(const char *fname);
 	char *LoadAlloc(const char *fname, int *sizeout);
+	void LoadAllocFree(char *ptr);
+	int SaveToFile(const char *fname, const unsigned char *src, int size);
 	void SetVolume(int fmvol, int ssgvol);
 	void SetFastFW(int value);
 	void SkipPlay(int count);
 	void PlayLoop(void);
 
 	//		仮想マシンステータス
+	uint8_t *GetMemoryMap(void) { return mem; }
 	int GetFlag(void) { return m_flag; }
 	int Peek(uint16_t adr);
 	int Peekw(uint16_t adr);
@@ -77,6 +85,7 @@ public:
 	void ResetTimer(void);
 	void StartINT3(void);
 	void StopINT3(void);
+	void RestartINT3(void);
 	void SetWindow(void *window) { master_window = window; }
 	void SetIntCount(int value) { time_intcount = value; }
 	int GetIntCount(void) { return time_intcount; }
@@ -84,10 +93,13 @@ public:
 	int GetPassTick(void) { return pass_tick; }
 
 	//		YM2608ステータス
+	void FMRegDataOut(int reg, int data);
+	int FMRegDataGet(int reg);
 	void SetChMuteAll(bool sw);
 	void SetChMute(int ch, bool sw);
 	bool GetChMute(int ch);
 	int GetChStatus(int ch);
+	uint8_t *GetRegisterMap(void) { return regmap;  }
 
 	//		デバッグ用
 	void Msgf(const char *format, ...);
@@ -116,9 +128,16 @@ public:
 	void UpdateTime(int tick);
 	void UpdateCallback(int tick);
 
+	//		プラグインコントロール
+	void SetMucomInstance(CMucom *mucom);
+	int AddPlugins(const char *filename, int bootopt);
+	void FreePlugins(void);
+	void NoticePlugins(int cmd, void *p1 = NULL, void *p2=NULL);
+
 private:
 	//		Z80
 	int32_t load(uint16_t adr);
+	int32_t loadpc(uint16_t adr);
 	void store(uint16_t adr, uint8_t data);
 	int32_t input(uint16_t adr);
 	void output(uint16_t adr, uint8_t data);
@@ -130,8 +149,10 @@ private:
 	int m_fastfw;						// 早送りカウント
 	int m_fmvol, m_ssgvol;				// ボリューム
 	int bankmode;						// BANK(3=MAIN/012=BGR)
+	int bankprg;						// BANK(0=MAIN/1=シャドーコピー側)
 	uint8_t mem[0x10000];				// メインメモリ
 	uint8_t vram[VMBANK_MAX][0x4000];	// GVRAM(3:退避/012=BRG)
+	uint8_t memprg[0x10000];			// メインメモリ(プログラム実行用のシャドーコピー)
 
 	//		音源
 	FM::OPNA *opn;
@@ -177,6 +198,12 @@ private:
 	//		OS依存部分
 	OsDependent *osd;
 	void *master_window;
+
+	// プラグイン拡張(内部用)
+	std::vector<Mucom88Plugin *> plugins;
+
+	//		親のインスタンス(参照)
+	CMucom *p_cmucom;
 
 };
 

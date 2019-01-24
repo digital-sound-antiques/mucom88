@@ -45,14 +45,12 @@ public:
 	void Delay(int ms);
 
 	// プラグイン拡張
-	int InitPlugin(Mucom88Plugin *plg, char *filename);
-	int ExecPluginVMCommand( int, int, int, void *, void *);
-	int ExecPluginEditorCommand( int, int, int, void *, void *);
+	int InitPlugin(Mucom88Plugin *plg, const char *filename, int bootopt);
+	void FreePlugin(Mucom88Plugin *plg);
+	int ExecPluginVMCommand(Mucom88Plugin *plg, int, int, int, void *, void *);
+	int ExecPluginEditorCommand(Mucom88Plugin *plg, int, int, int, void *, void *);
 
 private:
-	//		親のVMインスタンス
-	mucomvm *vm;
-
 	//		サウンド再生
 	WinSoundDriver::DriverDS *snddrv;
 	HWND master_window;
@@ -63,11 +61,13 @@ private:
 
 	int StartThread(void);
 	int StopThread(void);
-	void StreamSend(void);
+	void StreamSend(int ms);
 	void ThreadFunc(void);
 
 	UINT timer_period;
 	UINT timerid;
+	double SamplePerTick;
+	double UpdateSamples;
 
 	bool threadflag;
 

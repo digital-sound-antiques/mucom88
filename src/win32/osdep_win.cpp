@@ -243,10 +243,10 @@ int OsDependentWin32::GetElapsedTime()
 	pass_ft = cur_ft - last_ft;
 	last_ft = cur_ft;
 
-	ms = ((double)pass_ft) * 0.0001;	// ミリ秒単位に直す
+	ms = ((double)pass_ft) * (0.0001 * TICK_FACTOR);	// 1ミリ秒=1024 単位に直す
 	//printf( "(%f)\n",ms );
 
-	return (int)(ms * TICK_FACTOR);
+	return (int)(ms);
 
 #else
 	int curtime;
@@ -262,10 +262,13 @@ void OsDependentWin32::ThreadFunc() {
 	// ストリームスレッドループ
 	threadflag = true;
 	while (threadflag) {
-		if (WaitForSingleObject(hevent, 20) == WAIT_TIMEOUT) {
-			continue;
-		}
-		StreamSend();
+		Sleep(20);
+		//if (WaitForSingleObject(hevent, 20) == WAIT_TIMEOUT) {
+		//	continue;
+		//}
+		//StreamSend(16);
+		snddrv->PrepareSend();
+		snddrv->Send();
 	}
 }
 
@@ -287,6 +290,9 @@ bool OsDependentWin32::InitAudio(void *hwnd, int Rate, int BufferSize) {
 	if (hwnd) snddrv->SetHWND((HWND)hwnd);
 	if (!snddrv->Init(Rate, 2, BufferSize)) return false;
 
+	SamplePerTick = ((double)Rate / 1000);
+	UpdateSamples = 0.0;
+
 	//		先行するサウンドバッファを作っておく
 	//
 	int size = Rate * 40 / 1000 * 2;
@@ -297,7 +303,9 @@ bool OsDependentWin32::InitAudio(void *hwnd, int Rate, int BufferSize) {
 	//		タイマー初期化
 	//
 	//	ストリーム用スレッド
-	StartThread();
+	if (RealChipInstance == NULL) {
+		StartThread();
+	}
 
 	return true;
 }
@@ -315,14 +323,15 @@ void OsDependentWin32::WaitSendingAudio() {
 
 bool OsDependentWin32::SendAudio(int ms)
 {
-	//StreamSend();
-	SetEvent(hevent);
+	StreamSend(ms);
+	//SetEvent(hevent);
 	return true;
 }
 
 
-void OsDependentWin32::StreamSend(void)
+void OsDependentWin32::StreamSend(int ms)
 {
+	int i;
 	if (!snddrv) return;
 
 	// 0以外はスレッドが重複しているので続行しない。
@@ -330,11 +339,18 @@ void OsDependentWin32::StreamSend(void)
 	if (ret != 0) return;
 
 	int writelength;
-	writelength = snddrv->PrepareSend();
+	writelength = 0;// snddrv->PrepareSend();
+
+	UpdateSamples = (ms * SamplePerTick * sizeof(short) * 2 );
+	i = (int)UpdateSamples;
+	if (i>writelength ) {
+		writelength = i;
+	}
+
 	if (writelength) {
 		int32 *smp;
 		int size = writelength >> 2;
-		smp = snddrv->GetSoundBuffer()->PrepareBuffer(size * 2);
+		smp = snddrv->GetSoundBuffer()->PrepareBuffer(size*2);
 
 		if (!MuteAudio) {
 			UserAudioCallback->mix = smp;
@@ -342,9 +358,10 @@ void OsDependentWin32::StreamSend(void)
 			UserAudioCallback->Run();
 		}
 
-		snddrv->GetSoundBuffer()->UpdateBuffer(size * 2);
+		snddrv->GetSoundBuffer()->UpdateBuffer(size*2);
 	}
-	snddrv->Send();
+	//writelength = snddrv->PrepareSend();
+	//snddrv->Send();
 
 	// 終了
 	InterlockedExchange(&sending, 0);
@@ -353,23 +370,57 @@ void OsDependentWin32::StreamSend(void)
 
 
 
-//	MUCOMプラグイン処理用
+//	MUCOM88Winプラグイン処理用
 //
-
-int OsDependentWin32::InitPlugin(Mucom88Plugin *plg, char *filename)
+int OsDependentWin32::InitPlugin(Mucom88Plugin *plg, const char *filename, int bootopt)
 {
+	//		DLLをリンクして初期化する
+	//
+	HMODULE	hInst = NULL;
+	plg->instance = NULL;
+
+	//	DLL読み込み
+	hInst = ::LoadLibrary(filename);
+	if (hInst == NULL) {
+		return GetLastError();
+	}
+	//	初期化関数アドレス取得
+	MUCOM88IF_STARTUP initalize = (MUCOM88IF_STARTUP)(::GetProcAddress(hInst, "InitalizePlugin"));
+
+	if (initalize == NULL) {
+		::FreeLibrary(hInst);
+		return GetLastError();
+	}
+
+	//	初期化する
+	return initalize(plg,bootopt);
+}
+
+
+void OsDependentWin32::FreePlugin(Mucom88Plugin *plg)
+{
+	//		DLLを解放する
+	//
+	HMODULE	hInst = (HMODULE)plg->instance;
+	if (hInst == NULL) return;
+
+	::FreeLibrary(hInst);
+	plg->instance = NULL;
+}
+
+
+int OsDependentWin32::ExecPluginVMCommand(Mucom88Plugin *plg, int, int, int, void *, void *)
+{
+	//		OS依存のプラグインVMコマンド処理
+	//
 	return 0;
 }
 
 
-int OsDependentWin32::ExecPluginVMCommand(int, int, int, void *, void *)
+int OsDependentWin32::ExecPluginEditorCommand(Mucom88Plugin *plg, int, int, int, void *, void *)
 {
-	return 0;
-}
-
-
-int OsDependentWin32::ExecPluginEditorCommand(int, int, int, void *, void *)
-{
+	//		OS依存のプラグインエディタコマンド処理
+	//
 	return 0;
 }
 

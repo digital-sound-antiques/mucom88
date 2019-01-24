@@ -47,6 +47,8 @@ mucomvm::mucomvm(void)
 
 mucomvm::~mucomvm(void)
 {
+	FreePlugins();
+
 	if (osd) {
 		osd->FreeTimer();
 		osd->FreeAudio();
@@ -64,6 +66,12 @@ mucomvm::~mucomvm(void)
 		free(pchdata);
 	}
 
+}
+
+
+void mucomvm::SetMucomInstance(CMucom *mucom)
+{
+	p_cmucom = mucom;
 }
 
 
@@ -149,10 +157,7 @@ void mucomvm::InitSoundSystem(int rate)
 	predelay = 0;
 
 	// OS依存部分
-	{
-		osd = new OSDEP_CLASS();
-	}
-
+	osd = new OSDEP_CLASS();
 	if (osd == NULL) return;
 
 	//		COM初期化
@@ -211,6 +216,7 @@ void mucomvm::Reset(void)
 	p = &mem[0];
 	memset(p, 0, 0x10000);		// CLEAR
 	ClearBank();
+	bankprg = VMPRGBANK_MAIN;
 
 	m_flag = VMFLAG_EXEC;
 	sound_reg_select = 0;
@@ -237,6 +243,15 @@ int mucomvm::DeviceCheck(void)
 		return osd->CheckRealChip();
 	}
 	return 0;
+}
+
+
+int32_t mucomvm::loadpc(uint16_t adr)
+{
+	if (bankprg == VMPRGBANK_SHADOW) {
+		return (int32_t)memprg[adr];
+	}
+	return (int32_t)mem[adr];
 }
 
 
@@ -307,6 +322,14 @@ void mucomvm::Halt(void)
 {
 	//if (m_flag == VMFLAG_EXEC) printf("Halt.\n");
 	m_flag = VMFLAG_HALT;
+}
+
+
+void mucomvm::SendMemoryToShadow(void)
+{
+	//	メモリのシャドーコピーを作成する
+	//
+	memcpy(memprg, mem, 0x10000);
 }
 
 
@@ -459,12 +482,31 @@ int mucomvm::ExecUntilHalt(int times)
 
 			pc = 0xafb3;				// retの位置まで飛ばす
 		}
+
 #if 0
-		if (pc==0x979c) {
+		if (pc == 0x9000) {				// MWRITE(コマンド書き込みメイン)
+			int mdata = Peekw(0x0f320);
+			printf("#MWRITE MDATA$%04x.\r\n", mdata);
+		}
+#endif
+
+#if 0
+		if (pc == 0xde06) {				// CONVERT(音色定義コンバート)
+			//	出力データが大きい場合、DE06H～とかぶるので別バンクで実行する
+			bankprg = VMPRGBANK_SHADOW;
+		}
+		if (pc == 0xe132) {				// CONVERT(音色定義コンバート終了)
+			bankprg = VMPRGBANK_MAIN;
+		}
+#endif
+
+#if 0
+		if (pc==0x979c) {				// COMPST(コンパイラメイン)
 			int ch = Peek(0x0f330);
 			int line = Peekw(0x0f32b);
 			int link = Peekw(0x0f354);
-			printf("#CMPST $%04x LINKPT%04x CH%d LINE%04x.\r\n", pc, link, ch, line);
+			int mdata = Peekw(0x0f320);
+			printf("#CMPST $%04x LINKPT%04x CH%d LINE%04x MDATA%04x.\r\n", pc, link, ch, line,mdata);
 		}
 		if ((pc >= 0xAD86) && (pc < 0xb000)) {
 				printf("#VOICECONV1 %04x.\r\n", pc);
@@ -618,6 +660,14 @@ char *mucomvm::LoadAlloc(const char *fname, int *sizeout)
 }
 
 
+void mucomvm::LoadAllocFree(char *ptr)
+{
+	//	LoadAllocをロードしたメモリを返却する
+	//
+	free(ptr);
+}
+
+
 int mucomvm::LoadPcmFromMem(const char *buf, int sz, int maxpcm)
 {
 	//	PCMデータをOPNAのRAMにロード(メモリから)
@@ -673,7 +723,7 @@ int mucomvm::LoadPcm(const char *fname,int maxpcm)
 	buf = LoadAlloc( fname, &sz );
 	if (buf) {
 		LoadPcmFromMem( buf,sz,maxpcm );
-		free(buf);
+		LoadAllocFree(buf);
 	}
 	return 0;
 }
@@ -692,11 +742,19 @@ int mucomvm::SaveMem(const char *fname, int adr, int size)
 {
 	//	VMメモリの内容をファイルにセーブ
 	//
+	return SaveToFile( fname, mem+adr, size );
+}
+
+
+int mucomvm::SaveToFile(const char *fname, const unsigned char *src, int size)
+{
+	//	バイナリファイルを保存
+	//
 	FILE *fp;
 	int flen;
 	fp = fopen(fname, "wb");
 	if (fp == NULL) return -1;
-	flen = (int)fwrite(mem + adr, 1, size, fp);
+	flen = (int)fwrite(src, 1, size, fp);
 	fclose(fp);
 	return 0;
 }
@@ -718,6 +776,14 @@ int mucomvm::SaveMemExpand(const char *fname, int adr, int size, char *header, i
 }
 
 
+int mucomvm::KillFile(const char *fname)
+{
+	//		ファイルの削除
+	//
+	return remove(fname);
+}
+
+
 void mucomvm::SkipPlay(int count)
 {
 	//		再生のスキップ
@@ -728,6 +794,7 @@ void mucomvm::SkipPlay(int count)
 	int vec = Peekw(0xf308);		// INT3 vectorを取得
 
 	SetChMuteAll(true);
+	busyflag = true;				// Z80VMの2重起動を防止する
 	while (1) {
 		if (jcount <= 0) break;
 		CallAndHalt(vec);
@@ -737,6 +804,7 @@ void mucomvm::SkipPlay(int count)
 			if ((jcount & 3) == 0) osd->Delay(1);	// ちょっと待ちます
 		}
 	}
+	busyflag = false;
 	SetChMuteAll(false);
 }
 
@@ -768,16 +836,14 @@ void mucomvm::UpdateTime(int base)
 	//		1msごとの割り込み
 	//		base値は、1024=1msで経過時間が入る
 	//
-	int tick;
 	if (playflag == false) {
 		return;
 	}
 
 	bool stream_event = false;
 	bool int3_mode = int3flag;
-	tick = (base + (int)TICK_FACTOR - 1) >> TICK_SHIFT;
-	time_master += tick;
-	time_scount += tick;
+	time_master += base;
+	time_scount += base;
 
 	if (int3mask & 128) int3_mode = false;		// 割り込みマスク
 
@@ -797,6 +863,7 @@ void mucomvm::UpdateTime(int base)
 				}
 				busyflag = false;
 				ProcessChData();
+				NoticePlugins(MUCOM88IF_NOTICE_INTDONE, NULL, NULL);		// プラグインに通知する
 			}
 			else {
 				predelay--;
@@ -806,21 +873,17 @@ void mucomvm::UpdateTime(int base)
 
 	if ((stream_event == false) && (int3_mode == false)) {
 		// INT3が無効な場合もストリーム再生は続ける
-		if (time_scount > 10) {
+		if (time_scount > (10<< TICK_SHIFT)) {
 			stream_event = true;
 		}
 	}
 
 	if (stream_event) {
 		stream_event = false;
-		osd->SendAudio(time_scount);
-		time_scount = 0;
-
-		//SetEvent(hevent);
-		//StreamSend();
+		pass_tick = time_scount >> TICK_SHIFT;
+		time_scount = ( time_scount & ((int)TICK_FACTOR - 1) );
+		osd->SendAudio(pass_tick);
 	}
-
-	//if (pass_tick>1) printf("INT%d (%d) %d\n", time_scount, pass_tick, time_master);
 
 }
 
@@ -840,6 +903,22 @@ void mucomvm::StartINT3(void)
 }
 
 
+void mucomvm::RestartINT3(void)
+{
+	//		INT3割り込みを再開
+	//
+	if (int3flag) {
+		return;
+	}
+	int3mask &= 0x7f;
+	FMRegDataOut( 0x32, int3mask);
+	osd->WaitSendingAudio();
+	checkThreadBusy();
+	osd->ResetTime();
+	int3flag = true;
+}
+
+
 void mucomvm::StopINT3(void)
 {
 	//		INT3割り込みを停止
@@ -847,8 +926,7 @@ void mucomvm::StopINT3(void)
 	osd->WaitSendingAudio();
 	int3flag = false;
 	checkThreadBusy();
-
-	SetIntCount(0);
+	//SetIntCount(0);
 	predelay = 0;
 }
 
@@ -889,10 +967,28 @@ FM synth
 */
 /*------------------------------------------------------------*/
 
-//	データ出力
+//	レジスタデータ出力
+void mucomvm::FMRegDataOut(int reg, int data)
+{
+	regmap[reg] = (uint8_t)data;			// 内部レジスタ保持用
+	opn->SetReg(reg, data);
+
+	if (m_option & VM_OPTION_SCCI) {
+		// リアルチップ出力
+		osd->OutputRealChip(reg, data);
+	}
+}
+
+//	レジスタデータ取得
+int mucomvm::FMRegDataGet(int reg)
+{
+	return (int)regmap[reg];
+}
+
 void mucomvm::FMOutData(int data)
 {
 	//printf("FMReg: %04x = %02x\n", sound_reg_select, data);
+
 	switch (sound_reg_select) {
 	case 0x28:
 	{
@@ -913,12 +1009,8 @@ void mucomvm::FMOutData(int data)
 	default:
 		break;
 	}
-	opn->SetReg(sound_reg_select, data);
 
-	if (m_option & VM_OPTION_SCCI) {
-		// リアルチップ出力
-		osd->OutputRealChip(sound_reg_select, data);
-	}
+	FMRegDataOut(sound_reg_select, data);
 }
 
 //	データ出力(OPNA側)
@@ -931,12 +1023,7 @@ void mucomvm::FMOutData2(int data)
 		if (data & 0x80) chstat[OPNACH_ADPCM] = 1; else chstat[OPNACH_ADPCM] = 0;
 	}
 
-	opn->SetReg(sound_reg_select2 | 0x100, data);
-
-	if (m_option & VM_OPTION_SCCI) {
-		// リアルチップ出力
-		osd->OutputRealChip(sound_reg_select2 | 0x100, data);
-	}
+	FMRegDataOut(sound_reg_select2 | 0x100, data);
 }
 
 //	データ入力
@@ -999,7 +1086,7 @@ int mucomvm::ConvertWAVtoADPCMFile(const char *fname, const char *sname)
 
 
 	dstbuffer = adpcm.waveToAdpcm(buf, sz, dAdpcmSize, 16000 );
-	free(buf);
+	LoadAllocFree(buf);
 
 	if (dstbuffer == NULL) return -1;
 	res = (int)dAdpcmSize;
@@ -1098,6 +1185,62 @@ void mucomvm::ProcessChData(void)
 		memcpy(dst, src , channel_size);
 	}
 	memcpy( pchwork, mem + pchadr[0] - 16, 16 );	// CHDATAの前にワークがある
+}
+
+
+/*------------------------------------------------------------*/
+/*
+plugin interface
+*/
+/*------------------------------------------------------------*/
+
+int MUCOM88IF_VM_COMMAND(void *ifptr, int cmd, int prm1, int prm2, void *prm3, void *prm4);
+int MUCOM88IF_EDITOR_COMMAND(void *ifptr, int cmd, int prm1, int prm2, void *prm3, void *prm4);
+
+int mucomvm::AddPlugins(const char *filename, int bootopt)
+{
+	//		プラグインを追加する
+	//		filename = プラグインDLL名
+	//		bootopt = 起動オプション(未使用)
+	//		終了コード : 0=OK
+	//
+	int res;
+	Mucom88Plugin *plg = new Mucom88Plugin;
+	plg->if_mucomvm = (MUCOM88IF_COMMAND)MUCOM88IF_VM_COMMAND;
+	plg->if_editor = (MUCOM88IF_COMMAND)MUCOM88IF_EDITOR_COMMAND;
+	plg->mucom = p_cmucom;
+	plg->vm = this;
+	plg->hwnd = master_window;
+	strncpy( plg->filename, filename, MUCOM88IF_FILENAME_MAX-1 );
+	plugins.push_back(plg);
+	res = osd->InitPlugin(plg, filename, bootopt);
+	if (res) return res;
+	plg->if_notice(plg, MUCOM88IF_NOTICE_BOOT,NULL,NULL);				// 初期化を通知する
+	return 0;
+}
+
+
+void mucomvm::FreePlugins(void)
+{
+	//		プラグインをすべて破棄する
+	//
+	Mucom88Plugin *plg;
+	for (auto it = begin(plugins); it != end(plugins); ++it) {
+		plg = *it;
+		plg->if_notice(plg, MUCOM88IF_NOTICE_TERMINATE, NULL, NULL);	// 破棄する前に通知する
+		osd->FreePlugin(plg);
+	}
+	plugins.clear();			// すべて削除
+}
+
+
+void mucomvm::NoticePlugins(int cmd, void *p1, void *p2)
+{
+	Mucom88Plugin *plg;
+	for (auto it = begin(plugins); it != end(plugins); ++it) {
+		plg = *it;
+		plg->if_notice(plg, cmd, p1, p2);
+	}
 }
 
 

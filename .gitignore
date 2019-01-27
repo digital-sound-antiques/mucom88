@@ -22,3 +22,5 @@ src/mucom88.vcxproj.user
 src/.vs/
 src/Debug
 
+.DS_Store
+xcode/.DS_Store

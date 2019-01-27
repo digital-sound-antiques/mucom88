@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		73D55BE021EE04F30049E59E /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BDF21EE04F30049E59E /* SDLMain.m */; };
-		73D55BE321EE08230049E59E /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
-		73D55BE521EE0A650049E59E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
 		73D55BF921EE0E9E0049E59E /* adpcm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BE921EE0E9E0049E59E /* adpcm.cpp */; };
 		73D55BFA21EE0E9E0049E59E /* callback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BF521EE0E9E0049E59E /* callback.cpp */; };
 		73D55BFB21EE0E9E0049E59E /* cmucom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BF721EE0E9E0049E59E /* cmucom.cpp */; };
@@ -33,10 +31,46 @@
 		73D55C4721EE17240049E59E /* osdep_sdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4621EE17240049E59E /* osdep_sdl.cpp */; };
 		73D55C4B21EE25150049E59E /* mucomvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4A21EE25150049E59E /* mucomvm.cpp */; };
 		73D55C4D21EE253E0049E59E /* plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4C21EE253E0049E59E /* plugin.cpp */; };
+		D9429A8F21FD757900F27F87 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9429A8E21FD757900F27F87 /* main.cpp */; };
+		D949331B21FB442C0033EAFA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
+		D949331C21FB44370033EAFA /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
+		D9BF58C221FCAA720060B63D /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BDF21EE04F30049E59E /* SDLMain.m */; };
+		D9BF58C321FCAA720060B63D /* osdep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0D21EE0F000049E59E /* osdep.cpp */; };
+		D9BF58C421FCAA720060B63D /* psg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3421EE142B0049E59E /* psg.cpp */; };
+		D9BF58C521FCAA720060B63D /* fmtimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3021EE141B0049E59E /* fmtimer.cpp */; };
+		D9BF58C621FCAA720060B63D /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BFF21EE0EBF0049E59E /* md5.c */; };
+		D9BF58C721FCAA720060B63D /* osdep_sdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4621EE17240049E59E /* osdep_sdl.cpp */; };
+		D9BF58C821FCAA720060B63D /* audiosdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3821EE16870049E59E /* audiosdl.cpp */; };
+		D9BF58CA21FCAA720060B63D /* cmucom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BF721EE0E9E0049E59E /* cmucom.cpp */; };
+		D9BF58CB21FCAA720060B63D /* audiotime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3921EE16870049E59E /* audiotime.cpp */; };
+		D9BF58CC21FCAA720060B63D /* callback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BF521EE0E9E0049E59E /* callback.cpp */; };
+		D9BF58CD21FCAA720060B63D /* fmgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2C21EE13F60049E59E /* fmgen.cpp */; };
+		D9BF58CE21FCAA720060B63D /* adpcm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BE921EE0E9E0049E59E /* adpcm.cpp */; };
+		D9BF58CF21FCAA720060B63D /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2E21EE140B0049E59E /* file.cpp */; };
+		D9BF58D021FCAA720060B63D /* opna.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3221EE14230049E59E /* opna.cpp */; };
+		D9BF58D121FCAA720060B63D /* membuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0121EE0EBF0049E59E /* membuf.cpp */; };
+		D9BF58D221FCAA720060B63D /* mucomerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0821EE0F000049E59E /* mucomerror.cpp */; };
+		D9BF58D321FCAA720060B63D /* soundbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C1021EE0F000049E59E /* soundbuf.cpp */; };
+		D9BF58D421FCAA720060B63D /* plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4C21EE253E0049E59E /* plugin.cpp */; };
+		D9BF58D521FCAA720060B63D /* wavout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C1221EE0F000049E59E /* wavout.cpp */; };
+		D9BF58D621FCAA720060B63D /* audiobuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3721EE16870049E59E /* audiobuffer.cpp */; };
+		D9BF58D821FCAA720060B63D /* Z80.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2A21EE13E50049E59E /* Z80.cpp */; };
+		D9BF58D921FCAA720060B63D /* mucomvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4A21EE25150049E59E /* mucomvm.cpp */; };
+		D9BF58DB21FCAA720060B63D /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
+		D9BF58DC21FCAA720060B63D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		73D55BD021EE041C0049E59E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		D9BF58DD21FCAA720060B63D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -87,7 +121,7 @@
 		73D55C2E21EE140B0049E59E /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = file.cpp; path = ../src/fmgen/file.cpp; sourceTree = SOURCE_ROOT; };
 		73D55C3021EE141B0049E59E /* fmtimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fmtimer.cpp; path = ../src/fmgen/fmtimer.cpp; sourceTree = SOURCE_ROOT; };
 		73D55C3221EE14230049E59E /* opna.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = opna.cpp; path = ../src/fmgen/opna.cpp; sourceTree = SOURCE_ROOT; };
-		73D55C3421EE142B0049E59E /* psg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = psg.cpp; path = ../src/fmgen/psg.cpp; sourceTree = SOURCE_ROOT; };
+		73D55C3421EE142B0049E59E /* psg.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483649; lastKnownFileType = sourcecode.cpp.cpp; name = psg.cpp; path = ../src/fmgen/psg.cpp; sourceTree = SOURCE_ROOT; };
 		73D55C3721EE16870049E59E /* audiobuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audiobuffer.cpp; path = ../src/sdl/audiobuffer.cpp; sourceTree = SOURCE_ROOT; };
 		73D55C3821EE16870049E59E /* audiosdl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audiosdl.cpp; path = ../src/sdl/audiosdl.cpp; sourceTree = SOURCE_ROOT; };
 		73D55C3921EE16870049E59E /* audiotime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audiotime.cpp; path = ../src/sdl/audiotime.cpp; sourceTree = SOURCE_ROOT; };
@@ -97,8 +131,10 @@
 		73D55C4321EE16FC0049E59E /* mucom_module.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mucom_module.cpp; path = ../src/module/mucom_module.cpp; sourceTree = SOURCE_ROOT; };
 		73D55C4421EE16FC0049E59E /* mucom_module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mucom_module.h; path = ../src/module/mucom_module.h; sourceTree = SOURCE_ROOT; };
 		73D55C4621EE17240049E59E /* osdep_sdl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osdep_sdl.cpp; path = ../src/sdl/osdep_sdl.cpp; sourceTree = SOURCE_ROOT; };
-		73D55C4A21EE25150049E59E /* mucomvm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = mucomvm.cpp; path = ../../src/mucomvm.cpp; sourceTree = "<group>"; };
+		73D55C4A21EE25150049E59E /* mucomvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mucomvm.cpp; path = ../../src/mucomvm.cpp; sourceTree = "<group>"; };
 		73D55C4C21EE253E0049E59E /* plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = plugin.cpp; path = ../../src/plugin/plugin.cpp; sourceTree = "<group>"; };
+		D9429A8E21FD757900F27F87 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../src/main.cpp; sourceTree = "<group>"; };
+		D9BF58E121FCAA720060B63D /* mucom88 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mucom88; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,8 +142,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73D55BE321EE08230049E59E /* SDL.framework in Frameworks */,
-				73D55BE521EE0A650049E59E /* Cocoa.framework in Frameworks */,
+				D949331C21FB44370033EAFA /* SDL.framework in Frameworks */,
+				D949331B21FB442C0033EAFA /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9BF58DA21FCAA720060B63D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9BF58DB21FCAA720060B63D /* SDL.framework in Frameworks */,
+				D9BF58DC21FCAA720060B63D /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +162,7 @@
 		73D55BC921EE041C0049E59E = {
 			isa = PBXGroup;
 			children = (
+				D9429A8E21FD757900F27F87 /* main.cpp */,
 				73D55BD421EE041C0049E59E /* miniosx */,
 				73D55BD321EE041C0049E59E /* Products */,
 				73D55BE121EE08230049E59E /* Frameworks */,
@@ -127,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				73D55BD221EE041C0049E59E /* miniosx */,
+				D9BF58E121FCAA720060B63D /* mucom88 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -240,6 +287,23 @@
 			productReference = 73D55BD221EE041C0049E59E /* miniosx */;
 			productType = "com.apple.product-type.tool";
 		};
+		D9BF58C021FCAA720060B63D /* mucom88 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9BF58DE21FCAA720060B63D /* Build configuration list for PBXNativeTarget "mucom88" */;
+			buildPhases = (
+				D9BF58C121FCAA720060B63D /* Sources */,
+				D9BF58DA21FCAA720060B63D /* Frameworks */,
+				D9BF58DD21FCAA720060B63D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mucom88;
+			productName = miniosx;
+			productReference = D9BF58E121FCAA720060B63D /* mucom88 */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -268,6 +332,7 @@
 			projectRoot = "";
 			targets = (
 				73D55BD121EE041C0049E59E /* miniosx */,
+				D9BF58C021FCAA720060B63D /* mucom88 */,
 			);
 		};
 /* End PBXProject section */
@@ -304,6 +369,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D9BF58C121FCAA720060B63D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9429A8F21FD757900F27F87 /* main.cpp in Sources */,
+				D9BF58C421FCAA720060B63D /* psg.cpp in Sources */,
+				D9BF58C521FCAA720060B63D /* fmtimer.cpp in Sources */,
+				D9BF58CD21FCAA720060B63D /* fmgen.cpp in Sources */,
+				D9BF58D021FCAA720060B63D /* opna.cpp in Sources */,
+				D9BF58CF21FCAA720060B63D /* file.cpp in Sources */,
+				D9BF58D421FCAA720060B63D /* plugin.cpp in Sources */,
+				D9BF58D621FCAA720060B63D /* audiobuffer.cpp in Sources */,
+				D9BF58C721FCAA720060B63D /* osdep_sdl.cpp in Sources */,
+				D9BF58C821FCAA720060B63D /* audiosdl.cpp in Sources */,
+				D9BF58CB21FCAA720060B63D /* audiotime.cpp in Sources */,
+				D9BF58D821FCAA720060B63D /* Z80.cpp in Sources */,
+				D9BF58C321FCAA720060B63D /* osdep.cpp in Sources */,
+				D9BF58C621FCAA720060B63D /* md5.c in Sources */,
+				D9BF58CA21FCAA720060B63D /* cmucom.cpp in Sources */,
+				D9BF58CC21FCAA720060B63D /* callback.cpp in Sources */,
+				D9BF58CE21FCAA720060B63D /* adpcm.cpp in Sources */,
+				D9BF58D121FCAA720060B63D /* membuf.cpp in Sources */,
+				D9BF58D221FCAA720060B63D /* mucomerror.cpp in Sources */,
+				D9BF58D321FCAA720060B63D /* soundbuf.cpp in Sources */,
+				D9BF58D521FCAA720060B63D /* wavout.cpp in Sources */,
+				D9BF58D921FCAA720060B63D /* mucomvm.cpp in Sources */,
+				D9BF58C221FCAA720060B63D /* SDLMain.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -312,7 +407,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -359,7 +454,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -399,16 +494,20 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(SDKROOT)$(LOCAL_LIBRARY_DIR)/Frameworks/Frameworks",
 				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"USE_SDL=1",
 					"DEBUG=1",
 				);
+				GCC_VERSION = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
@@ -421,13 +520,66 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(SDKROOT)$(LOCAL_LIBRARY_DIR)/Frameworks/Frameworks",
 				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = "USE_SDL=1";
+				GCC_VERSION = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
+				VALID_ARCHS = i386;
+			};
+			name = Release;
+		};
+		D9BF58DF21FCAA720060B63D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(SDKROOT)$(LOCAL_LIBRARY_DIR)/Frameworks/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"USE_SDL=1",
+					"DEBUG=1",
+				);
+				GCC_VERSION = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
+				VALID_ARCHS = i386;
+			};
+			name = Debug;
+		};
+		D9BF58E021FCAA720060B63D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(SDKROOT)$(LOCAL_LIBRARY_DIR)/Frameworks/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PREPROCESSOR_DEFINITIONS = "USE_SDL=1";
+				GCC_VERSION = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
@@ -452,6 +604,15 @@
 			buildConfigurations = (
 				73D55BDA21EE041C0049E59E /* Debug */,
 				73D55BDB21EE041C0049E59E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D9BF58DE21FCAA720060B63D /* Build configuration list for PBXNativeTarget "mucom88" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9BF58DF21FCAA720060B63D /* Debug */,
+				D9BF58E021FCAA720060B63D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

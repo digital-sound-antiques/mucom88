@@ -1224,6 +1224,8 @@ void mucomvm::FreePlugins(void)
 {
 	//		プラグインをすべて破棄する
 	//
+// C++11ではOS X 10.6用ビルドが通らないので…。
+#ifndef USE_SDL
 	Mucom88Plugin *plg;
 	for (auto it = begin(plugins); it != end(plugins); ++it) {
 		plg = *it;
@@ -1231,16 +1233,19 @@ void mucomvm::FreePlugins(void)
 		osd->FreePlugin(plg);
 	}
 	plugins.clear();			// すべて削除
+#endif
 }
 
 
 void mucomvm::NoticePlugins(int cmd, void *p1, void *p2)
 {
+#ifndef USE_SDL
 	Mucom88Plugin *plg;
 	for (auto it = begin(plugins); it != end(plugins); ++it) {
 		plg = *it;
 		plg->if_notice(plg, cmd, p1, p2);
 	}
+#endif
 }
 
 

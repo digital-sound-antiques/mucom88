@@ -237,4 +237,20 @@ int OsDependentSdl::ExecPluginEditorCommand(Mucom88Plugin *plg, int, int, int, v
 }
 
 
+int OsDependentSdl::GetDirectory(char *buf, int size)
+{
+	return 0;
+}
+
+int OsDependentSdl::ChangeDirectory(const char *dir)
+{
+	return 0;
+}
+
+int OsDependentSdl::KillFile(const char *filename)
+{
+	return 0;
+}
+
+
 

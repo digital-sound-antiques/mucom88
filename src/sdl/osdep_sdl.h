@@ -51,6 +51,11 @@ public:
 	int ExecPluginVMCommand(Mucom88Plugin *plg, int, int, int, void *, void *);
 	int ExecPluginEditorCommand(Mucom88Plugin *plg, int, int, int, void *, void *);
 
+	// ファイル操作関連
+	int GetDirectory(char *buf, int size);
+	int ChangeDirectory(const char *dir);
+	int KillFile(const char *filename);
+
     AudioBuffer *Buffer;
     AudioTimeInfo *Time;
     AudioTimeInfo *TimeRender;

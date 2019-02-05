@@ -1283,7 +1283,7 @@ int Z80::ResolvPV() {
 #ifdef Z80_DEBUG
 	if (p < fbuf) Halt();
 #endif
-    int x;
+	int x;
 	switch (sw >> 8) {
 		case FZERO:
 		break;

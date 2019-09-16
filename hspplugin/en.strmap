@@ -1,0 +1,245 @@
+;	strmap v0.5 mucom88win.strmap
+&&&&dsmap:17,1678,10916
+Missing plugin [
+&&&&dsmap:2,1695,652
+]
+&&&&dsmap:10,1697,4553
+MENU [F1]
+&&&&dsmap:14,1707,7665
+SAVE [ctrl+S]
+&&&&dsmap:10,1721,4588
+PLAY [F5]
+&&&&dsmap:11,1731,5382
+STOP [ESC]
+&&&&dsmap:7,1742,3850
+Ready.
+&&&&dsmap:5,1749,2229
+SMON
+&&&&dsmap:7,1754,3003
+V.EDIT
+&&&&dsmap:15,1761,9324
+System Halted.
+&&&&dsmap:3,1779,843
+<<
+&&&&dsmap:5,1782,2761
+Home
+&&&&dsmap:5,1787,2698
+Load
+&&&&dsmap:5,1792,2803
+Save
+&&&&dsmap:11,1797,5522
+Save as...
+&&&&dsmap:4,1808,2092
+New
+&&&&dsmap:7,1812,4452
+Option
+&&&&dsmap:5,1819,2908
+Tool
+&&&&dsmap:6,1824,3508
+Share
+&&&&dsmap:4,1830,2008
+Web
+&&&&dsmap:6,1834,3564
+About
+&&&&dsmap:14,1841,9772
+Arial
+&&&&dsmap:54,1856,56857
+Editing text will be lost.
+Do you want to read anyway?
+&&&&dsmap:60,1910,63531
+Editing FM Voice will be lost.
+Do you want to read anyway?
+&&&&dsmap:16,1974,9969
+MUCOM88 MML file
+&&&&dsmap:2,1990,638
+[
+&&&&dsmap:10,1992,5337
+] Loaded.
+&&&&dsmap:10,2002,5365
+No file [
+&&&&dsmap:7,2012,5145
+Home
+&&&&dsmap:26,2019,24580
+Let's start writing MML
+
+&&&&dsmap:13,2045,9283
+Edit MML [Enter]
+&&&&dsmap:10,2058,7059
+Play [F5]
+&&&&dsmap:13,2068,8877
+Make MUB [F2]
+&&&&dsmap:18,2081,14279
+Reference...
+&&&&dsmap:14,2099,9464
+Player...
+&&&&dsmap:9,2141,4061
+NO TITLE
+&&&&dsmap:8,2182,4823
+Author:
+&&&&dsmap:12,2190,6800
+  Composer:
+&&&&dsmap:6,2202,3095
+Date:
+&&&&dsmap:9,2208,4404
+  Voice:
+&&&&dsmap:7,2217,2443
+  PCM:
+&&&&dsmap:9,2224,5503
+Comment:
+&&&&dsmap:52,2233,53238
+Editing FM Voice will be lost.
+Do you want to proceed anyway?
+&&&&dsmap:24,2294,20541
+Can't start playing due to error.
+
+&&&&dsmap:24,2324,21647
+Can't write file due to error.
+
+&&&&dsmap:11,2348,4906
+] Saved.
+
+&&&&dsmap:52,2359,54484
+Editing text will be lost.
+Do you want to delete anyway?
+&&&&dsmap:9,2413,5181
+No Title
+&&&&dsmap:7,2422,5061
+Tool
+&&&&dsmap:20,2429,16850
+Format editing MML
+
+&&&&dsmap:17,2449,18434
+Delete line number
+&&&&dsmap:20,2466,18103
+q to @ of G channel
+&&&&dsmap:15,2486,15197
+Add TAGs
+&&&&dsmap:5,2501,4140
+Execute
+&&&&dsmap:30,2506,21043
+
+
+Make PCM Data File
+
+&&&&dsmap:19,2547,18490
+PCM File Name
+&&&&dsmap:25,2566,19739
+DATA file folder
+&&&&dsmap:21,2591,18697
+Select File List
+&&&&dsmap:31,2612,23950
+N88 Export current MML
+
+&&&&dsmap:11,2643,9540
+Start line
+&&&&dsmap:11,2654,10639
+Add line
+&&&&dsmap:28,2665,20517
+
+
+Save as WAV file
+
+&&&&dsmap:17,2693,15690
+Duration(second)
+&&&&dsmap:15,2710,13062
+Write File
+&&&&dsmap:18,2725,9988
+#Tool executed.
+
+&&&&dsmap:17,2780,12750
+Text File
+&&&&dsmap:15,2801,9002
+WAV sound file
+&&&&dsmap:11,2848,8553
+Option
+&&&&dsmap:25,2859,26410
+Tool settings
+&&&&dsmap:47,2884,46315
+(*) Some settings will be reflected after restarting the tool
+
+&&&&dsmap:23,2931,19720
+User Name(for TAG)
+&&&&dsmap:19,2954,14003
+
+Default Voice File
+&&&&dsmap:20,2973,12769
+
+Default ADPCM File
+&&&&dsmap:19,2993,12540
+
+Window Size
+&&&&dsmap:5,3038,4105
+Change
+&&&&dsmap:17,3043,14003
+
+Slow playback
+&&&&dsmap:17,3080,15550
+
+Fast playback
+&&&&dsmap:30,3097,19398
+
+SCCI Device (*)
+&&&&dsmap:11,3127,8231
+SCCI enable
+&&&&dsmap:12,3138,8263
+SCCI setup...
+&&&&dsmap:28,3150,22204
+Check update on startup (*)
+&&&&dsmap:28,3178,22267
+Link with FM tone editor (*)
+&&&&dsmap:19,3206,14962
+
+Auto Save
+&&&&dsmap:23,3225,26405
+Auto Save Enable
+&&&&dsmap:13,3248,9822
+Interval (seconds)
+&&&&dsmap:17,3261,14360
+Generation
+&&&&dsmap:23,3278,18628
+
+Auto Player settings
+&&&&dsmap:27,3301,27609
+Skip if conditions are met
+&&&&dsmap:17,3328,15711
+Time (seconds)
+&&&&dsmap:14,3345,11354
+Progress (%)
+&&&&dsmap:16,3389,12622
+
+Font settings:
+&&&&dsmap:8,3407,5089
+Change...
+&&&&dsmap:16,3415,13406
+Color...
+&&&&dsmap:16,3431,12601
+Background...
+&&&&dsmap:7,3492,4319
+Share
+&&&&dsmap:38,3499,34730
+Share MML on the network (in preparation)
+&&&&dsmap:7,3695,3619
+line: 
+&&&&dsmap:19,3711,11931
+Error file write [
+&&&&dsmap:27,3940,23976
+DATA file not found.
+&&&&dsmap:9,4029,4712
+Saved. [
+&&&&dsmap:8,4038,4410
+] size:
+&&&&dsmap:9,4057,5643
+convert 
+&&&&dsmap:5,4066,1207
+ -> 
+&&&&dsmap:24,4072,15011
+No data.Convert failed.
+&&&&dsmap:9,4126,5552
+Missing:
+&&&&dsmap:7,4135,3206
+EDITOR
+&&&&dsmap:10,4167,4847
+INTCOUNT:
+&&&&dsmap:46,4335,46430
+Editing text will be lost.
+Do you want to exit anyway?

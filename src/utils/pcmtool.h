@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\cmucom.h"
+#include "../cmucom.h"
 #include "pcmentry.h"
 
 class PcmTool
@@ -16,8 +16,8 @@ public:
 
     CMucom *cmucom;
     PcmEntry entry[32];
-    int entryCount = 0;
-	int pcmBodySize = 0;
+    int entryCount;
+	int pcmBodySize;
 
 	unsigned char* header;
 	unsigned char *body;

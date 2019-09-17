@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <direct.h>
 
 #include "pcmentry.h"
 
@@ -14,7 +13,7 @@ PcmEntry::PcmEntry() {
 }
 
 PcmEntry::~PcmEntry() {
-    if (data != NULL) delete[] data;    
+    if (data != NULL) delete[] data;
 }
 
 void PcmEntry::SetEntry(unsigned char *entry) {

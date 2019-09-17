@@ -3,7 +3,8 @@
 #
 # make test ... test生成
 # make mini ... miniplay生成
-#
+# make tool ... pcmtool作成
+
 
 CXX = g++
 CC = gcc
@@ -47,7 +48,7 @@ endif
 all: makedir $(TARGET)
 test: makedir $(TARGET_DEPTEST) $(TARGET_MODTEST)
 mini: makedir $(TARGET_MINIPLAY)
-pcmtool: makedir $(TARGET_PCMTOOL)
+tool: makedir $(TARGET_PCMTOOL)
 
 
 DIRS = Z80 fmgen plugin module tests
@@ -84,7 +85,7 @@ DEPTEST_SRCS = tests/depent_test.cpp
 MINIPLAY_SRCS = sdl/miniplay.cpp sdl/audiosdl.cpp
 
 # pcmtool
-PCMTOOL_SRCS = utils/pcmtool.cpp
+PCMTOOL_SRCS = utils/pcmtool.cpp utils/pcmentry.cpp
 
 DIRS += utils
 

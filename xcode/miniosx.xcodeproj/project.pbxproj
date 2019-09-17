@@ -31,6 +31,35 @@
 		73D55C4721EE17240049E59E /* osdep_sdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4621EE17240049E59E /* osdep_sdl.cpp */; };
 		73D55C4B21EE25150049E59E /* mucomvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4A21EE25150049E59E /* mucomvm.cpp */; };
 		73D55C4D21EE253E0049E59E /* plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4C21EE253E0049E59E /* plugin.cpp */; };
+		D91D0D6C23319E7F0012562A /* psg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3421EE142B0049E59E /* psg.cpp */; };
+		D91D0D6D23319E7F0012562A /* fmtimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3021EE141B0049E59E /* fmtimer.cpp */; };
+		D91D0D6E23319E7F0012562A /* fmgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2C21EE13F60049E59E /* fmgen.cpp */; };
+		D91D0D6F23319E7F0012562A /* opna.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3221EE14230049E59E /* opna.cpp */; };
+		D91D0D7023319E7F0012562A /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2E21EE140B0049E59E /* file.cpp */; };
+		D91D0D7123319E7F0012562A /* plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4C21EE253E0049E59E /* plugin.cpp */; };
+		D91D0D7223319E7F0012562A /* audiobuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3721EE16870049E59E /* audiobuffer.cpp */; };
+		D91D0D7323319E7F0012562A /* osdep_sdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4621EE17240049E59E /* osdep_sdl.cpp */; };
+		D91D0D7423319E7F0012562A /* audiosdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3821EE16870049E59E /* audiosdl.cpp */; };
+		D91D0D7523319E7F0012562A /* audiotime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3921EE16870049E59E /* audiotime.cpp */; };
+		D91D0D7623319E7F0012562A /* Z80.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2A21EE13E50049E59E /* Z80.cpp */; };
+		D91D0D7723319E7F0012562A /* osdep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0D21EE0F000049E59E /* osdep.cpp */; };
+		D91D0D7823319E7F0012562A /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BFF21EE0EBF0049E59E /* md5.c */; };
+		D91D0D7923319E7F0012562A /* cmucom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BF721EE0E9E0049E59E /* cmucom.cpp */; };
+		D91D0D7A23319E7F0012562A /* callback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BF521EE0E9E0049E59E /* callback.cpp */; };
+		D91D0D7B23319E7F0012562A /* adpcm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BE921EE0E9E0049E59E /* adpcm.cpp */; };
+		D91D0D7C23319E7F0012562A /* membuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0121EE0EBF0049E59E /* membuf.cpp */; };
+		D91D0D7D23319E7F0012562A /* mucomerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0821EE0F000049E59E /* mucomerror.cpp */; };
+		D91D0D7E23319E7F0012562A /* soundbuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C1021EE0F000049E59E /* soundbuf.cpp */; };
+		D91D0D7F23319E7F0012562A /* wavout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C1221EE0F000049E59E /* wavout.cpp */; };
+		D91D0D8023319E7F0012562A /* mucomvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4A21EE25150049E59E /* mucomvm.cpp */; };
+		D91D0D8323319E7F0012562A /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
+		D91D0D8423319E7F0012562A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
+		D91D0D8F23319ED80012562A /* pcmentry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8C23319ED80012562A /* pcmentry.cpp */; };
+		D91D0D9023319ED80012562A /* pcmtool_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8D23319ED80012562A /* pcmtool_main.cpp */; };
+		D91D0D9123319ED80012562A /* pcmtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8E23319ED80012562A /* pcmtool.cpp */; };
+		D91D0D9323319F5F0012562A /* pcmtool_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8D23319ED80012562A /* pcmtool_main.cpp */; };
+		D91D0D9423319F650012562A /* pcmentry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8C23319ED80012562A /* pcmentry.cpp */; };
+		D91D0D9523319F690012562A /* pcmtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8E23319ED80012562A /* pcmtool.cpp */; };
 		D9429A8F21FD757900F27F87 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9429A8E21FD757900F27F87 /* main.cpp */; };
 		D949331B21FB442C0033EAFA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
 		D949331C21FB44370033EAFA /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
@@ -62,6 +91,15 @@
 
 /* Begin PBXCopyFilesBuildPhase section */
 		73D55BD021EE041C0049E59E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		D91D0D8523319E7F0012562A /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -133,6 +171,12 @@
 		73D55C4621EE17240049E59E /* osdep_sdl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = osdep_sdl.cpp; path = ../src/sdl/osdep_sdl.cpp; sourceTree = SOURCE_ROOT; };
 		73D55C4A21EE25150049E59E /* mucomvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mucomvm.cpp; path = ../../src/mucomvm.cpp; sourceTree = "<group>"; };
 		73D55C4C21EE253E0049E59E /* plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = plugin.cpp; path = ../../src/plugin/plugin.cpp; sourceTree = "<group>"; };
+		D91D0D8923319E7F0012562A /* pcmtool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pcmtool; sourceTree = BUILT_PRODUCTS_DIR; };
+		D91D0D8A23319ED80012562A /* pcmentry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcmentry.h; path = ../../src/utils/pcmentry.h; sourceTree = "<group>"; };
+		D91D0D8B23319ED80012562A /* pcmtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcmtool.h; path = ../../src/utils/pcmtool.h; sourceTree = "<group>"; };
+		D91D0D8C23319ED80012562A /* pcmentry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmentry.cpp; path = ../../src/utils/pcmentry.cpp; sourceTree = "<group>"; };
+		D91D0D8D23319ED80012562A /* pcmtool_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmtool_main.cpp; path = ../../src/utils/pcmtool_main.cpp; sourceTree = "<group>"; };
+		D91D0D8E23319ED80012562A /* pcmtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmtool.cpp; path = ../../src/utils/pcmtool.cpp; sourceTree = "<group>"; };
 		D9429A8E21FD757900F27F87 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../src/main.cpp; sourceTree = "<group>"; };
 		D9BF58E121FCAA720060B63D /* mucom88 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mucom88; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -144,6 +188,15 @@
 			files = (
 				D949331C21FB44370033EAFA /* SDL.framework in Frameworks */,
 				D949331B21FB442C0033EAFA /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D91D0D8223319E7F0012562A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D91D0D8323319E7F0012562A /* SDL.framework in Frameworks */,
+				D91D0D8423319E7F0012562A /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,6 +227,7 @@
 			children = (
 				73D55BD221EE041C0049E59E /* miniosx */,
 				D9BF58E121FCAA720060B63D /* mucom88 */,
+				D91D0D8923319E7F0012562A /* pcmtool */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -181,6 +235,7 @@
 		73D55BD421EE041C0049E59E /* miniosx */ = {
 			isa = PBXGroup;
 			children = (
+				D91D0D9223319EE30012562A /* pcmtool */,
 				73D55C2A21EE13E50049E59E /* Z80.cpp */,
 				73D55C4921EE242B0049E59E /* SDL */,
 				73D55C3621EE144E0049E59E /* fmgen */,
@@ -267,6 +322,18 @@
 			name = SDL;
 			sourceTree = "<group>";
 		};
+		D91D0D9223319EE30012562A /* pcmtool */ = {
+			isa = PBXGroup;
+			children = (
+				D91D0D8A23319ED80012562A /* pcmentry.h */,
+				D91D0D8B23319ED80012562A /* pcmtool.h */,
+				D91D0D8C23319ED80012562A /* pcmentry.cpp */,
+				D91D0D8D23319ED80012562A /* pcmtool_main.cpp */,
+				D91D0D8E23319ED80012562A /* pcmtool.cpp */,
+			);
+			name = pcmtool;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -285,6 +352,23 @@
 			name = miniosx;
 			productName = miniosx;
 			productReference = 73D55BD221EE041C0049E59E /* miniosx */;
+			productType = "com.apple.product-type.tool";
+		};
+		D91D0D6923319E7F0012562A /* pcmtool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D91D0D8623319E7F0012562A /* Build configuration list for PBXNativeTarget "pcmtool" */;
+			buildPhases = (
+				D91D0D6A23319E7F0012562A /* Sources */,
+				D91D0D8223319E7F0012562A /* Frameworks */,
+				D91D0D8523319E7F0012562A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pcmtool;
+			productName = miniosx;
+			productReference = D91D0D8923319E7F0012562A /* pcmtool */;
 			productType = "com.apple.product-type.tool";
 		};
 		D9BF58C021FCAA720060B63D /* mucom88 */ = {
@@ -333,6 +417,7 @@
 			targets = (
 				73D55BD121EE041C0049E59E /* miniosx */,
 				D9BF58C021FCAA720060B63D /* mucom88 */,
+				D91D0D6923319E7F0012562A /* pcmtool */,
 			);
 		};
 /* End PBXProject section */
@@ -356,16 +441,50 @@
 				73D55C2D21EE13F60049E59E /* fmgen.cpp in Sources */,
 				73D55BF921EE0E9E0049E59E /* adpcm.cpp in Sources */,
 				73D55C2F21EE140B0049E59E /* file.cpp in Sources */,
+				D91D0D9123319ED80012562A /* pcmtool.cpp in Sources */,
+				D91D0D8F23319ED80012562A /* pcmentry.cpp in Sources */,
 				73D55C3321EE14230049E59E /* opna.cpp in Sources */,
 				73D55C0621EE0EBF0049E59E /* membuf.cpp in Sources */,
 				73D55C1521EE0F000049E59E /* mucomerror.cpp in Sources */,
 				73D55C1821EE0F000049E59E /* soundbuf.cpp in Sources */,
+				D91D0D9023319ED80012562A /* pcmtool_main.cpp in Sources */,
 				73D55C4D21EE253E0049E59E /* plugin.cpp in Sources */,
 				73D55C1921EE0F000049E59E /* wavout.cpp in Sources */,
 				73D55C3B21EE16870049E59E /* audiobuffer.cpp in Sources */,
 				73D55C3E21EE16870049E59E /* miniplay.cpp in Sources */,
 				73D55C2B21EE13E50049E59E /* Z80.cpp in Sources */,
 				73D55C4B21EE25150049E59E /* mucomvm.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D91D0D6A23319E7F0012562A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D91D0D9523319F690012562A /* pcmtool.cpp in Sources */,
+				D91D0D9423319F650012562A /* pcmentry.cpp in Sources */,
+				D91D0D9323319F5F0012562A /* pcmtool_main.cpp in Sources */,
+				D91D0D6C23319E7F0012562A /* psg.cpp in Sources */,
+				D91D0D6D23319E7F0012562A /* fmtimer.cpp in Sources */,
+				D91D0D6E23319E7F0012562A /* fmgen.cpp in Sources */,
+				D91D0D6F23319E7F0012562A /* opna.cpp in Sources */,
+				D91D0D7023319E7F0012562A /* file.cpp in Sources */,
+				D91D0D7123319E7F0012562A /* plugin.cpp in Sources */,
+				D91D0D7223319E7F0012562A /* audiobuffer.cpp in Sources */,
+				D91D0D7323319E7F0012562A /* osdep_sdl.cpp in Sources */,
+				D91D0D7423319E7F0012562A /* audiosdl.cpp in Sources */,
+				D91D0D7523319E7F0012562A /* audiotime.cpp in Sources */,
+				D91D0D7623319E7F0012562A /* Z80.cpp in Sources */,
+				D91D0D7723319E7F0012562A /* osdep.cpp in Sources */,
+				D91D0D7823319E7F0012562A /* md5.c in Sources */,
+				D91D0D7923319E7F0012562A /* cmucom.cpp in Sources */,
+				D91D0D7A23319E7F0012562A /* callback.cpp in Sources */,
+				D91D0D7B23319E7F0012562A /* adpcm.cpp in Sources */,
+				D91D0D7C23319E7F0012562A /* membuf.cpp in Sources */,
+				D91D0D7D23319E7F0012562A /* mucomerror.cpp in Sources */,
+				D91D0D7E23319E7F0012562A /* soundbuf.cpp in Sources */,
+				D91D0D7F23319E7F0012562A /* wavout.cpp in Sources */,
+				D91D0D8023319E7F0012562A /* mucomvm.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,6 +616,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				DEPLOYMENT_LOCATION = NO;
+				DEPLOYMENT_POSTPROCESSING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -507,7 +628,7 @@
 					"USE_SDL=1",
 					"DEBUG=1",
 				);
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
@@ -523,6 +644,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				DEPLOYMENT_LOCATION = NO;
+				DEPLOYMENT_POSTPROCESSING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -530,7 +653,60 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = "USE_SDL=1";
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
+				VALID_ARCHS = i386;
+			};
+			name = Release;
+		};
+		D91D0D8723319E7F0012562A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				DEPLOYMENT_LOCATION = NO;
+				DEPLOYMENT_POSTPROCESSING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(SDKROOT)$(LOCAL_LIBRARY_DIR)/Frameworks/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"USE_SDL=1",
+					"DEBUG=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
+				VALID_ARCHS = i386;
+			};
+			name = Debug;
+		};
+		D91D0D8823319E7F0012562A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				DEPLOYMENT_LOCATION = NO;
+				DEPLOYMENT_POSTPROCESSING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(SDKROOT)$(LOCAL_LIBRARY_DIR)/Frameworks/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PREPROCESSOR_DEFINITIONS = "USE_SDL=1";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
@@ -546,6 +722,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				DEPLOYMENT_LOCATION = NO;
+				DEPLOYMENT_POSTPROCESSING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -556,7 +734,7 @@
 					"USE_SDL=1",
 					"DEBUG=1",
 				);
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
@@ -572,6 +750,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				DEPLOYMENT_LOCATION = NO;
+				DEPLOYMENT_POSTPROCESSING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -579,7 +759,7 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = "USE_SDL=1";
-				GCC_VERSION = "";
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) /Library/Frameworks/SDL.framework/Versions/A/Headers";
@@ -604,6 +784,15 @@
 			buildConfigurations = (
 				73D55BDA21EE041C0049E59E /* Debug */,
 				73D55BDB21EE041C0049E59E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D91D0D8623319E7F0012562A /* Build configuration list for PBXNativeTarget "pcmtool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D91D0D8723319E7F0012562A /* Debug */,
+				D91D0D8823319E7F0012562A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

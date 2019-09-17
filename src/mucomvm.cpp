@@ -28,7 +28,7 @@ interface
 
 mucomvm::mucomvm(void)
 {
-	m_flag = 0;
+	m_flag = VMFLAG_NONE;
 	m_option = 0;
 	m_fastfw = 4;
 	m_fmvol = 0;
@@ -44,6 +44,8 @@ mucomvm::mucomvm(void)
 	pchdata = NULL;
 
 	playflag = false;
+
+	ResetMessageBuffer();
 }
 
 mucomvm::~mucomvm(void)
@@ -78,7 +80,7 @@ void mucomvm::SetMucomInstance(CMucom *mucom)
 
 void mucomvm::SetOption(int option)
 {
-	m_flag = 0;
+	m_flag = VMFLAG_NONE;
 	m_option = option;
 }
 
@@ -230,7 +232,10 @@ void mucomvm::Reset(void)
 	*p++ = 0x18;
 	*p++ = 0xfb;		// JR LABEL1
 #endif
+	ResetMessageBuffer();
+}
 
+void mucomvm::ResetMessageBuffer(void) {
 	if (membuf) delete membuf;
 	membuf = new CMemBuf;
 }
@@ -420,6 +425,7 @@ void mucomvm::PeekToStr(char *out, uint16_t adr, uint16_t length)
 
 int mucomvm::ExecUntilHalt(int times)
 {
+	if (m_flag == VMFLAG_NONE) return 0;
 	int cnt=0;
 	int id = 0;
 	msgid = 0;
@@ -589,6 +595,7 @@ void mucomvm::SetPC(uint16_t adr)
 
 void mucomvm::CallAndHalt(uint16_t adr)
 {
+	if (m_flag == VMFLAG_NONE) return;
 	uint16_t tempadr = 0xf000;
 	uint8_t *p = mem + tempadr;
 	*p++ = 0xcd;				// Call

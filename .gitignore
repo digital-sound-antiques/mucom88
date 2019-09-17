@@ -18,10 +18,11 @@ xcode/miniosx.xcodeproj/xcuserdata
 xcode/DerivedData
 xcode/miniosx.xcodeproj/project.xcworkspace/xcuserdata
 
-src/mucom88.vcxproj.user
+src/*.user
 src/.vs/
 src/Debug
+src/Release
+.vscode
 
 .DS_Store
 xcode/.DS_Store
-.vscode/

@@ -41,6 +41,7 @@ class mucomvm : public Z80 {
 public:
 	mucomvm();
 	~mucomvm();
+	void ResetMessageBuffer(void);
 
 	//		Z80コントロール
 	void InitSoundSystem(int Rate);

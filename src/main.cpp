@@ -36,6 +36,7 @@ static const char *p[] = {
 	"       -v [filename] set load voice file name",
 	"       -o [filename] set output MUB file name",
 	"       -w [filename] set output WAV file name",
+	"       -b [filename] set output S98 file name",
 	"       -c [filename] compile mucom88 MML file name",
 	"       -i [filename] info print mucom88 MML file name",
 #ifdef MUCOM88WIN
@@ -44,7 +45,7 @@ static const char *p[] = {
 	"       -e Use external ROM files",
 	"       -s Use SCCI device",
 	"       -k Skip PCM load",
-	"       -x Record WAV file",
+	"       -x Recording Mode",
 	"       -d Dump used voice parameter",
 	"       -l [n] Set Recording lengh to n seconds ",
 	NULL };
@@ -66,6 +67,7 @@ int main( int argc, char *argv[] )
 	const char *pcmfile;
 	const char *outfile;
 	const char *wavfile;
+	const char *logfile;
 	const char *voicefile;
 	const char *pluginfile;
 
@@ -112,6 +114,7 @@ int main( int argc, char *argv[] )
 	pcmfile = MUCOM_DEFAULT_PCMFILE;
 	outfile = DEFAULT_OUTFILE;
 	wavfile = DEFAULT_OUTWAVE;
+	logfile = NULL;
 	voicefile = NULL;
 	pluginfile = NULL;
 	fname[0] = 0;
@@ -137,6 +140,9 @@ int main( int argc, char *argv[] )
 			case 'w':
 				wavfile = argv[b + 1]; b++;
 				break;
+			case 'b':
+				logfile = argv[b + 1]; b++;
+				break;			
 			case 'a':
 				pluginfile = argv[b + 1]; b++;
 				break;
@@ -175,6 +181,10 @@ int main( int argc, char *argv[] )
 
 	//		call main
 	CMucom mucom;
+
+	if (logfile) {
+		mucom.SetLogFilename(logfile);
+	}
 
 	if (cmpopt & MUCOM_CMPOPT_STEP) {
 		mucom.Init(NULL,cmpopt,RENDER_RATE);

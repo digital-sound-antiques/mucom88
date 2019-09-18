@@ -13,6 +13,8 @@
 #include "osdep.h"
 #include "membuf.h"
 
+#include "utils/logwrite.h"
+
 //#define DEBUGZ80_TRACE
 
 enum {
@@ -140,6 +142,8 @@ public:
 	void FreePlugins(void);
 	void NoticePlugins(int cmd, void *p1 = NULL, void *p2=NULL);
 
+	void SetLog(LogWrite *log);
+
 private:
 	//		Z80
 	int32_t load(uint16_t adr);
@@ -211,6 +215,8 @@ private:
 
 	//		親のインスタンス(参照)
 	CMucom *p_cmucom;
+
+	LogWrite *p_log;
 
 };
 

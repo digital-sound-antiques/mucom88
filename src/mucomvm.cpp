@@ -34,6 +34,8 @@ mucomvm::mucomvm(void)
 	m_fmvol = 0;
 	m_ssgvol = -3;
 
+	p_log = NULL;
+
 	opn = NULL;
 	membuf = NULL;
 	osd = NULL;
@@ -69,6 +71,10 @@ mucomvm::~mucomvm(void)
 		free(pchdata);
 	}
 
+}
+
+void mucomvm::SetLog(LogWrite *log) {
+	p_log = log;
 }
 
 
@@ -898,6 +904,8 @@ void mucomvm::UpdateTime(int base)
 		return;
 	}
 
+	if (p_log != NULL) p_log->Wait(((double)base)/(1024*1000));
+
 	bool stream_event = false;
 	bool int3_mode = int3flag;
 
@@ -1040,6 +1048,7 @@ void mucomvm::FMRegDataOut(int reg, int data)
 {
 	regmap[reg] = (uint8_t)data;			// 内部レジスタ保持用
 	opn->SetReg(reg, data);
+	if (p_log != NULL) p_log->WriteData(0, reg, data);
 
 	if (m_option & VM_OPTION_SCCI) {
 		// リアルチップ出力

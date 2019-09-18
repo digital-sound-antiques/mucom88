@@ -104,6 +104,7 @@ CMucom::CMucom( void )
 	infobuf = NULL;
 	edit_status = MUCOM_EDIT_STATUS_NONE;
 	user_uuid[0] = 0;
+	p_log = NULL;
 }
 
 
@@ -113,6 +114,13 @@ CMucom::~CMucom( void )
 	DeleteInfoBuffer();
 	MusicBufferTerm();
 	if (vm != NULL) delete vm;
+	if (p_log != NULL) delete p_log;
+}
+
+void CMucom::SetLogFilename(const char *filename) {
+	if (p_log != NULL) delete p_log;
+	p_log = new LogWrite();
+	p_log->Open(filename);
 }
 
 
@@ -124,6 +132,7 @@ void CMucom::Init(void *window, int option, int rate)
 	//		option : 0   = 1:FMをミュート  2:SCCIを使用
 	//
 	vm = new mucomvm;
+	vm->SetLog(p_log);
 	flag = 1;
 
 	// レート設定

@@ -10,6 +10,8 @@
 #include "membuf.h"
 #include "voiceformat.h"
 
+#include "utils/logwrite.h"
+
 /*------------------------------------------------------------*/
 
 #define MUCOM_DEFAULT_PCMFILE "mucompcm.bin"
@@ -316,6 +318,9 @@ public:
 	int GetUseVoiceNum(int num) { return (int)fmvoice_use[num]; }
 	int GetUseVoiceMax(void) { return fmvoice_usemax; }
 
+	// FM Log Service
+	void SetLogFilename(const char *name);
+
 private:
 	//		Settings
 	//
@@ -324,6 +329,8 @@ private:
 	char pcmfilename[MUCOM_FILE_MAXSTR];	// loaded PCM file
 	int mubver;			// playing MUB version
 	MUBHED *hedmusic;	// playing Music data header
+
+	LogWrite *p_log;
 
 	//		FM voice status
 	//

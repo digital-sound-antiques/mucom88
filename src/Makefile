@@ -75,6 +75,9 @@ SRCS += callback.cpp
 SRCS += wavout.cpp
 SRCS += osdep.cpp
 
+SRCS += utils/logwrite.cpp
+
+
 MAIN_SRCS = main.cpp
 
 MOD_SRCS = module/mucom_module.cpp

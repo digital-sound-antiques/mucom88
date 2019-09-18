@@ -36,6 +36,9 @@ public:
 	void WriteSync1();
 	void WriteSync2(int Count);
 
+	void WriteAdpcmMemory(void* pData, int size);
+
+
 
 private:
 	FILE *fp;

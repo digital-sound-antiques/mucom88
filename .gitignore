@@ -3,6 +3,7 @@ src/objs
 src/stderr.txt
 src/stdout.txt
 
+
 src/mucom88
 src/mucom88.exe
 src/mucom88_d
@@ -13,6 +14,8 @@ src/mod_test
 src/mod_test.exe
 src/miniplay
 src/miniplay.exe
+src/pcmtool
+src/pcmtool.exe
 
 xcode/miniosx.xcodeproj/xcuserdata
 xcode/DerivedData
@@ -26,3 +29,5 @@ src/Release
 
 .DS_Store
 xcode/.DS_Store
+
+package/muplug_fmeditor.ini

@@ -85,7 +85,7 @@ DEPTEST_SRCS = tests/depent_test.cpp
 MINIPLAY_SRCS = sdl/miniplay.cpp sdl/audiosdl.cpp
 
 # pcmtool
-PCMTOOL_SRCS = utils/pcmtool.cpp utils/pcmentry.cpp
+PCMTOOL_SRCS = utils/pcmtool.cpp utils/pcmentry.cpp utils/pcmtool_main.cpp
 
 DIRS += utils
 

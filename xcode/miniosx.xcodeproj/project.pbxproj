@@ -31,17 +31,6 @@
 		73D55C4721EE17240049E59E /* osdep_sdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4621EE17240049E59E /* osdep_sdl.cpp */; };
 		73D55C4B21EE25150049E59E /* mucomvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4A21EE25150049E59E /* mucomvm.cpp */; };
 		73D55C4D21EE253E0049E59E /* plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4C21EE253E0049E59E /* plugin.cpp */; };
-		D91D0D6C23319E7F0012562A /* psg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3421EE142B0049E59E /* psg.cpp */; };
-		D91D0D6D23319E7F0012562A /* fmtimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3021EE141B0049E59E /* fmtimer.cpp */; };
-		D91D0D6E23319E7F0012562A /* fmgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2C21EE13F60049E59E /* fmgen.cpp */; };
-		D91D0D6F23319E7F0012562A /* opna.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3221EE14230049E59E /* opna.cpp */; };
-		D91D0D7023319E7F0012562A /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2E21EE140B0049E59E /* file.cpp */; };
-		D91D0D7123319E7F0012562A /* plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4C21EE253E0049E59E /* plugin.cpp */; };
-		D91D0D7223319E7F0012562A /* audiobuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3721EE16870049E59E /* audiobuffer.cpp */; };
-		D91D0D7323319E7F0012562A /* osdep_sdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4621EE17240049E59E /* osdep_sdl.cpp */; };
-		D91D0D7423319E7F0012562A /* audiosdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3821EE16870049E59E /* audiosdl.cpp */; };
-		D91D0D7523319E7F0012562A /* audiotime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3921EE16870049E59E /* audiotime.cpp */; };
-		D91D0D7623319E7F0012562A /* Z80.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2A21EE13E50049E59E /* Z80.cpp */; };
 		D91D0D7723319E7F0012562A /* osdep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0D21EE0F000049E59E /* osdep.cpp */; };
 		D91D0D7823319E7F0012562A /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BFF21EE0EBF0049E59E /* md5.c */; };
 		D91D0D7923319E7F0012562A /* cmucom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BF721EE0E9E0049E59E /* cmucom.cpp */; };
@@ -54,15 +43,24 @@
 		D91D0D8023319E7F0012562A /* mucomvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4A21EE25150049E59E /* mucomvm.cpp */; };
 		D91D0D8323319E7F0012562A /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
 		D91D0D8423319E7F0012562A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
-		D91D0D8F23319ED80012562A /* pcmentry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8C23319ED80012562A /* pcmentry.cpp */; };
-		D91D0D9023319ED80012562A /* pcmtool_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8D23319ED80012562A /* pcmtool_main.cpp */; };
-		D91D0D9123319ED80012562A /* pcmtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8E23319ED80012562A /* pcmtool.cpp */; };
 		D91D0D9323319F5F0012562A /* pcmtool_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8D23319ED80012562A /* pcmtool_main.cpp */; };
-		D91D0D9423319F650012562A /* pcmentry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8C23319ED80012562A /* pcmentry.cpp */; };
 		D91D0D9523319F690012562A /* pcmtool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D91D0D8E23319ED80012562A /* pcmtool.cpp */; };
 		D9429A8F21FD757900F27F87 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9429A8E21FD757900F27F87 /* main.cpp */; };
 		D949331B21FB442C0033EAFA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
 		D949331C21FB44370033EAFA /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
+		D98306832335AD8C00655FCB /* logwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D983067F2335AD8C00655FCB /* logwrite.cpp */; };
+		D98306842335AD8C00655FCB /* logwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D983067F2335AD8C00655FCB /* logwrite.cpp */; };
+		D98306872335AE1600655FCB /* pcmentry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D98306812335AD8C00655FCB /* pcmentry.cpp */; };
+		D983068B2335B40900655FCB /* Z80.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2A21EE13E50049E59E /* Z80.cpp */; };
+		D983068C2335B40900655FCB /* opna.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3221EE14230049E59E /* opna.cpp */; };
+		D983068D2335B41600655FCB /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2E21EE140B0049E59E /* file.cpp */; };
+		D983068E2335B41600655FCB /* fmgen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2C21EE13F60049E59E /* fmgen.cpp */; };
+		D983068F2335B41600655FCB /* fmtimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3021EE141B0049E59E /* fmtimer.cpp */; };
+		D98306902335B41600655FCB /* psg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3421EE142B0049E59E /* psg.cpp */; };
+		D98306912335B43600655FCB /* osdep_sdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4621EE17240049E59E /* osdep_sdl.cpp */; };
+		D98306922335B44800655FCB /* audiobuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3721EE16870049E59E /* audiobuffer.cpp */; };
+		D98306932335B45900655FCB /* logwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D983067F2335AD8C00655FCB /* logwrite.cpp */; };
+		D98306942335B46600655FCB /* audiotime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3921EE16870049E59E /* audiotime.cpp */; };
 		D9BF58C221FCAA720060B63D /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BDF21EE04F30049E59E /* SDLMain.m */; };
 		D9BF58C321FCAA720060B63D /* osdep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0D21EE0F000049E59E /* osdep.cpp */; };
 		D9BF58C421FCAA720060B63D /* psg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3421EE142B0049E59E /* psg.cpp */; };
@@ -172,12 +170,14 @@
 		73D55C4A21EE25150049E59E /* mucomvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mucomvm.cpp; path = ../../src/mucomvm.cpp; sourceTree = "<group>"; };
 		73D55C4C21EE253E0049E59E /* plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = plugin.cpp; path = ../../src/plugin/plugin.cpp; sourceTree = "<group>"; };
 		D91D0D8923319E7F0012562A /* pcmtool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pcmtool; sourceTree = BUILT_PRODUCTS_DIR; };
-		D91D0D8A23319ED80012562A /* pcmentry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcmentry.h; path = ../../src/utils/pcmentry.h; sourceTree = "<group>"; };
 		D91D0D8B23319ED80012562A /* pcmtool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcmtool.h; path = ../../src/utils/pcmtool.h; sourceTree = "<group>"; };
-		D91D0D8C23319ED80012562A /* pcmentry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmentry.cpp; path = ../../src/utils/pcmentry.cpp; sourceTree = "<group>"; };
 		D91D0D8D23319ED80012562A /* pcmtool_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmtool_main.cpp; path = ../../src/utils/pcmtool_main.cpp; sourceTree = "<group>"; };
 		D91D0D8E23319ED80012562A /* pcmtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmtool.cpp; path = ../../src/utils/pcmtool.cpp; sourceTree = "<group>"; };
-		D9429A8E21FD757900F27F87 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../src/main.cpp; sourceTree = "<group>"; };
+		D9429A8E21FD757900F27F87 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../src/main.cpp; sourceTree = "<group>"; };
+		D983067F2335AD8C00655FCB /* logwrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = logwrite.cpp; path = ../../src/utils/logwrite.cpp; sourceTree = "<group>"; };
+		D98306802335AD8C00655FCB /* logwrite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = logwrite.h; path = ../../src/utils/logwrite.h; sourceTree = "<group>"; };
+		D98306812335AD8C00655FCB /* pcmentry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmentry.cpp; path = ../../src/utils/pcmentry.cpp; sourceTree = "<group>"; };
+		D98306822335AD8C00655FCB /* pcmentry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcmentry.h; path = ../../src/utils/pcmentry.h; sourceTree = "<group>"; };
 		D9BF58E121FCAA720060B63D /* mucom88 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mucom88; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -215,7 +215,6 @@
 		73D55BC921EE041C0049E59E = {
 			isa = PBXGroup;
 			children = (
-				D9429A8E21FD757900F27F87 /* main.cpp */,
 				73D55BD421EE041C0049E59E /* miniosx */,
 				73D55BD321EE041C0049E59E /* Products */,
 				73D55BE121EE08230049E59E /* Frameworks */,
@@ -235,38 +234,15 @@
 		73D55BD421EE041C0049E59E /* miniosx */ = {
 			isa = PBXGroup;
 			children = (
-				D91D0D9223319EE30012562A /* pcmtool */,
-				73D55C2A21EE13E50049E59E /* Z80.cpp */,
+				D983068A2335B15900655FCB /* main */,
+				D983067E2335AD3900655FCB /* utils */,
+				D983067D2335AD0B00655FCB /* plugin */,
+				D983067C2335ACFE00655FCB /* Z80 */,
 				73D55C4921EE242B0049E59E /* SDL */,
 				73D55C3621EE144E0049E59E /* fmgen */,
 				73D55C4821EE233B0049E59E /* BinHeader */,
-				73D55BFD21EE0EBF0049E59E /* headers.h */,
-				73D55BFF21EE0EBF0049E59E /* md5.c */,
-				73D55C0021EE0EBF0049E59E /* md5.h */,
-				73D55C3F21EE16CE0049E59E /* mucomvm_os.h */,
-				73D55C4121EE16CE0049E59E /* mucomvm.h */,
-				73D55C4A21EE25150049E59E /* mucomvm.cpp */,
-				73D55C4321EE16FC0049E59E /* mucom_module.cpp */,
-				73D55C4421EE16FC0049E59E /* mucom_module.h */,
-				73D55C0121EE0EBF0049E59E /* membuf.cpp */,
-				73D55C0221EE0EBF0049E59E /* membuf.h */,
-				73D55BE921EE0E9E0049E59E /* adpcm.cpp */,
-				73D55BEA21EE0E9E0049E59E /* adpcm.h */,
-				73D55BF521EE0E9E0049E59E /* callback.cpp */,
-				73D55BF621EE0E9E0049E59E /* callback.h */,
-				73D55BF721EE0E9E0049E59E /* cmucom.cpp */,
-				73D55BF821EE0E9E0049E59E /* cmucom.h */,
-				73D55C0721EE0F000049E59E /* mucom88config.h */,
-				73D55C0821EE0F000049E59E /* mucomerror.cpp */,
-				73D55C0921EE0F000049E59E /* mucomerror.h */,
-				73D55C4621EE17240049E59E /* osdep_sdl.cpp */,
-				73D55C0D21EE0F000049E59E /* osdep.cpp */,
-				73D55C0E21EE0F000049E59E /* osdep.h */,
-				73D55C1021EE0F000049E59E /* soundbuf.cpp */,
-				73D55C1121EE0F000049E59E /* soundbuf.h */,
-				73D55C1221EE0F000049E59E /* wavout.cpp */,
-				73D55C1321EE0F000049E59E /* wavout.h */,
-				73D55C4C21EE253E0049E59E /* plugin.cpp */,
+				D983067A2335AC7300655FCB /* src */,
+				D983067B2335ACA200655FCB /* module */,
 			);
 			path = miniosx;
 			sourceTree = "<group>";
@@ -317,21 +293,103 @@
 				73D55C3721EE16870049E59E /* audiobuffer.cpp */,
 				73D55C3821EE16870049E59E /* audiosdl.cpp */,
 				73D55C3921EE16870049E59E /* audiotime.cpp */,
-				73D55C3A21EE16870049E59E /* miniplay.cpp */,
+				73D55C4621EE17240049E59E /* osdep_sdl.cpp */,
 			);
 			name = SDL;
 			sourceTree = "<group>";
 		};
-		D91D0D9223319EE30012562A /* pcmtool */ = {
+		D983067A2335AC7300655FCB /* src */ = {
 			isa = PBXGroup;
 			children = (
-				D91D0D8A23319ED80012562A /* pcmentry.h */,
-				D91D0D8B23319ED80012562A /* pcmtool.h */,
-				D91D0D8C23319ED80012562A /* pcmentry.cpp */,
-				D91D0D8D23319ED80012562A /* pcmtool_main.cpp */,
+				D98306892335AF4200655FCB /* header */,
+				73D55C0D21EE0F000049E59E /* osdep.cpp */,
+				73D55C1021EE0F000049E59E /* soundbuf.cpp */,
+				73D55C1221EE0F000049E59E /* wavout.cpp */,
+				73D55C0121EE0EBF0049E59E /* membuf.cpp */,
+				73D55BE921EE0E9E0049E59E /* adpcm.cpp */,
+				73D55BF521EE0E9E0049E59E /* callback.cpp */,
+				73D55BF721EE0E9E0049E59E /* cmucom.cpp */,
+				73D55C0821EE0F000049E59E /* mucomerror.cpp */,
+				73D55BFF21EE0EBF0049E59E /* md5.c */,
+				73D55C4A21EE25150049E59E /* mucomvm.cpp */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		D983067B2335ACA200655FCB /* module */ = {
+			isa = PBXGroup;
+			children = (
+				73D55C4321EE16FC0049E59E /* mucom_module.cpp */,
+				73D55C4421EE16FC0049E59E /* mucom_module.h */,
+			);
+			name = module;
+			sourceTree = "<group>";
+		};
+		D983067C2335ACFE00655FCB /* Z80 */ = {
+			isa = PBXGroup;
+			children = (
+				73D55C2A21EE13E50049E59E /* Z80.cpp */,
+			);
+			name = Z80;
+			sourceTree = "<group>";
+		};
+		D983067D2335AD0B00655FCB /* plugin */ = {
+			isa = PBXGroup;
+			children = (
+				73D55C4C21EE253E0049E59E /* plugin.cpp */,
+			);
+			name = plugin;
+			sourceTree = "<group>";
+		};
+		D983067E2335AD3900655FCB /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				D98306882335AF1500655FCB /* header */,
+				D983067F2335AD8C00655FCB /* logwrite.cpp */,
+				D98306812335AD8C00655FCB /* pcmentry.cpp */,
 				D91D0D8E23319ED80012562A /* pcmtool.cpp */,
 			);
-			name = pcmtool;
+			name = utils;
+			sourceTree = "<group>";
+		};
+		D98306882335AF1500655FCB /* header */ = {
+			isa = PBXGroup;
+			children = (
+				D98306802335AD8C00655FCB /* logwrite.h */,
+				D98306822335AD8C00655FCB /* pcmentry.h */,
+				D91D0D8B23319ED80012562A /* pcmtool.h */,
+			);
+			name = header;
+			sourceTree = "<group>";
+		};
+		D98306892335AF4200655FCB /* header */ = {
+			isa = PBXGroup;
+			children = (
+				73D55C0E21EE0F000049E59E /* osdep.h */,
+				73D55C1121EE0F000049E59E /* soundbuf.h */,
+				73D55C1321EE0F000049E59E /* wavout.h */,
+				73D55C0221EE0EBF0049E59E /* membuf.h */,
+				73D55BEA21EE0E9E0049E59E /* adpcm.h */,
+				73D55BF621EE0E9E0049E59E /* callback.h */,
+				73D55BF821EE0E9E0049E59E /* cmucom.h */,
+				73D55C0721EE0F000049E59E /* mucom88config.h */,
+				73D55C0921EE0F000049E59E /* mucomerror.h */,
+				73D55BFD21EE0EBF0049E59E /* headers.h */,
+				73D55C0021EE0EBF0049E59E /* md5.h */,
+				73D55C3F21EE16CE0049E59E /* mucomvm_os.h */,
+				73D55C4121EE16CE0049E59E /* mucomvm.h */,
+			);
+			name = header;
+			sourceTree = "<group>";
+		};
+		D983068A2335B15900655FCB /* main */ = {
+			isa = PBXGroup;
+			children = (
+				73D55C3A21EE16870049E59E /* miniplay.cpp */,
+				D9429A8E21FD757900F27F87 /* main.cpp */,
+				D91D0D8D23319ED80012562A /* pcmtool_main.cpp */,
+			);
+			name = main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -437,17 +495,15 @@
 				73D55C4521EE16FC0049E59E /* mucom_module.cpp in Sources */,
 				73D55BFB21EE0E9E0049E59E /* cmucom.cpp in Sources */,
 				73D55C3D21EE16870049E59E /* audiotime.cpp in Sources */,
+				D98306832335AD8C00655FCB /* logwrite.cpp in Sources */,
 				73D55BFA21EE0E9E0049E59E /* callback.cpp in Sources */,
 				73D55C2D21EE13F60049E59E /* fmgen.cpp in Sources */,
 				73D55BF921EE0E9E0049E59E /* adpcm.cpp in Sources */,
 				73D55C2F21EE140B0049E59E /* file.cpp in Sources */,
-				D91D0D9123319ED80012562A /* pcmtool.cpp in Sources */,
-				D91D0D8F23319ED80012562A /* pcmentry.cpp in Sources */,
 				73D55C3321EE14230049E59E /* opna.cpp in Sources */,
 				73D55C0621EE0EBF0049E59E /* membuf.cpp in Sources */,
 				73D55C1521EE0F000049E59E /* mucomerror.cpp in Sources */,
 				73D55C1821EE0F000049E59E /* soundbuf.cpp in Sources */,
-				D91D0D9023319ED80012562A /* pcmtool_main.cpp in Sources */,
 				73D55C4D21EE253E0049E59E /* plugin.cpp in Sources */,
 				73D55C1921EE0F000049E59E /* wavout.cpp in Sources */,
 				73D55C3B21EE16870049E59E /* audiobuffer.cpp in Sources */,
@@ -461,20 +517,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D98306942335B46600655FCB /* audiotime.cpp in Sources */,
+				D98306932335B45900655FCB /* logwrite.cpp in Sources */,
+				D98306922335B44800655FCB /* audiobuffer.cpp in Sources */,
+				D98306912335B43600655FCB /* osdep_sdl.cpp in Sources */,
+				D983068D2335B41600655FCB /* file.cpp in Sources */,
+				D983068E2335B41600655FCB /* fmgen.cpp in Sources */,
+				D983068F2335B41600655FCB /* fmtimer.cpp in Sources */,
+				D98306902335B41600655FCB /* psg.cpp in Sources */,
+				D983068B2335B40900655FCB /* Z80.cpp in Sources */,
+				D983068C2335B40900655FCB /* opna.cpp in Sources */,
 				D91D0D9523319F690012562A /* pcmtool.cpp in Sources */,
-				D91D0D9423319F650012562A /* pcmentry.cpp in Sources */,
 				D91D0D9323319F5F0012562A /* pcmtool_main.cpp in Sources */,
-				D91D0D6C23319E7F0012562A /* psg.cpp in Sources */,
-				D91D0D6D23319E7F0012562A /* fmtimer.cpp in Sources */,
-				D91D0D6E23319E7F0012562A /* fmgen.cpp in Sources */,
-				D91D0D6F23319E7F0012562A /* opna.cpp in Sources */,
-				D91D0D7023319E7F0012562A /* file.cpp in Sources */,
-				D91D0D7123319E7F0012562A /* plugin.cpp in Sources */,
-				D91D0D7223319E7F0012562A /* audiobuffer.cpp in Sources */,
-				D91D0D7323319E7F0012562A /* osdep_sdl.cpp in Sources */,
-				D91D0D7423319E7F0012562A /* audiosdl.cpp in Sources */,
-				D91D0D7523319E7F0012562A /* audiotime.cpp in Sources */,
-				D91D0D7623319E7F0012562A /* Z80.cpp in Sources */,
+				D98306872335AE1600655FCB /* pcmentry.cpp in Sources */,
 				D91D0D7723319E7F0012562A /* osdep.cpp in Sources */,
 				D91D0D7823319E7F0012562A /* md5.c in Sources */,
 				D91D0D7923319E7F0012562A /* cmucom.cpp in Sources */,
@@ -502,6 +557,7 @@
 				D9BF58D621FCAA720060B63D /* audiobuffer.cpp in Sources */,
 				D9BF58C721FCAA720060B63D /* osdep_sdl.cpp in Sources */,
 				D9BF58C821FCAA720060B63D /* audiosdl.cpp in Sources */,
+				D98306842335AD8C00655FCB /* logwrite.cpp in Sources */,
 				D9BF58CB21FCAA720060B63D /* audiotime.cpp in Sources */,
 				D9BF58D821FCAA720060B63D /* Z80.cpp in Sources */,
 				D9BF58C321FCAA720060B63D /* osdep.cpp in Sources */,

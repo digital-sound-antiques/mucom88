@@ -110,7 +110,7 @@ void LogWrite::WriteAdpcmMemory(void* pData, int size) {
 	WriteData(0, 0x10d, 0xff);
 	// PCM転送
 	unsigned cnt = 0;
-	for (unsigned cnt = 0; cnt < transSize; cnt++) {
+	for (cnt = 0; cnt < transSize; cnt++) {
 		WriteData(0, 0x108, AdpcmBuffer[cnt]);
 	}
 	// 終了

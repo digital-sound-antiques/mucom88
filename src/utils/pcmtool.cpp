@@ -33,7 +33,11 @@ void SplitPath(const char *path, char *drive, char *dir, char *name, char *ext) 
 	strcpy(buf, path);
 	if (drive) drive[0] = 0;
 	if (dir) strcpy(dir, dirname(buf));
-	if (name) strcpy(name, basename(buf));
+    if (name) {
+        strcpy(name, basename(buf));
+        char *p = strchr(name, '.');
+        if (p) *p = 0;
+    }
 	if (ext) strcpy(ext, strrchr(path, '.'));
 #endif
 
@@ -89,7 +93,7 @@ int PcmTool::Convert(const char* filename)
 	_getcwd(oldwd, _MAX_PATH);
 	strcpy(wd, drive);
 	strcat(wd, dir);
-	printf("wd:%s\n", wd);
+	// printf("wd:%s\n", wd);
 	_chdir(wd);
 
 	if (ConvertList(fp)) {

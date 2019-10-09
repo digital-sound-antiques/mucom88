@@ -34,7 +34,6 @@
     <ClCompile Include="soundbuf.cpp">
       <Filter>mucom88</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="adpcm.cpp">
       <Filter>mucom88</Filter>
     </ClCompile>
@@ -65,6 +64,10 @@
     <ClCompile Include="plugin\plugin.cpp">
       <Filter>plugin</Filter>
     </ClCompile>
+    <ClCompile Include="utils\pcmentry.cpp" />
+    <ClCompile Include="utils\pcmtool_main.cpp" />
+    <ClCompile Include="utils\pcmtool.cpp" />
+    <ClCompile Include="utils\logwrite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bin_errmsg.h" />
@@ -166,6 +169,9 @@
     <ClInclude Include="voiceformat.h">
       <Filter>mucom88</Filter>
     </ClInclude>
+    <ClInclude Include="utils\pcmentry.h" />
+    <ClInclude Include="utils\pcmtool.h" />
+    <ClInclude Include="utils\logwrite.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Z80">

@@ -97,6 +97,7 @@
     <ClCompile Include="osdep.cpp" />
     <ClCompile Include="plugin\plugin.cpp" />
     <ClCompile Include="soundbuf.cpp" />
+    <ClCompile Include="utils\logwrite.cpp" />
     <ClCompile Include="utils\pcmentry.cpp" />
     <ClCompile Include="utils\pcmtool_main.cpp" />
     <ClCompile Include="wavout.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="plugin\mucom88if.h" />
     <ClInclude Include="plugin\plugin.h" />
     <ClInclude Include="soundbuf.h" />
+    <ClInclude Include="utils\logwrite.h" />
     <ClInclude Include="utils\pcmentry.h" />
     <ClInclude Include="utils\pcmtool.h" />
     <ClInclude Include="voiceformat.h" />

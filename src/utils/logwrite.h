@@ -38,8 +38,6 @@ public:
 
 	void WriteAdpcmMemory(void* pData, int size);
 
-
-
 private:
 	FILE *fp;
 	bool Loop;

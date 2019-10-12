@@ -105,6 +105,7 @@ CMucom::CMucom( void )
 	edit_status = MUCOM_EDIT_STATUS_NONE;
 	user_uuid[0] = 0;
 	p_log = NULL;
+	hedmusic = NULL;
 }
 
 
@@ -245,7 +246,8 @@ void CMucom::Reset(int option)
 		vm->Poke(i++, 0xbf);
 		vm->Poke(i++, 0xc9);
 
-		return;
+		// コンパイル時でもプレイヤーを読み込むようにした
+		// return;
 	}
 	if (option & MUCOM_CMPOPT_USE_EXTROM) {
 		//	プレイヤーをファイルから読む
@@ -339,6 +341,15 @@ int CMucom::Play(int num)
 
 	PRINTF("#Play[%d]\r\n", num);
 
+	PlayMemory();
+
+	return 0;
+}
+
+void CMucom::PlayMemory() {
+
+	bool CompileMode = hedmusic == NULL;
+
 	vm->CallAndHalt(0xb000);
 	//int vec = vm->Peekw(0xf308);
 	//PRINTF("#INT3 $%x.\r\n", vec);
@@ -349,15 +360,16 @@ int CMucom::Play(int num)
 
 	NoticePlugins(MUCOM88IF_NOTICE_PLAY);
 
-	int jcount = hedmusic->jumpcount;
-	vm->SkipPlay(jcount);
+	if (!CompileMode) {
+		int jcount = hedmusic->jumpcount;
+		vm->SkipPlay(jcount);
+	}
 
 	vm->StartINT3();
 
 	playflag = true;
-
-	return 0;
 }
+
 
 
 void CMucom::PlayLoop() {

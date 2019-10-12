@@ -48,6 +48,8 @@ static const char *p[] = {
 	"       -x Recording Mode",
 	"       -d Dump used voice parameter",
 	"       -l [n] Set Recording lengh to n seconds ",
+	"       -g Compile only",
+	"       -?, -h This help message ",
 	NULL };
 	int i;
 	for (i = 0; p[i]; i++) {
@@ -119,6 +121,8 @@ int main( int argc, char *argv[] )
 	pluginfile = NULL;
 	fname[0] = 0;
 
+	bool compile_only = false;
+
 	int song_length = RENDER_SECONDS;
 
 	for (b=1;b<argc;b++) {
@@ -167,9 +171,15 @@ int main( int argc, char *argv[] )
 			case 'x':
 				cmpopt |= MUCOM_CMPOPT_STEP;
 				break;
+			case 'g':
+				compile_only = true;
+				break;
 			case 'd':
 				dumpopt = 1;
 				break;
+			case '?': case 'h':
+				usage1(); 
+				return -1;
 			default:
 				st=1;break;
 			}
@@ -218,6 +228,8 @@ int main( int argc, char *argv[] )
 		return 0;
 	}
 
+	bool play_memory = false;
+
 	if (cmpopt & MUCOM_CMPOPT_COMPILE) {
 		if (ppopt == 0) {
 			mucom.LoadPCM(pcmfile);
@@ -228,8 +240,7 @@ int main( int argc, char *argv[] )
 		if (mucom.CompileFile(fname, outfile) < 0) {
 			st = 1;
 		}
-		// 現状はコンパイル時は再生できない
-		st = 1;
+		play_memory = true;
 	} else {
 		if (mucom.LoadMusic(fname) < 0) {
 			st = 1;
@@ -242,7 +253,12 @@ int main( int argc, char *argv[] )
 		return st;
 	}
 
-	st = mucom.Play(0);
+	if (play_memory) { 
+		mucom.PlayMemory(); 
+	} else { 
+		st = mucom.Play(0); 
+	}
+
 	if (st == 0) {
 		if (dumpopt) {
 			int i, max;
@@ -255,6 +271,9 @@ int main( int argc, char *argv[] )
 
 	mucom.PrintInfoBuffer();
 	puts(mucom.GetMessageBuffer());
+
+	// コンパイルのみ
+	if (play_memory && compile_only) return st;
 
 	if (st == 0) {
 		if (cmpopt & MUCOM_CMPOPT_STEP) {

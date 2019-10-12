@@ -232,6 +232,8 @@ public:
 	int Update(void);
 	int PlayEffect(int num=0);
 
+	void PlayMemory();
+
 	//	Service for command line
 	void PlayLoop();
 	void RenderAudio(void *mix, int size);

@@ -73,8 +73,14 @@ mucomvm::~mucomvm(void)
 
 }
 
-void mucomvm::SetLog(LogWrite *log) {
+void mucomvm::SetLog(LogWrite *log)
+{
 	p_log = log;
+}
+
+void mucomvm::GetMemory(unsigned char *data, int address, int length)
+{
+	memcpy(data, mem+address, length);
 }
 
 

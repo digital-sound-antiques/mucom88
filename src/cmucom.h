@@ -323,6 +323,9 @@ public:
 	// FM Log Service
 	void SetLogFilename(const char *name);
 
+	// Other Service
+	void GetMemory(unsigned char *data, int address, int length);
+
 private:
 	//		Settings
 	//

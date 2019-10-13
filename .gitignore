@@ -31,3 +31,8 @@ src/Release
 xcode/.DS_Store
 
 package/muplug_fmeditor.ini
+
+hspplugin/*.user
+hspplugin/.vs/
+hspplugin/Debug
+hspplugin/Release

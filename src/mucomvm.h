@@ -143,7 +143,11 @@ public:
 	void FreePlugins(void);
 	void NoticePlugins(int cmd, void *p1 = NULL, void *p2=NULL);
 
+	// ログ取得
 	void SetLog(LogWrite *log);
+
+	// データ取得
+	void GetMemory(unsigned char *data, int address, int length);
 
 private:
 	//		Z80

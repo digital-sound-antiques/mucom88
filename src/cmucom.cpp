@@ -370,6 +370,9 @@ void CMucom::PlayMemory() {
 	playflag = true;
 }
 
+void CMucom::GetMemory(unsigned char *data, int address, int length) {
+	vm->GetMemory(data, address, length);
+}
 
 
 void CMucom::PlayLoop() {

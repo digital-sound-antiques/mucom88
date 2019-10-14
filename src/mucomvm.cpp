@@ -911,6 +911,7 @@ void mucomvm::ResetTimer(void)
 
 	pass_tick = 0;
 	last_tick = 0;
+	audio_output_ms = 0;
 
 	osd->ResetTime();
 }
@@ -977,6 +978,7 @@ void mucomvm::UpdateTime(int base)
 		pass_tick = time_scount >> TICK_SHIFT;
 		time_scount = ( time_scount & ((int)TICK_FACTOR - 1) );
 		osd->SendAudio(pass_tick);
+		audio_output_ms += pass_tick;
 	}
 	tmflag = false;
 

@@ -199,6 +199,12 @@ EXPORT BOOL WINAPI mucomgetchwork(int channel, PCHDATA *chwork)
 	return 0;
 }
 
+EXPORT int WINAPI mucomgetstatus(int p1) {
+	if (!mucom) return 0;
+	return mucom->GetStatus(p1);
+}
+
+
 
 EXPORT BOOL WINAPI mucomfade(int p1, int p2, int p3, int p4)
 {

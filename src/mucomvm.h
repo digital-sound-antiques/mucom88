@@ -99,6 +99,7 @@ public:
 	int GetIntCount(void) { return time_intcount; }
 	int GetMasterCount(void) { return time_master; }
 	int GetPassTick(void) { return pass_tick; }
+	int GetAudioOutputMs(void) { return audio_output_ms; }
 
 	//		YM2608ステータス
 	void FMRegDataOut(int reg, int data);
@@ -197,6 +198,7 @@ private:
 	int time_intcount;
 	int pass_tick;
 	int last_tick;
+	int audio_output_ms;
 
 	bool playflag;
 	bool busyflag;

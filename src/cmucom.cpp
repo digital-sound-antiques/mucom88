@@ -397,7 +397,6 @@ void CMucom::UpdateTime(int tick_ms) {
 	vm->UpdateTime(tick_ms << TICK_SHIFT);
 }
 
-
 int CMucom::LoadTagFromMusic(int num)
 {
 	//		MUCOM88音楽データからタグ一覧を取得する
@@ -576,7 +575,8 @@ int CMucom::GetStatus(int option)
 		return basicsize;
 	case MUCOM_STATUS_BASICRATE:
 		return basicsize * 100 / MUCOM_BASICSIZE_MAX;
-
+	case MUCOM_STATUS_AUDIOMS:
+		return vm->GetAudioOutputMs();
 	default:
 		break;
 	}

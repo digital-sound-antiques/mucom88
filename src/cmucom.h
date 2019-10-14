@@ -55,6 +55,7 @@
 #define MUCOM_STATUS_MUBRATE 8
 #define MUCOM_STATUS_BASICSIZE 9
 #define MUCOM_STATUS_BASICRATE 10
+#define MUCOM_STATUS_AUDIOMS 11
 
 #define MUCOM_OPTION_FMMUTE 1
 #define MUCOM_OPTION_SCCI 2
@@ -238,6 +239,10 @@ public:
 	void PlayLoop();
 	void RenderAudio(void *mix, int size);
 	void UpdateTime(int tick_ms);
+
+	int GetIntCount();
+	int GetAudioOutputMs();
+
 
 	//	PCM file service
 	int LoadPCM(const char *fname = MUCOM_DEFAULT_PCMFILE);

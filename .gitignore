@@ -3,6 +3,7 @@ src/objs
 src/stderr.txt
 src/stdout.txt
 
+
 src/mucom88
 src/mucom88.exe
 src/mucom88_d
@@ -13,15 +14,25 @@ src/mod_test
 src/mod_test.exe
 src/miniplay
 src/miniplay.exe
+src/pcmtool
+src/pcmtool.exe
 
 xcode/miniosx.xcodeproj/xcuserdata
 xcode/DerivedData
 xcode/miniosx.xcodeproj/project.xcworkspace/xcuserdata
 
-src/mucom88.vcxproj.user
+src/*.user
 src/.vs/
 src/Debug
+src/Release
+.vscode
 
 .DS_Store
 xcode/.DS_Store
-.vscode/
+
+package/muplug_fmeditor.ini
+
+hspplugin/*.user
+hspplugin/.vs/
+hspplugin/Debug
+hspplugin/Release

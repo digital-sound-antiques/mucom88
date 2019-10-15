@@ -240,10 +240,6 @@ public:
 	void RenderAudio(void *mix, int size);
 	void UpdateTime(int tick_ms);
 
-	int GetIntCount();
-	int GetAudioOutputMs();
-
-
 	//	PCM file service
 	int LoadPCM(const char *fname = MUCOM_DEFAULT_PCMFILE);
 

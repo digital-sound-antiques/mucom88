@@ -177,6 +177,7 @@ EXPORT BOOL WINAPI mucomplaymemory(int p1, int p2, int p3, int p4)
 }
 
 
+// 曲データをコンパイル（MUB出力)
 EXPORT BOOL WINAPI mucomcompilefile(const char *file, const char *mubname)
 {
 	if (mucom) {
@@ -185,10 +186,53 @@ EXPORT BOOL WINAPI mucomcompilefile(const char *file, const char *mubname)
 	return 0;
 }
 
+// 曲データをコンパイル（ファイル出力なし)
+EXPORT BOOL WINAPI mucomcompilemem(const char* file)
+{
+	if (!mucom) return 0;
+
+	mucom->CompileMemory(file);
+	return 0;
+}
+
+// バッファを準備
+EXPORT BOOL WINAPI mucompreparebuf() {
+	if (!mucom) return 0;
+	mucom->PrintInfoBuffer();
+	return 0;
+}
+
+// メッセージバッファサイズ取得
+EXPORT int WINAPI mucomgetmsgsize() {
+	if (!mucom) return 0;
+	return mucom->GetMessageBufferSize();
+}
+
+// メッセージバッファ取得
+EXPORT int WINAPI mucomgetmsg(char *message, int length) {
+	if (!mucom || length == 0) return 0;
+	const char* p = mucom->GetMessageBuffer();
+	int l = strlen(p);
+
+	if (length <= l) l = length;
+
+	memcpy(message, p, l);
+	message[l - 1] = 0;
+	return 0;
+}
+
+
 EXPORT BOOL WINAPI mucomgetmemory(unsigned char *data, int address, int length)
 {
 	if (!mucom) return -1;
 	mucom->GetMemory(data, address, length);
+	return 0;
+}
+
+EXPORT BOOL WINAPI mucomgetfmmem(unsigned char* data, int address, int length)
+{
+	if (!mucom) return -1;
+	mucom->GetFMRegMemory(data, address, length);
 	return 0;
 }
 
@@ -204,6 +248,50 @@ EXPORT int WINAPI mucomgetstatus(int p1) {
 	return mucom->GetStatus(p1);
 }
 
+EXPORT int WINAPI mucomgetfmreg(int reg) {
+	if (!mucom) return 0;
+	return mucom->FMRegDataGet(reg);
+}
+
+EXPORT int WINAPI mucomoutfmreg(int reg, int data) {
+	if (!mucom) return 0;
+	mucom->FMRegDataOut(reg, data);
+	return 0;
+}
+
+EXPORT int WINAPI mucomsetmute(int ch, int data) {
+	if (!mucom) return 0;
+	mucom->SetChMute(ch, data != 0 ? true : false);
+	return 0;
+}
+
+EXPORT int WINAPI mucomgetmute(int ch) {
+	if (!mucom) return 0;
+	bool result = mucom->GetChMute(ch);
+	return result ? 1 : 0;
+}
+
+EXPORT int WINAPI mucompeek(int adr) {
+	if (!mucom) return 0;
+	return mucom->Peek(adr);
+}
+
+EXPORT int WINAPI mucompeekw(int adr) {
+	if (!mucom) return 0;
+	return mucom->Peekw(adr);
+}
+
+EXPORT int WINAPI mucompoke(int adr, int data) {
+	if (!mucom) return 0;
+	mucom->Poke(adr, data);
+	return 0;
+}
+
+EXPORT int WINAPI mucompokew(int adr, int data) {
+	if (!mucom) return 0;
+	mucom->Pokew(adr, data);
+	return 0;
+}
 
 
 EXPORT BOOL WINAPI mucomfade(int p1, int p2, int p3, int p4)

@@ -78,8 +78,34 @@ void mucomvm::SetLog(LogWrite *log)
 	p_log = log;
 }
 
+void mucomvm::GetFMRegMemory(unsigned char* data, int address, int length)
+{
+	if (address < 0 || OPNAREG_MAX <= address) {
+		memset(data, 0, length);
+		return;
+	}
+	if (address + length >= OPNAREG_MAX) {
+		int actual_size = OPNAREG_MAX - address;
+		memcpy(data, regmap + address, actual_size);
+		memset(data + actual_size, 0, length - actual_size);
+		return;
+	}
+	memcpy(data, regmap + address, length);
+}
+
+
 void mucomvm::GetMemory(unsigned char *data, int address, int length)
 {
+	if (address < 0 || 0x10000 <= address) {
+		memset(data, 0, length);
+		return;
+	}
+	if (address + length >= 0x10000) {
+		int actual_size = 0x10000 - address;
+		memcpy(data, mem + address, actual_size);
+		memset(data + actual_size, 0, length - actual_size);
+		return;
+	}
 	memcpy(data, mem+address, length);
 }
 

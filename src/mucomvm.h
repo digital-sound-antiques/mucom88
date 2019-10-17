@@ -114,6 +114,7 @@ public:
 	//		デバッグ用
 	void Msgf(const char *format, ...);
 	char *GetMessageBuffer(void) { return membuf->GetBuffer(); }
+	int GetMessageBufferSize(void) { return membuf->GetSize(); }
 	void DumpBin(uint16_t adr, uint16_t length);
 	int DeviceCheck(void);
 	int GetMessageId() { return msgid; }
@@ -148,6 +149,7 @@ public:
 	void SetLog(LogWrite *log);
 
 	// データ取得
+	void GetFMRegMemory(unsigned char* data, int address, int length);
 	void GetMemory(unsigned char *data, int address, int length);
 
 private:

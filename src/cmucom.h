@@ -246,8 +246,10 @@ public:
 	//	MUCOM88 MUC/MUB service
 	int LoadMusic(const char *fname, int num = 0);
 	int CompileFile(const char *fname, const char *sname, int option=0);
+	int CompileMemory(const char* fname, int option = 0);
 	int CompileMem(char *mem, int option=0);
 	int Compile(char *text, const char *filename, int option=0);
+	int Compile(char* text, int option = 0, bool writeMub=false, const char *filenamw = NULL);
 	int ProcessFile(const char *fname);
 	int ProcessHeader(char *text);
 	int SaveMusic(const char *fname, int start, int length, int option = 0);
@@ -256,6 +258,7 @@ public:
 
 	//	VM log service
 	const char *GetMessageBuffer(void);
+	int GetMessageBufferSize(void);
 	int GetStatus(int option);
 	void SetVMOption(int option, int mode);
 	void SetAudioRate(int rate);
@@ -325,7 +328,19 @@ public:
 	void SetLogFilename(const char *name);
 
 	// Other Service
+	void GetFMRegMemory(unsigned char* data, int address, int length);
 	void GetMemory(unsigned char *data, int address, int length);
+	void SetChMute(int ch, bool sw);
+	bool GetChMute(int ch);
+	void FMRegDataOut(int reg, int data);
+	int FMRegDataGet(int reg);
+
+	int Peek(uint16_t adr);
+	int Peekw(uint16_t adr);
+	void Poke(uint16_t adr, uint8_t data);
+	void Pokew(uint16_t adr, uint16_t data);
+
+
 
 private:
 	//		Settings

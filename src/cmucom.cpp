@@ -288,6 +288,12 @@ const char *CMucom::GetMessageBuffer(void)
 	return vm->GetMessageBuffer();
 }
 
+int CMucom::GetMessageBufferSize(void)
+{
+	return vm->GetMessageBufferSize();
+}
+
+
 int CMucom::Play(int num)
 {
 	//		MUCOM88音楽再生
@@ -370,9 +376,55 @@ void CMucom::PlayMemory() {
 	playflag = true;
 }
 
+void CMucom::GetFMRegMemory(unsigned char* data, int address, int length)
+{
+	vm->GetFMRegMemory(data, address, length);
+}
+
 void CMucom::GetMemory(unsigned char *data, int address, int length) {
 	vm->GetMemory(data, address, length);
 }
+
+void CMucom::SetChMute(int ch, bool sw)
+{
+	vm->SetChMute(ch, sw);
+}
+
+bool CMucom::GetChMute(int ch)
+{
+	return vm->GetChMute(ch);
+}
+
+void CMucom::FMRegDataOut(int reg, int data)
+{
+	vm->FMRegDataOut(reg, data);
+}
+
+int CMucom::FMRegDataGet(int reg)
+{
+	return vm->FMRegDataGet(reg);
+}
+
+int CMucom::Peek(uint16_t adr)
+{
+	return vm->Peek(adr);
+}
+
+int CMucom::Peekw(uint16_t adr)
+{
+	return vm->Peekw(adr);
+}
+
+void CMucom::Poke(uint16_t adr, uint8_t data)
+{
+	vm->Poke(adr, data);
+}
+
+void CMucom::Pokew(uint16_t adr, uint16_t data)
+{
+	vm->Pokew(adr, data);
+}
+
 
 
 void CMucom::PlayLoop() {
@@ -1251,19 +1303,24 @@ int CMucom::StoreBasicSource(char *text, int line, int add)
 
 int CMucom::Compile(char *text, const char *filename, int option)
 {
-	//		MUCOM88コンパイル(Resetが必要)
-	//		text         = MML書式のテキストデータ(UTF8)(終端=0)
-	//		filename     = 出力される音楽データファイル
-	//		option : 1   = #タグによるvoice設定を無視
-	//		         2   = PCM埋め込みをスキップ
-	//		         4   = 音色の一時バッファ作成を許可する
-	//		         8   = 演奏バッファ#0に直接保存する
-	//		(戻り値が0以外の場合はエラー)
-	//
+	return Compile(text, option, true, filename);
+}
+
+int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
+{
+//		MUCOM88コンパイル(Resetが必要)
+//		text         = MML書式のテキストデータ(UTF8)(終端=0)
+//		filename     = 出力される音楽データファイル
+//		option : 1   = #タグによるvoice設定を無視
+//		         2   = PCM埋め込みをスキップ
+//		         4   = 音色の一時バッファ作成を許可する
+//		         8   = 演奏バッファ#0に直接保存する
+//		(戻り値が0以外の場合はエラー)
+//
 	int i, res;
 	int start, length;
-	char *adr_start;
-	char *adr_length;
+	char* adr_start;
+	char* adr_length;
 	int workadr;
 	int pcmflag;
 
@@ -1282,20 +1339,20 @@ int CMucom::Compile(char *text, const char *filename, int option)
 
 	NoticePlugins(MUCOM88IF_NOTICE_MMLSEND);
 
-	basicsize = StoreBasicSource( text, 1, 1 );
+	basicsize = StoreBasicSource(text, 1, 1);
 
 	vm->CallAndHalt(0x9600);
 	int vec = vm->Peekw(0x0eea8);
 	PRINTF("#poll a $%x.\r\n", vec);
 
 	int loopst = 0xf25a;
-	vm->Pokew( loopst, 0x0101 );		// ループ情報スタックを初期化する(ループ外の'/'でエラーを出すため)
+	vm->Pokew(loopst, 0x0101);		// ループ情報スタックを初期化する(ループ外の'/'でエラーを出すため)
 
 	res = vm->CallAndHalt2(vec, 'A');
-	if (res){
+	if (res) {
 		int line = vm->Peekw(0x0f32e);
 		int msgid = vm->GetMessageId();
-		if (msgid>0) {
+		if (msgid > 0) {
 			PRINTF("#error %d in line %d.\r\n-> %s (%s)\r\n", msgid, line, mucom_geterror_j(msgid), mucom_geterror(msgid));
 		}
 		else {
@@ -1303,9 +1360,9 @@ int CMucom::Compile(char *text, const char *filename, int option)
 		}
 		return -1;
 	}
-	
+
 	char stmp[128];
-	vm->PeekToStr(stmp,0xf3c8,80);		// 画面最上段のメッセージ
+	vm->PeekToStr(stmp, 0xf3c8, 80);		// 画面最上段のメッセージ
 	PRINTF("%s\r\n", stmp);
 
 	workadr = 0xf320;
@@ -1338,8 +1395,8 @@ int CMucom::Compile(char *text, const char *filename, int option)
 
 	PRINTF("[ Total count ]\r\n");
 
-	for (i = 0; i < maxch; i++){
-		int tcnt,lcnt;
+	for (i = 0; i < maxch; i++) {
+		int tcnt, lcnt;
 		tcnt = vm->Peekw(0x8c10 + i * 4);
 		lcnt = vm->Peekw(0x8c12 + i * 4);
 		if (lcnt) { lcnt = tcnt - (lcnt - 1); }
@@ -1352,7 +1409,7 @@ int CMucom::Compile(char *text, const char *filename, int option)
 
 	PRINTF("[ Loop count  ]\r\n");
 
-	for (i = 0; i < maxch; i++){
+	for (i = 0; i < maxch; i++) {
 		PRINTF("%c:%d ", 'A' + i, lcount[i]);
 	}
 	PRINTF("\r\n");
@@ -1367,14 +1424,14 @@ int CMucom::Compile(char *text, const char *filename, int option)
 
 	mubsize = length;
 
-	PRINTF("#Data Buffer $%04x-$%04x ($%04x)\r\n", start, start + length - 1,length);
+	PRINTF("#Data Buffer $%04x-$%04x ($%04x)\r\n", start, start + length - 1, length);
 	PRINTF("#MaxCount:%d Basic:%04x Data:%04x\r\n", maxcount, basicsize, mubsize);
 
-	if (tcount[maxch-1]==0) pcmflag = 2;	// PCM chが使われてなければPCM埋め込みはスキップ
+	if (tcount[maxch - 1] == 0) pcmflag = 2;	// PCM chが使われてなければPCM埋め込みはスキップ
 
 	NoticePlugins(MUCOM88IF_NOTICE_COMPEND);
 
-	return SaveMusic(filename,start,length,option| pcmflag);
+	return !writeMub ? 0 : SaveMusic(filename, start, length, option | pcmflag);
 }
 
 
@@ -1405,6 +1462,34 @@ int CMucom::CompileFile(const char *fname, const char *sname, int option)
 
 	return 0;
 }
+
+int CMucom::CompileMemory(const char* fname, int option)
+{
+	//		MUCOM88メモリコンパイル(Resetが必要)
+	//		fname     = MML書式のテキストファイル(UTF8)
+	//		option : 1   = #タグによるvoice設定を無視
+	//		(戻り値が0以外の場合はエラー)
+	//
+	int res;
+	int sz;
+	char* mml;
+	PRINTF("#Compile[%s].\r\n", fname);
+	mml = vm->LoadAlloc(fname, &sz);
+	if (mml == NULL) {
+		PRINTF("#File not found [%s].\r\n", fname);
+		return -1;
+	}
+
+	ProcessHeader(mml);
+
+	res = Compile(mml, option);
+	vm->LoadAllocFree(mml);
+
+	if (res) return res;
+
+	return 0;
+}
+
 
 
 int CMucom::CompileMem(char *mem, int option)

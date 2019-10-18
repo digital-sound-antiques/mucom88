@@ -340,6 +340,8 @@ public:
 	void Poke(uint16_t adr, uint8_t data);
 	void Pokew(uint16_t adr, uint16_t data);
 
+	//
+	void SetOriginalMode();
 
 
 private:
@@ -352,6 +354,8 @@ private:
 	MUBHED *hedmusic;	// playing Music data header
 
 	LogWrite *p_log;
+
+	bool original_mode; // original mode
 
 	//		FM voice status
 	//

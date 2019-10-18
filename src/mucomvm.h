@@ -29,6 +29,8 @@ enum {
 #define VMBANK_MAX 4
 #define VMBANK_SIZE 0x4000
 
+#define EXTRAM_SIZE 0x8000
+
 #define VMPRGBANK_MAIN 0
 #define VMPRGBANK_SHADOW 1
 
@@ -159,6 +161,11 @@ private:
 	void store(uint16_t adr, uint8_t data);
 	int32_t input(uint16_t adr);
 	void output(uint16_t adr, uint8_t data);
+	uint8_t extram_bank_mode;
+	uint8_t extram_bank_no;
+	void ChangeExtRamBank(uint8_t bank);
+	void ChangeExtRamMode(uint8_t mode);
+
 	void Halt(void);
 
 	//		メモリ(64K)
@@ -171,6 +178,10 @@ private:
 	uint8_t mem[0x10000];				// メインメモリ
 	uint8_t vram[VMBANK_MAX][0x4000];	// GVRAM(3:退避/012=BRG)
 	uint8_t memprg[0x10000];			// メインメモリ(プログラム実行用のシャドーコピー)
+	uint8_t extram[4][0x8000];
+
+	uint8_t *membank[0x10];
+	uint8_t* membank_wr[0x10];
 
 	//		音源
 	FM::OPNA *opn;

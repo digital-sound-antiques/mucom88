@@ -45,10 +45,11 @@ static const char *p[] = {
 	"       -e Use external ROM files",
 	"       -s Use SCCI device",
 	"       -k Skip PCM load",
-	"       -x Recording Mode",
+	"       -x Recording mode",
 	"       -d Dump used voice parameter",
-	"       -l [n] Set Recording lengh to n seconds ",
+	"       -l [n] Set recording lengh to n seconds ",
 	"       -g Compile only",
+	"       -z Original mode",
 	"       -?, -h This help message ",
 	NULL };
 	int i;
@@ -122,6 +123,7 @@ int main( int argc, char *argv[] )
 	fname[0] = 0;
 
 	bool compile_only = false;
+	bool original_mode = false;
 
 	int song_length = RENDER_SECONDS;
 
@@ -177,6 +179,9 @@ int main( int argc, char *argv[] )
 			case 'd':
 				dumpopt = 1;
 				break;
+			case 'z':
+				original_mode = true;
+				break;
 			case '?': case 'h':
 				usage1(); 
 				return -1;
@@ -191,6 +196,10 @@ int main( int argc, char *argv[] )
 
 	//		call main
 	CMucom mucom;
+
+	if (original_mode) {
+		mucom.SetOriginalMode();
+	}
 
 	if (logfile) {
 		mucom.SetLogFilename(logfile);

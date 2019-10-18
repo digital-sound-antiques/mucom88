@@ -41,6 +41,9 @@ mucomvm::mucomvm(void)
 	osd = NULL;
 	master_window = NULL;
 
+	extram_bank_mode = 0;
+	extram_bank_no = 0;
+
 	channel_max = 0;
 	channel_size = 0;
 	pchdata = NULL;
@@ -258,6 +261,12 @@ void mucomvm::Reset(void)
 	ClearBank();
 	bankprg = VMPRGBANK_MAIN;
 
+	int i = 0;
+	for (int i = 0; i < 0x10; i++) {
+		membank[i] = &mem[i * 0x1000];
+		membank_wr[i] = &mem[i * 0x1000];
+	}
+
 	m_flag = VMFLAG_EXEC;
 	sound_reg_select = 0;
 
@@ -302,23 +311,23 @@ int32_t mucomvm::loadpc(uint16_t adr)
 {
 	if (bankprg == VMPRGBANK_SHADOW) {
 		if ((adr < 0xde00)||(adr >=0xe300)) {
-			return (int32_t)mem[adr];
+			return (int32_t)membank[adr>>12][adr&0xfff];
 		}
 		return (int32_t)memprg[adr];
 	}
-	return (int32_t)mem[adr];
+	return (int32_t)membank[adr>>12][adr&0xfff];
 }
 
 
 int32_t mucomvm::load(uint16_t adr)
 {
-	return (int32_t)mem[adr];
+	return (int32_t)membank[adr>>12][adr & 0xfff];
 }
 
 
 void mucomvm::store(uint16_t adr, uint8_t data)
 {
-	mem[adr] = data;
+	membank_wr[adr>>12][adr&0xfff] = data;
 }
 
 
@@ -326,6 +335,7 @@ int32_t mucomvm::input(uint16_t adr)
 {
 	//printf("input : %x\n", adr);
 	int port = adr & 0xff;
+	if (port < 0x10) return 0xff;
 	switch (port)
 	{
 	case 0x32:
@@ -368,9 +378,49 @@ void mucomvm::output(uint16_t adr, uint8_t data)
 	case 0x5f:
 		ChangeBank( port - 0x5c );
 		break;
+	case 0xe2:
+		ChangeExtRamMode(data);
+		break;
+	case 0xe3:
+		ChangeExtRamBank(data);
+		break;
 	default:
 		break;
 	}
+}
+
+void mucomvm::ChangeExtRamBank(uint8_t bank)
+{
+	extram_bank_no = bank & 0x3;
+	uint8_t *wrp;
+	uint8_t *rdp;
+	int i;
+
+	// bit4 = 書き込み
+	if (extram_bank_mode & 0x10) {
+		wrp = extram[extram_bank_no];
+	} else {
+		wrp = mem;
+	}
+
+	// bit0 = 読み込み
+	if (extram_bank_mode & 0x01) {
+		rdp = extram[extram_bank_no];
+	}
+	else {
+		rdp = mem;
+	}
+
+	for (int i = 0; i < 0x8; i++) {
+		membank[i] = &rdp[i * 0x1000];
+		membank_wr[i] = &wrp[i * 0x1000];
+	}
+}
+
+void mucomvm::ChangeExtRamMode(uint8_t mode)
+{
+	extram_bank_mode = mode;
+	ChangeExtRamBank(extram_bank_no);
 }
 
 void mucomvm::Halt(void)
@@ -433,29 +483,25 @@ void mucomvm::RestoreMem(uint8_t *mem_bak)
 
 int mucomvm::Peek(uint16_t adr)
 {
-	return (int)mem[adr];
+	return (int)membank[adr>>12][adr&0xfff];
 }
-
 
 int mucomvm::Peekw(uint16_t adr)
 {
-	int res;
-	res = ((int)mem[adr+1])<<8;
-	res += (int)mem[adr];
-	return res;
+	return ((Peek(adr+1))<<8) + Peek(adr);
 }
 
 
 void mucomvm::Poke(uint16_t adr, uint8_t data)
 {
-	mem[adr] = data;
+	membank[adr >> 12][adr & 0xfff] = data;
 }
 
 
 void mucomvm::Pokew(uint16_t adr, uint16_t data)
 {
-	mem[adr] = data & 0xff;
-	mem[adr+1] = (data>>8) & 0xff;
+	Poke(adr, data & 0xff);
+	Poke(adr+1, (data>>8) & 0xff);
 }
 
 

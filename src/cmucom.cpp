@@ -99,6 +99,7 @@ int CMucom::strpick_spc(char *target, char *dest, int strmax)
 
 CMucom::CMucom( void )
 {
+	original_mode = false;
 	flag = 0;
 	vm = NULL;
 	infobuf = NULL;
@@ -227,6 +228,13 @@ void CMucom::Reset(int option)
 			vm->SendMem(bin_smon, 0xde00, smon_size);
 			//vm->SendMem(bin_voice_dat, 0x6000, voice_dat_size);
 			StoreFMVoice((unsigned char *)bin_voice_dat);
+
+			// 外部ファイル
+			if (!original_mode) {
+				vm->LoadMem("msubM", 0x9000, 0);
+				vm->LoadMem("muc88M", 0x9600, 0);
+			}
+
 		}
 
 		int i;
@@ -256,6 +264,11 @@ void CMucom::Reset(int option)
 	else {
 		//	内部のプレイヤーを読む
 		vm->SendMem(bin_music2, 0xb000, music2_size);
+
+		// 外部ファイル
+		if (!original_mode) {
+			vm->LoadMem("musicM", 0xb000, 0);
+		}
 	}
 
 	//	実行用メモリをシャドーコピーとして保存しておく
@@ -356,7 +369,14 @@ void CMucom::PlayMemory() {
 
 	bool CompileMode = hedmusic == NULL;
 
-	vm->CallAndHalt(0xb000);
+	if (!original_mode) {
+		int vec = vm->Peekw(0x0eea8);
+		PRINTF("#poll s $%x.\r\n", vec);
+		vm->CallAndHalt2(vec, 'S');
+	} else {
+		vm->CallAndHalt(0xb000);
+	}
+
 	//int vec = vm->Peekw(0xf308);
 	//PRINTF("#INT3 $%x.\r\n", vec);
 
@@ -424,6 +444,12 @@ void CMucom::Pokew(uint16_t adr, uint16_t data)
 {
 	vm->Pokew(adr, data);
 }
+
+void CMucom::SetOriginalMode()
+{
+	original_mode = true;
+}
+
 
 
 

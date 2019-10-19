@@ -356,7 +356,7 @@ private:
 	int mubver;			// playing MUB version
 	MUBHED *hedmusic;	// playing Music data header
 
-	LogWrite *p_log;
+	ILogWrite *p_log;
 
 	bool original_mode; // original mode
 	bool use_extram;

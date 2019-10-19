@@ -157,7 +157,7 @@ public:
 	void NoticePlugins(int cmd, void *p1 = NULL, void *p2=NULL);
 
 	// ログ取得
-	void SetLog(LogWrite *log);
+	void SetLog(ILogWrite *log);
 
 	// データ取得
 	void GetFMRegMemory(unsigned char* data, int address, int length);
@@ -241,8 +241,7 @@ private:
 	//		親のインスタンス(参照)
 	CMucom *p_cmucom;
 
-	LogWrite *p_log;
-
+	ILogWrite *p_log;
 };
 
 

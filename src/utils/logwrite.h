@@ -2,45 +2,17 @@
 
 #include <stdio.h>
 
-class LogWrite
-{
+class ILogWrite {
+
 public:
-	LogWrite();
-	~LogWrite();
+	virtual ~ILogWrite() {}
 
-	double BaseTick;
-	double SyncBufferTicks;
-	int LoopPoint;
-	int DeviceCount;
-	int DataLength;
+	virtual bool Open(const char* filename) = 0;
+	virtual void Close() = 0;
 
-	// 分子 / 分母
-	int Numerator;
-	int Denominator;
+	virtual void SetLoopPoint() = 0;
+	virtual void Wait(double Seconds) = 0;
+	virtual void WriteData(int Device, int Address, int Value) = 0;
 
-
-	bool Open(const char *filename);
-	void Close();
-
-	void SetLoopPoint();
-	void Wait(double Seconds);
-	void WriteData(int Device, int Address, int Value);
-	void WriteEnd();
-
-	void WriteDword(unsigned char *buf, int value);
-	void WriteWord(unsigned char *buf, int value);
-	void WriteHeader();
-
-	void WriteValue(int value);
-	void WriteSync();
-	void WriteSync1();
-	void WriteSync2(int Count);
-
-	void WriteAdpcmMemory(void* pData, int size);
-
-private:
-	FILE *fp;
-	bool Loop;
-	bool HeaderOut;
+	virtual void WriteAdpcmMemory(void* pData, int size) = 0;
 };
-

@@ -12,6 +12,9 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "utils/s98write.h"
+#include "utils/vgmwrite.h"
+
 #include "cmucom.h"
 #include "mucomvm.h"
 #include "mucomerror.h"
@@ -122,7 +125,18 @@ CMucom::~CMucom( void )
 
 void CMucom::SetLogFilename(const char *filename) {
 	if (p_log != NULL) delete p_log;
-	p_log = new LogWrite();
+	const char *p = strrchr(filename, '.');
+
+	bool use_vgm = false;
+
+	if (p != NULL && strcmpi(p, ".vgm") == 0) use_vgm = true;
+
+	if (use_vgm) {
+		p_log = new VGMWrite();
+	} else {
+		p_log = new S98Write();
+	}
+
 	p_log->Open(filename);
 }
 

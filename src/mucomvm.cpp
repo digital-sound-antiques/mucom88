@@ -76,7 +76,7 @@ mucomvm::~mucomvm(void)
 
 }
 
-void mucomvm::SetLog(LogWrite *log)
+void mucomvm::SetLog(ILogWrite *log)
 {
 	p_log = log;
 }
@@ -395,7 +395,6 @@ void mucomvm::ChangeExtRamBank(uint8_t bank)
 	extram_bank_no = bank & 0x3;
 	uint8_t *wrp;
 	uint8_t *rdp;
-	int i;
 
 	// bit4 = 書き込み
 	if (extram_bank_mode & 0x10) {
@@ -411,7 +410,8 @@ void mucomvm::ChangeExtRamBank(uint8_t bank)
 		rdp = mem;
 	}
 
-	for (int i = 0; i < 0x8; i++) {
+	int i;
+	for (i = 0; i < 0x8; i++) {
 		membank[i] = &rdp[i * 0x1000];
 		membank_wr[i] = &wrp[i * 0x1000];
 	}

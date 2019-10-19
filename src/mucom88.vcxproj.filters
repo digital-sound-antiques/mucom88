@@ -65,7 +65,10 @@
     <ClCompile Include="plugin\plugin.cpp">
       <Filter>plugin</Filter>
     </ClCompile>
-    <ClCompile Include="utils\logwrite.cpp">
+    <ClCompile Include="utils\s98write.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\vgmwrite.cpp">
       <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -169,7 +172,13 @@
     <ClInclude Include="voiceformat.h">
       <Filter>mucom88</Filter>
     </ClInclude>
+    <ClInclude Include="utils\s98write.h">
+      <Filter>utils</Filter>
+    </ClInclude>
     <ClInclude Include="utils\logwrite.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\vgmwrite.h">
       <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,9 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "logwrite.h"
+#include "s98write.h"
 
-LogWrite::LogWrite() {
+S98Write::S98Write() {
 	BaseTick = 0;
 	SyncBufferTicks = 0;
 	LoopPoint = 0;
@@ -20,23 +20,23 @@ LogWrite::LogWrite() {
 	Loop = false;
 }
 
-LogWrite::~LogWrite() {
+S98Write::~S98Write() {
 	Close();
 }
 
-bool LogWrite::Open(const char *filename) {
+bool S98Write::Open(const char *filename) {
 	fp = fopen(filename,"wb");
 	return fp != NULL;
 }
 
-void LogWrite::Close(void) {
+void S98Write::Close(void) {
 	WriteSync();
 	WriteEnd();
 	if (fp != NULL) fclose(fp);
 	fp = NULL;
 }
 
-void LogWrite::WriteHeader() {
+void S98Write::WriteHeader() {
 	HeaderOut = true;
 	if (fp == NULL) return;
 	fseek(fp, 0, SEEK_SET);
@@ -58,19 +58,19 @@ void LogWrite::WriteHeader() {
 	fwrite(header, 0x20, 1, fp);
 }
 
-void LogWrite::WriteDword(unsigned char *data, int value) {
+void S98Write::WriteDword(unsigned char *data, int value) {
 	data[0] = value & 0xff;
 	data[1] = (value >> 8) & 0xff;
 	data[2] = (value >> 16) & 0xff;
 	data[3] = (value >> 24) & 0xff;
 }
 
-void LogWrite::WriteWord(unsigned char *data, int value) {
+void S98Write::WriteWord(unsigned char *data, int value) {
 	data[0] = value & 0xff;
 	data[1] = (value >> 8) & 0xff;
 }
 
-void LogWrite::WriteData(int Device, int Address, int Value) {
+void S98Write::WriteData(int Device, int Address, int Value) {
 	WriteSync();
 	int d = (int)(Device * 2 + (Address >= 0x100 ? 1 : 0));
 	int a = (int)(Address & 0xff);
@@ -80,7 +80,7 @@ void LogWrite::WriteData(int Device, int Address, int Value) {
 	WriteValue(v);
 }
 
-void LogWrite::WriteAdpcmMemory(void* pData, int size) {
+void S98Write::WriteAdpcmMemory(void* pData, int size) {
 
 	unsigned char AdpcmBuffer[0x40000];
 
@@ -122,13 +122,13 @@ void LogWrite::WriteAdpcmMemory(void* pData, int size) {
 
 
 
-void LogWrite::WriteValue(int value) {
+void S98Write::WriteValue(int value) {
 	if (!HeaderOut) WriteHeader();
 	if (fp != NULL) fputc(value, fp);
 	DataLength++;
 }
 
-void LogWrite::WriteSync() {
+void S98Write::WriteSync() {
 	if (SyncBufferTicks < BaseTick) return;
 
 	int SyncCount = (int)(SyncBufferTicks / BaseTick);
@@ -136,7 +136,7 @@ void LogWrite::WriteSync() {
 	if (SyncCount > 1) WriteSync2(SyncCount); else WriteSync1();
 }
 
-void LogWrite::WriteSync2(int Count) {
+void S98Write::WriteSync2(int Count) {
 	Count -= 2;
 	WriteValue(0xfe);
 	while (true) {
@@ -150,20 +150,20 @@ void LogWrite::WriteSync2(int Count) {
 	}
 }
 
-void LogWrite::WriteSync1() {
+void S98Write::WriteSync1() {
 	WriteValue(0xff);
 }
 
-void LogWrite::WriteEnd() {
+void S98Write::WriteEnd() {
 	WriteValue(0xfd);
 }
 
-void LogWrite::SetLoopPoint() {
+void S98Write::SetLoopPoint() {
 	Loop = true;
 	LoopPoint = DataLength;
 }
 
-void LogWrite::Wait(double seconds) {
+void S98Write::Wait(double seconds) {
 	SyncBufferTicks += seconds;
 }
 

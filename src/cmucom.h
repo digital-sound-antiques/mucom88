@@ -342,7 +342,10 @@ public:
 
 	//
 	void SetOriginalMode();
-
+	void GetExtramVector();
+	void PrepareSongMemory();
+	void BackToMainMemory();
+	int GetSongAddress();
 
 private:
 	//		Settings
@@ -356,6 +359,9 @@ private:
 	LogWrite *p_log;
 
 	bool original_mode; // original mode
+	bool use_extram;
+	int extram_disable_vec;
+	int extram_enable_vec;
 
 	//		FM voice status
 	//
@@ -408,6 +414,12 @@ private:
 	const char *GetTextLine(const char *text);
 	int StoreBasicSource(char *text, int line, int add);
 	bool hasMacro(char *text);
+
+	void InitCompiler();
+	void LoadModBinary();
+	void LoadExternalCompiler();
+	void LoadInternalCompiler();
+
 
 	//		Virtual Machine
 	//

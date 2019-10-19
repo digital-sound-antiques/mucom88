@@ -100,6 +100,7 @@ int CMucom::strpick_spc(char *target, char *dest, int strmax)
 CMucom::CMucom( void )
 {
 	original_mode = false;
+	use_extram = false;
 	flag = 0;
 	vm = NULL;
 	infobuf = NULL;
@@ -205,36 +206,11 @@ void CMucom::Reset(int option)
 		PRINTF("#Device error(%d)\r\n", devres);
 	}
 
+	LoadInternalCompiler();
+
 	if (option & MUCOM_CMPOPT_COMPILE) {
 		if (option & MUCOM_CMPOPT_USE_EXTROM) {
-			//	コンパイラをファイルから読む
-			vm->LoadMem("expand", 0xab00, 0);
-			vm->LoadMem("errmsg", 0x8800, 0);
-			vm->LoadMem("msub", 0x9000, 0);
-			vm->LoadMem("muc88", 0x9600, 0);
-			vm->LoadMem("ssgdat", 0x5e00, 0);
-			vm->LoadMem("time", 0xe400, 0);
-			vm->LoadMem("smon", 0xde00, 0);
-			LoadFMVoice(MUCOM_DEFAULT_VOICEFILE,true);
-		}
-		else {
-			//	内部のコンパイラを読む
-			vm->SendMem(bin_expand, 0xab00, expand_size);
-			vm->SendMem(bin_errmsg, 0x8800, errmsg_size);
-			vm->SendMem(bin_msub, 0x9000, msub_size);
-			vm->SendMem(bin_muc88, 0x9600, muc88_size);
-			vm->SendMem(bin_ssgdat, 0x5e00, ssgdat_size);
-			vm->SendMem(bin_time, 0xe400, time_size);
-			vm->SendMem(bin_smon, 0xde00, smon_size);
-			//vm->SendMem(bin_voice_dat, 0x6000, voice_dat_size);
-			StoreFMVoice((unsigned char *)bin_voice_dat);
-
-			// 外部ファイル
-			if (!original_mode) {
-				vm->LoadMem("msubM", 0x9000, 0);
-				vm->LoadMem("muc88M", 0x9600, 0);
-			}
-
+			LoadExternalCompiler();
 		}
 
 		int i;
@@ -257,19 +233,17 @@ void CMucom::Reset(int option)
 		// コンパイル時でもプレイヤーを読み込むようにした
 		// return;
 	}
+
 	if (option & MUCOM_CMPOPT_USE_EXTROM) {
 		//	プレイヤーをファイルから読む
 		vm->LoadMem("music", 0xb000, 0);
-	}
-	else {
+	} else {
 		//	内部のプレイヤーを読む
 		vm->SendMem(bin_music2, 0xb000, music2_size);
-
-		// 外部ファイル
-		if (!original_mode) {
-			vm->LoadMem("musicM", 0xb000, 0);
-		}
 	}
+
+	LoadModBinary();
+
 
 	//	実行用メモリをシャドーコピーとして保存しておく
 	vm->SendMemoryToShadow();
@@ -279,11 +253,51 @@ void CMucom::Reset(int option)
 	int i,adr;
 	vm->InitChData(MUCOM_MAXCH,MUCOM_CHDATA_SIZE);
 	for (i = 0; i < MUCOM_MAXCH; i++){
-		adr = vm->CallAndHaltWithA(0xb00c, i);
+		adr = vm->CallAndHaltWithA(0xb00c, i); // B00C = ESC_PRC?
 		vm->SetChDataAddress( i,adr );
 	}
 
 	NoticePlugins(MUCOM88IF_NOTICE_RESET);
+}
+
+void CMucom::LoadModBinary()
+{
+	// 外部ファイル
+	if (!original_mode) {
+		vm->LoadMem("msubM", 0x9000, 0);
+		vm->LoadMem("muc88M", 0x9600, 0);
+
+		// 拡張RAMはmusic側に依存
+		int result = vm->LoadMem("musicM", 0xb000, 0);
+		if (result >= 0) GetExtramVector();
+	}
+}
+
+void CMucom::LoadExternalCompiler()
+{
+	//	コンパイラをファイルから読む
+	vm->LoadMem("expand", 0xab00, 0);
+	vm->LoadMem("errmsg", 0x8800, 0);
+	vm->LoadMem("msub", 0x9000, 0);
+	vm->LoadMem("muc88", 0x9600, 0);
+	vm->LoadMem("ssgdat", 0x5e00, 0);
+	vm->LoadMem("time", 0xe400, 0);
+	vm->LoadMem("smon", 0xde00, 0);
+	LoadFMVoice(MUCOM_DEFAULT_VOICEFILE, true);
+}
+
+void CMucom::LoadInternalCompiler()
+{
+	//	内部のコンパイラを読む
+	vm->SendMem(bin_expand, 0xab00, expand_size);
+	vm->SendMem(bin_errmsg, 0x8800, errmsg_size);
+	vm->SendMem(bin_msub, 0x9000, msub_size);
+	vm->SendMem(bin_muc88, 0x9600, muc88_size);
+	vm->SendMem(bin_ssgdat, 0x5e00, ssgdat_size);
+	vm->SendMem(bin_time, 0xe400, time_size);
+	vm->SendMem(bin_smon, 0xde00, smon_size);
+	//vm->SendMem(bin_voice_dat, 0x6000, voice_dat_size);
+	StoreFMVoice((unsigned char*)bin_voice_dat);
 }
 
 void CMucom::SetUUID(char *uuid)
@@ -352,7 +366,12 @@ int CMucom::Play(int num)
 
 	LoadFMVoiceFromTAG();
 
-	vm->SendMem((const unsigned char *)data, 0xc200, datasize);
+	PrepareSongMemory();
+	int song_address = GetSongAddress();
+	PRINTF("#Load song:%04x size:%04x\r\n", song_address, datasize);
+
+	vm->SendMem((const unsigned char *)data, song_address, datasize);
+	BackToMainMemory();
 
 	StoreFMVoiceFromEmbed();
 
@@ -370,11 +389,13 @@ void CMucom::PlayMemory() {
 	bool CompileMode = hedmusic == NULL;
 
 	if (!original_mode) {
-		int vec = vm->Peekw(0x0eea8);
+		if (!CompileMode) InitCompiler();
+
+		int vec = vm->Peekw(0x0eea8); // EEA8 = POLLコマンドアドレス
 		PRINTF("#poll s $%x.\r\n", vec);
 		vm->CallAndHalt2(vec, 'S');
 	} else {
-		vm->CallAndHalt(0xb000);
+		vm->CallAndHalt(0xb000); // MSTART
 	}
 
 	//int vec = vm->Peekw(0xf308);
@@ -450,8 +471,27 @@ void CMucom::SetOriginalMode()
 	original_mode = true;
 }
 
+void CMucom::GetExtramVector()
+{
+	int mstart_vec = vm->Peekw(0xb001);
+	if (vm->Peek(mstart_vec - 3) != 0xc3) return;
+	if (vm->Peek(mstart_vec - 6) != 0xc3) return;
+	use_extram = true;
+	extram_enable_vec = vm->Peekw(mstart_vec-5);
+	extram_disable_vec = vm->Peekw(mstart_vec-2);
+}
 
+void CMucom::PrepareSongMemory()
+{
+	if (!use_extram) return;
+	vm->CallAndHalt(extram_enable_vec);
+}
 
+void CMucom::BackToMainMemory()
+{
+	if (!use_extram) return;
+	vm->CallAndHalt(extram_disable_vec);
+}
 
 void CMucom::PlayLoop() {
 	vm->PlayLoop();
@@ -863,6 +903,9 @@ void CMucom::DumpFMVoice(int no)
 	PRINTF("  %02d, %02d, %02d, %02d, %02d, %02d, %02d, %02d, %02d, \"%s\"}\r\n", v->ar_op4, v->dr_op4, v->sr_op4, v->rr_op4, v->sl_op4, v->tl_op4, v->ks_op4, v->ml_op4, v->dt_op4,name);
 }
 
+int CMucom::GetSongAddress() {
+	return use_extram ? 0x0000 : 0xc200;
+}
 
 int CMucom::StoreFMVoiceFromEmbed(void)
 {
@@ -875,8 +918,13 @@ int CMucom::StoreFMVoiceFromEmbed(void)
 	char *v;
 	int vmmem;
 
-	int vdata = vm->Peekw(0xc201) + 0xc200;
+	int song_address = GetSongAddress();
+
+	PrepareSongMemory();
+	int vdata = vm->Peekw(song_address + 1) + song_address;
 	int result = vm->Peek(vdata++);
+	BackToMainMemory();
+
 	fmvoice_usemax = result;
 
 	for (i = 0; i < result; i++) {
@@ -890,6 +938,7 @@ int CMucom::StoreFMVoiceFromEmbed(void)
 			*v++ = vm->Peek(vdata++);
 		}
 	}
+
 	return result;
 }
 
@@ -1367,7 +1416,7 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 
 	basicsize = StoreBasicSource(text, 1, 1);
 
-	vm->CallAndHalt(0x9600);
+	InitCompiler();
 	int vec = vm->Peekw(0x0eea8);
 	PRINTF("#poll a $%x.\r\n", vec);
 
@@ -1458,6 +1507,11 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 	NoticePlugins(MUCOM88IF_NOTICE_COMPEND);
 
 	return !writeMub ? 0 : SaveMusic(filename, start, length, option | pcmflag);
+}
+
+void CMucom::InitCompiler()
+{
+	vm->CallAndHalt(0x9600); // CINT コンパイラ初期化
 }
 
 
@@ -1637,7 +1691,9 @@ int CMucom::SaveMusic(const char *fname,int start, int length, int option)
 
 		int num = 0;
 		CMemBuf *buf = new CMemBuf();
+		PrepareSongMemory();
 		res = vm->StoreMemExpand(buf, start, length, header, hedsize, footer, footsize, pcmdata, pcmsize);
+		BackToMainMemory();
 		if (res) {
 			PRINTF("#Memory write error.\r\n");
 			return -2;
@@ -1649,8 +1705,11 @@ int CMucom::SaveMusic(const char *fname,int start, int length, int option)
 		NoticePlugins(MUCOM88IF_NOTICE_LOADMUB);
 	}
 	else {
+		PrepareSongMemory();
 		//res = vm->SaveMem(filename, start, length);
 		res = vm->SaveMemExpand(fname, start, length, header, hedsize, footer, footsize, pcmdata, pcmsize);
+		BackToMainMemory();
+
 		if (res) {
 			PRINTF("#File write error [%s].\r\n", fname);
 			return -2;

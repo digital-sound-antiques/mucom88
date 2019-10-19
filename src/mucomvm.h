@@ -128,6 +128,15 @@ public:
 	void ClearBank(void);
 	void ChangeBank(int bank);
 
+	void CopyMemToVm(const uint8_t * src, int address, int length);
+	void CopyMemFromVm(uint8_t * dest, int address, int length);
+
+	uint8_t extram_bank_mode;
+	uint8_t extram_bank_no;
+	void ChangeExtRamBank(uint8_t bank);
+	void ChangeExtRamMode(uint8_t mode);
+
+
 	//		CHDATA用
 	void InitChData(int chmax, int chsize);
 	void SetChDataAddress(int ch, int adr);
@@ -161,10 +170,6 @@ private:
 	void store(uint16_t adr, uint8_t data);
 	int32_t input(uint16_t adr);
 	void output(uint16_t adr, uint8_t data);
-	uint8_t extram_bank_mode;
-	uint8_t extram_bank_no;
-	void ChangeExtRamBank(uint8_t bank);
-	void ChangeExtRamMode(uint8_t mode);
 
 	void Halt(void);
 

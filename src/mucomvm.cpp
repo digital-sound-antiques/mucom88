@@ -261,6 +261,7 @@ void mucomvm::Reset(void)
 	ClearBank();
 	bankprg = VMPRGBANK_MAIN;
 
+	// バンクをリセット
 	int i = 0;
 	for (int i = 0; i < 0x10; i++) {
 		membank[i] = &mem[i * 0x1000];
@@ -406,8 +407,7 @@ void mucomvm::ChangeExtRamBank(uint8_t bank)
 	// bit0 = 読み込み
 	if (extram_bank_mode & 0x01) {
 		rdp = extram[extram_bank_no];
-	}
-	else {
+	} else {
 		rdp = mem;
 	}
 
@@ -861,7 +861,7 @@ int mucomvm::SendMem(const unsigned char *src, int adr, int size)
 {
 	//	VMメモリにデータを転送
 	//
-	memcpy(mem + adr, src, size);
+	CopyMemToVm(src, adr, size);
 	return 0;
 }
 
@@ -870,7 +870,12 @@ int mucomvm::SaveMem(const char *fname, int adr, int size)
 {
 	//	VMメモリの内容をファイルにセーブ
 	//
-	return SaveToFile( fname, mem+adr, size );
+
+	uint8_t* rdbuf = new uint8_t[size];
+	CopyMemFromVm(rdbuf, adr, size);
+	int ret = SaveToFile(fname, rdbuf, size);
+	delete[] rdbuf;
+	return ret;
 }
 
 
@@ -887,6 +892,40 @@ int mucomvm::SaveToFile(const char *fname, const unsigned char *src, int size)
 	return 0;
 }
 
+void mucomvm::CopyMemToVm(const uint8_t * src, int address, int length) 
+{
+	int i = 0;
+	int left = length;
+	int start = address & 0xfff;
+	int bank = address >> 12;
+
+	while(0 < left) {
+		int block_size = start + left < 0x1000 ? left : 0x1000 - start;
+		memcpy(membank_wr[bank + i] + start, src, block_size);
+		i++;
+		start = 0;
+		src += block_size;
+		left -= block_size;
+	}
+}
+
+void mucomvm::CopyMemFromVm(uint8_t *dest, int address, int length) 
+{
+	int i = 0;
+	int left = length;
+	int start = address & 0xfff;
+	int bank = address >> 12;
+
+	while (0 < left) {
+		int block_size = start + left < 0x1000 ? left : 0x1000 - start;
+		memcpy(dest, membank[bank + i] + start, block_size);
+		i++;
+		start = 0;
+		dest += block_size;
+		left -= block_size;
+	}
+}
+
 
 int mucomvm::SaveMemExpand(const char *fname, int adr, int size, char *header, int hedsize, char *footer, int footsize, char *pcm, int pcmsize)
 {
@@ -896,7 +935,12 @@ int mucomvm::SaveMemExpand(const char *fname, int adr, int size, char *header, i
 	fp = fopen(fname, "wb");
 	if (fp == NULL) return -1;
 	if (header) fwrite(header, 1, hedsize, fp);
-	fwrite(mem + adr, 1, size, fp);
+
+	uint8_t* rdbuf = new uint8_t[size];
+	CopyMemFromVm(rdbuf, adr, size);	
+	fwrite(rdbuf, 1, size, fp);
+	delete[] rdbuf;
+
 	if (footer) fwrite(footer, 1, footsize, fp);
 	if (pcm) fwrite(pcm, 1, pcmsize, fp);
 	fclose(fp);
@@ -910,7 +954,12 @@ int mucomvm::StoreMemExpand(CMemBuf *buf, int adr, int size, char *header, int h
 	//
 	if ( buf==NULL ) return -1;
 	if (header) buf->PutData(header, hedsize);
-	buf->PutData(mem + adr, size);
+
+	uint8_t* rdbuf = new uint8_t[size];
+	CopyMemFromVm(rdbuf, adr, size);
+	buf->PutData(rdbuf, size);
+	delete[] rdbuf;
+
 	if (footer) buf->PutData(footer, footsize);
 	if (pcm) buf->PutData(pcm, pcmsize);
 	return 0;

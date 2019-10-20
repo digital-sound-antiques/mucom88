@@ -96,34 +96,6 @@ void VGMWrite::WriteAdpcmMemory(void* pData, int size) {
 	unsigned transSize = size + ((0x20 - (size & 0x1f)) & 0x1f);
 
 	WriteVgmAdpcm(transSize, AdpcmBuffer);
-
-	WriteData(0, 0x100, 0x20);
-	WriteData(0, 0x100, 0x21);
-	WriteData(0, 0x100, 0x00);
-	WriteData(0, 0x110, 0x00);
-	WriteData(0, 0x110, 0x80);
-
-	WriteData(0, 0x100, 0x61);
-	WriteData(0, 0x100, 0x68);
-	WriteData(0, 0x101, 0x00);
-
-	// アドレス
-	WriteData(0, 0x102, 0x00);
-	WriteData(0, 0x103, 0x00);
-	WriteData(0, 0x104, 0xff);
-	WriteData(0, 0x105, 0xff);
-	WriteData(0, 0x10c, 0xff);
-	WriteData(0, 0x10d, 0xff);
-	// PCM転送
-	unsigned cnt = 0;
-	for (cnt = 0; cnt < transSize; cnt++) {
-		WriteData(0, 0x108, AdpcmBuffer[cnt]);
-	}
-	// 終了
-	WriteData(0, 0x100, 0x00);
-	Wait(0.016); // 16ms?
-	WriteData(0, 0x110, 0x80);
-	Wait(0.016);
 }
 
 void VGMWrite::WriteVgmAdpcm(unsigned int transSize, unsigned char *AdpcmBuffer)

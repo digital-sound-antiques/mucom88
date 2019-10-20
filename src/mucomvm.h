@@ -14,6 +14,7 @@
 #include "membuf.h"
 
 #include "utils/logwrite.h"
+#include "utils/wavwrite.h"
 
 //#define DEBUGZ80_TRACE
 
@@ -156,8 +157,9 @@ public:
 	void FreePlugins(void);
 	void NoticePlugins(int cmd, void *p1 = NULL, void *p2=NULL);
 
-	// ログ取得
-	void SetLog(ILogWrite *log);
+	// 音源ログ設定
+	void SetLogWriter(ILogWrite *log);
+	void SetWavWriter(WavWriter* wav);
 
 	// データ取得
 	void GetFMRegMemory(unsigned char* data, int address, int length);
@@ -242,6 +244,8 @@ private:
 	CMucom *p_cmucom;
 
 	ILogWrite *p_log;
+
+	WavWriter *p_wav;
 };
 
 

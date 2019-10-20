@@ -36,7 +36,7 @@ static const char *p[] = {
 	"       -v [filename] set load voice file name",
 	"       -o [filename] set output MUB file name",
 	"       -w [filename] set output WAV file name",
-	"       -b [filename] set output S98 file name",
+	"       -b [filename] set output log(.vgm/.s98) file name",
 	"       -c [filename] compile mucom88 MML file name",
 	"       -i [filename] info print mucom88 MML file name",
 #ifdef MUCOM88WIN
@@ -116,7 +116,7 @@ int main( int argc, char *argv[] )
 	st = 0; ppopt = 0; cmpopt = 0; scci_opt = 0; dumpopt = 0;
 	pcmfile = MUCOM_DEFAULT_PCMFILE;
 	outfile = DEFAULT_OUTFILE;
-	wavfile = DEFAULT_OUTWAVE;
+	wavfile = NULL;
 	logfile = NULL;
 	voicefile = NULL;
 	pluginfile = NULL;
@@ -156,10 +156,10 @@ int main( int argc, char *argv[] )
 				song_length = atoi(argv[b + 1]); b++;
 				break;
 			case 'c':
-				cmpopt |= 2;
+				cmpopt |= MUCOM_CMPOPT_COMPILE;
 				break;
 			case 'e':
-				cmpopt |= 1;
+				cmpopt |= MUCOM_CMPOPT_USE_EXTROM;
 				break;
 			case 'k':
 				ppopt = 1;
@@ -201,9 +201,7 @@ int main( int argc, char *argv[] )
 		mucom.SetOriginalMode();
 	}
 
-	if (logfile) {
-		mucom.SetLogFilename(logfile);
-	}
+
 
 	if (cmpopt & MUCOM_CMPOPT_STEP) {
 		mucom.Init(NULL,cmpopt,RENDER_RATE);
@@ -218,6 +216,15 @@ int main( int argc, char *argv[] )
 		}
 	}
 
+	// ログ設定
+	if (logfile) {
+		mucom.SetLogFilename(logfile);
+	}
+
+	// 初期化
+	if (wavfile) {
+		mucom.SetWavFilename(wavfile);
+	}
 
 	if (pluginfile) {
 		printf("#Adding plugin %s.\n", pluginfile);
@@ -238,6 +245,10 @@ int main( int argc, char *argv[] )
 	}
 
 	bool play_memory = false;
+	const char* ext = strrchr(fname, '.');
+
+	// mmlファイルはコンパイルをするようにする
+	if (ext != NULL && strcmpi(ext, ".muc") == 0) cmpopt |= MUCOM_CMPOPT_COMPILE;
 
 	if (cmpopt & MUCOM_CMPOPT_COMPILE) {
 		if (ppopt == 0) {
@@ -286,7 +297,8 @@ int main( int argc, char *argv[] )
 
 	if (st == 0) {
 		if (cmpopt & MUCOM_CMPOPT_STEP) {
-			RecordWave(&mucom, wavfile, RENDER_RATE, song_length);
+			mucom.Record(song_length);
+			// RecordWave(&mucom, wavfile, RENDER_RATE, song_length);
 		}
 		else {
 			mucom.PlayLoop();

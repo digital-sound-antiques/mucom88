@@ -11,6 +11,7 @@
 #include "voiceformat.h"
 
 #include "utils/logwrite.h"
+#include "utils/wavwrite.h"
 
 /*------------------------------------------------------------*/
 
@@ -237,6 +238,8 @@ public:
 
 	//	Service for command line
 	void PlayLoop();
+	void SetWavFilename(const char *wavFilename);
+	void Record(int seconds);
 	void RenderAudio(void *mix, int size);
 	void UpdateTime(int tick_ms);
 
@@ -357,6 +360,7 @@ private:
 	MUBHED *hedmusic;	// playing Music data header
 
 	ILogWrite *p_log;
+	WavWriter *p_wav;
 
 	bool original_mode; // original mode
 	bool use_extram;
@@ -431,6 +435,7 @@ private:
 	CMemBuf *musbuf[MUCOM_MUSICBUFFER_MAX];
 
 	//		Audio
+	int AudioCurrentRate;
 	double AudioStep;
 	double AudioLeftMs;
 

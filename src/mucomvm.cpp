@@ -35,6 +35,7 @@ mucomvm::mucomvm(void)
 	m_ssgvol = -3;
 
 	p_log = NULL;
+	p_wav = NULL;
 
 	opn = NULL;
 	membuf = NULL;
@@ -76,9 +77,13 @@ mucomvm::~mucomvm(void)
 
 }
 
-void mucomvm::SetLog(ILogWrite *log)
+void mucomvm::SetLogWriter(ILogWrite *log)
 {
 	p_log = log;
+}
+
+void mucomvm::SetWavWriter(WavWriter* wav) {
+	p_wav = wav;
 }
 
 void mucomvm::GetFMRegMemory(unsigned char* data, int address, int length)
@@ -1160,13 +1165,15 @@ void mucomvm::checkThreadBusy(void)
 
 
 void mucomvm::PlayLoop() {
-	while (1) {
+	osd->SetBreakHook();
+	while (!osd->GetBreakStatus()) {
 		osd->Delay(20);
 	}
 }
 
 void mucomvm::RenderAudio(void *mix, int size) {
 	opn->Mix((FM::Sample *)mix, size);
+	if (p_wav != NULL) p_wav->WriteData((int*)mix, size);
 }
 
 void mucomvm::UpdateCallback(int tick) {

@@ -14,6 +14,7 @@
 
 #include "utils/s98write.h"
 #include "utils/vgmwrite.h"
+#include "utils/wavwrite.h"
 
 #include "cmucom.h"
 #include "mucomvm.h"
@@ -109,8 +110,10 @@ CMucom::CMucom( void )
 	infobuf = NULL;
 	edit_status = MUCOM_EDIT_STATUS_NONE;
 	user_uuid[0] = 0;
-	p_log = NULL;
 	hedmusic = NULL;
+
+	p_log = NULL;
+	p_wav = NULL;
 }
 
 
@@ -119,8 +122,10 @@ CMucom::~CMucom( void )
 	Stop(1);
 	DeleteInfoBuffer();
 	MusicBufferTerm();
-	if (vm != NULL) delete vm;
-	if (p_log != NULL) delete p_log;
+	if (vm != NULL) { delete vm; vm = NULL; }
+	if (p_log != NULL) { delete p_log; p_log = NULL; }
+	if (p_wav != NULL) { delete p_wav; p_wav = NULL; }
+
 }
 
 void CMucom::SetLogFilename(const char *filename) {
@@ -149,19 +154,18 @@ void CMucom::Init(void *window, int option, int rate)
 	//		option : 0   = 1:FMをミュート  2:SCCIを使用
 	//
 	vm = new mucomvm;
-	vm->SetLog(p_log);
 	flag = 1;
 
 	// レート設定
-	int myrate = rate;
-	if (rate == 0) myrate = MUCOM_AUDIO_RATE;
-	SetAudioRate(myrate);
+	AudioCurrentRate = rate;
+	if (rate == 0) AudioCurrentRate = MUCOM_AUDIO_RATE;
+	SetAudioRate(AudioCurrentRate);
 
 	if (window != NULL) {
 		vm->SetWindow(window);
 	}
 	vm->SetOption(option);
-	vm->InitSoundSystem(myrate);
+	vm->InitSoundSystem(AudioCurrentRate);
 	MusicBufferInit();
 	vm->SetMucomInstance(this);			// Mucomのインスタンスを通知する(プラグイン用)
 
@@ -211,6 +215,9 @@ void CMucom::Reset(int option)
 	//		         2,3 = コンパイラを初期化
 	//
 	int devres;
+	vm->SetLogWriter(p_log);
+	vm->SetWavWriter(p_wav);
+
 	vm->Reset();
 	PRINTF("#OpenMucom88 Ver.%s Copyright 1987-2019(C) Yuzo Koshiro\r\n",VERSION);
 	pcmfilename[0] = 0;
@@ -511,6 +518,31 @@ void CMucom::PlayLoop() {
 	vm->PlayLoop();
 }
 
+// AudioCurrentRateの設定が必要
+void CMucom::SetWavFilename(const char *fname) {
+	if (p_wav != NULL) delete p_wav;
+
+	p_wav = new WavWriter();
+	p_wav->SetFormat(AudioCurrentRate, 16, 2);
+	if (!p_wav->Open(fname)) return;
+}
+
+
+void CMucom::Record(int seconds) {
+	int buf[512];
+
+	int TotalSamples = 0;
+
+	SetVMOption(VM_OPTION_STEP, 1);		// オプションを設定
+
+	while (TotalSamples < AudioCurrentRate * seconds) {
+		int samples = 16;
+		RenderAudio(buf, samples);
+		TotalSamples += samples;
+	}
+
+	SetVMOption(VM_OPTION_STEP, 2);		// オプションを解除
+}
 
 // 時間を進めてレンダリングを行う
 void CMucom::RenderAudio(void *mix, int size) {

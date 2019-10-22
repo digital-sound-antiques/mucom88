@@ -131,7 +131,9 @@
     <ClCompile Include="..\src\osdep.cpp" />
     <ClCompile Include="..\src\plugin\plugin.cpp" />
     <ClCompile Include="..\src\soundbuf.cpp" />
-    <ClCompile Include="..\src\utils\logwrite.cpp" />
+    <ClCompile Include="..\src\utils\s98write.cpp" />
+    <ClCompile Include="..\src\utils\vgmwrite.cpp" />
+    <ClCompile Include="..\src\utils\wavwrite.cpp" />
     <ClCompile Include="..\src\wavout.cpp" />
     <ClCompile Include="..\src\win32\osdep_win.cpp" />
     <ClCompile Include="..\src\win32\realchip.cpp" />

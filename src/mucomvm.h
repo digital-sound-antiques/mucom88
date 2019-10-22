@@ -56,7 +56,10 @@ public:
 	void CallAndHalt(uint16_t adr);
 	int CallAndHalt2(uint16_t adr, uint8_t code);
 	int CallAndHaltWithA(uint16_t adr, uint8_t areg);
+	int CallAndHaltWithB(uint16_t adr, uint8_t breg);
 	int ExecUntilHalt(int times = 0x10000);
+	void ExecuteCLUC();
+	void ExecuteModCLUC();
 	void SendMemoryToShadow(void);
 
 	//		仮想マシンコントロール
@@ -132,10 +135,10 @@ public:
 	void CopyMemToVm(const uint8_t * src, int address, int length);
 	void CopyMemFromVm(uint8_t * dest, int address, int length);
 
-	uint8_t extram_bank_mode;
-	uint8_t extram_bank_no;
 	void ChangeExtRamBank(uint8_t bank);
 	void ChangeExtRamMode(uint8_t mode);
+
+	void SetOrignalMode();
 
 
 	//		CHDATA用
@@ -187,8 +190,15 @@ private:
 	uint8_t memprg[0x10000];			// メインメモリ(プログラム実行用のシャドーコピー)
 	uint8_t extram[4][0x8000];
 
+	// バンク機能
 	uint8_t *membank[0x10];
 	uint8_t* membank_wr[0x10];
+
+	// 拡張RAM関連
+	bool original_mode;
+	uint8_t extram_bank_mode;
+	uint8_t extram_bank_no;
+
 
 	//		音源
 	FM::OPNA *opn;

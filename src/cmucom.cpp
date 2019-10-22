@@ -32,6 +32,17 @@
 #include "bin_voice.h"
 #include "bin_smon.h"
 
+
+#include "bin_em/bin_expand_em.h"
+#include "bin_em/bin_errmsg_em.h"
+#include "bin_em/bin_msub_em.h"
+#include "bin_em/bin_muc88_em.h"
+#include "bin_em/bin_ssgdat_em.h"
+#include "bin_em/bin_time_em.h"
+#include "bin_em/bin_smon_em.h"
+#include "bin_em/bin_music_em.h"
+
+
 #define PRINTF vm->Msgf
 
 int CMucom::htoi_sub(char hstr)
@@ -155,6 +166,7 @@ void CMucom::Init(void *window, int option, int rate)
 	//
 	vm = new mucomvm;
 	flag = 1;
+	if (original_mode) vm->SetOrignalMode();
 
 	// レート設定
 	AudioCurrentRate = rate;
@@ -274,7 +286,12 @@ void CMucom::Reset(int option)
 	int i,adr;
 	vm->InitChData(MUCOM_MAXCH,MUCOM_CHDATA_SIZE);
 	for (i = 0; i < MUCOM_MAXCH; i++){
-		adr = vm->CallAndHaltWithA(0xb00c, i); // B00C = ESC_PRC?
+		if (original_mode) {
+			adr = vm->CallAndHaltWithA(0xb00c, i); // B00C = music2:RETW
+		} else {
+			adr = vm->CallAndHaltWithB(0xb02a, i+1); // B02A = WKGET
+		}
+
 		vm->SetChDataAddress( i,adr );
 	}
 
@@ -285,12 +302,21 @@ void CMucom::LoadModBinary()
 {
 	// 外部ファイル
 	if (!original_mode) {
+		vm->SendMem(bin_expand_em, 0xaa80, expand_em_size);
+		vm->SendMem(bin_errmsg_em, 0x8800, errmsg_em_size);
+		vm->SendMem(bin_msub_em, 0x9000, msub_em_size);
+		vm->SendMem(bin_muc88_em, 0x9600, muc88_em_size);
+		vm->SendMem(bin_ssgdat_em, 0x5e00, ssgdat_em_size);
+		vm->SendMem(bin_time_em, 0xe400, time_em_size);
+		vm->SendMem(bin_smon_em, 0xde00, smon_em_size);
+
+		vm->SendMem(bin_music_em, 0xb000, music_em_size);
+
 		vm->LoadMem("msubM", 0x9000, 0);
 		vm->LoadMem("muc88M", 0x9600, 0);
+		vm->LoadMem("musicM", 0xb000, 0);
 
-		// 拡張RAMはmusic側に依存
-		int result = vm->LoadMem("musicM", 0xb000, 0);
-		if (result >= 0) GetExtramVector();
+		GetExtramVector();
 	}
 }
 
@@ -494,12 +520,12 @@ void CMucom::SetOriginalMode()
 
 void CMucom::GetExtramVector()
 {
-	int mstart_vec = vm->Peekw(0xb001);
-	if (vm->Peek(mstart_vec - 3) != 0xc3) return;
-	if (vm->Peek(mstart_vec - 6) != 0xc3) return;
+	int eram_tbl = 0xafb0;
+	if (vm->Peek(eram_tbl) != 0xc3) return;
+	if (vm->Peek(eram_tbl + 9) != 0xc3) return;
 	use_extram = true;
-	extram_enable_vec = vm->Peekw(mstart_vec-5);
-	extram_disable_vec = vm->Peekw(mstart_vec-2);
+	extram_enable_vec = eram_tbl + 9;
+	extram_disable_vec = eram_tbl;
 }
 
 void CMucom::PrepareSongMemory()

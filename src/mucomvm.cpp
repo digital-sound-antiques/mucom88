@@ -42,6 +42,8 @@ mucomvm::mucomvm(void)
 	osd = NULL;
 	master_window = NULL;
 
+	original_mode = false;
+
 	extram_bank_mode = 0;
 	extram_bank_no = 0;
 
@@ -428,6 +430,11 @@ void mucomvm::ChangeExtRamMode(uint8_t mode)
 	ChangeExtRamBank(extram_bank_no);
 }
 
+void mucomvm::SetOrignalMode()
+{
+	original_mode = true;
+}
+
 void mucomvm::Halt(void)
 {
 	//if (m_flag == VMFLAG_EXEC) printf("Halt.\n");
@@ -570,28 +577,7 @@ int mucomvm::ExecUntilHalt(int times)
 			}
 		}
 
-		if (pc==0xaf80) {				// expand内のCULC: を置き換える
-			int amul = GetA();
-			int val = Peekw(0xAF93);
-			int frq = Peekw(0xAFFA);
-			int ans,count;
-			float facc;
-			float frqbef = (float)frq;
-			if (val == 0x0A1BB) {
-				facc = 0.943874f;
-			}
-			else {
-				facc = 1.059463f;
-			}
-			for (count = 0; count < amul; count++) {
-				frqbef = frqbef * facc;
-			}
-			ans = int(frqbef);
-			SetHL(ans);
-			//Msgf("#CULC A=%d : %d * %f =%d.\r\n", amul, frq, facc, ans);
-
-			pc = 0xafb3;				// retの位置まで飛ばす
-		}
+		if (original_mode) ExecuteCLUC(); else ExecuteModCLUC();
 
 #if 0
 		if (pc == 0x9000) {				// MWRITE(コマンド書き込みメイン)
@@ -601,10 +587,12 @@ int mucomvm::ExecUntilHalt(int times)
 #endif
 
 #if 1
-		if (pc == 0xde06) {				// CONVERT(音色定義コンバート)
-										//	出力データが大きい場合、DE06H～とかぶるので代替コードで実行する
-										// $6001～ 38byteの音色データを25byteに圧縮する->$6001から書き込む
-										//
+		if (pc == 0xde06) {				
+			// CONVERT(音色定義コンバート)
+			//	出力データが大きい場合、DE06H～とかぶるので代替コードで実行する
+			// $6001～ 38byteの音色データを25byteに圧縮する->$6001から書き込む
+
+			// 音色は表メモリでの処理になる
 			MUCOM88_VOICEFORMAT *v = (MUCOM88_VOICEFORMAT *)(memprg + 0x6000);
 			unsigned char *src = mem + 0x6001;
 			v->ar_op1 = *src++;  v->dr_op1 = *src++; v->sr_op1 = *src++; v->rr_op1 = *src++; v->sl_op1 = *src++; v->tl_op1 = *src++; v->ks_op1 = *src++; v->ml_op1 = *src++; v->dt_op1 = *src++;
@@ -615,7 +603,8 @@ int mucomvm::ExecUntilHalt(int times)
 			memcpy(mem + 0x6000, memprg + 0x6000, 26);
 
 			SetHL(0x6001);
-			pc = 0xafb3;				// retの位置まで飛ばす($c9のコードなら何でもいい)
+			Poke(0xde06, 0xc9);
+			// pc = 0xafb3;				// retの位置まで飛ばす($c9のコードなら何でもいい)
 		}
 #endif
 #if 0
@@ -656,6 +645,64 @@ int mucomvm::ExecUntilHalt(int times)
 #endif
 	//Msgf( "#CPU halted.\n" );
 	return 0;
+}
+
+void mucomvm::ExecuteCLUC()
+{
+	if (pc == 0xaf80) {				// expand内のCULC: を置き換える
+		int amul = GetA();
+		int val = Peekw(0xAF93); // 0xAF93 = CULLP2 + 1
+		int frq = Peekw(0xAFFA); // 0xAFFA = FRQBEF
+		int ans, count;
+		float facc;
+		float frqbef = (float)frq;
+		if (val == 0x0A1BB) {
+			facc = 0.943874f;
+		}
+		else {
+			facc = 1.059463f;
+		}
+		for (count = 0; count < amul; count++) {
+			frqbef = frqbef * facc;
+		}
+		ans = int(frqbef);
+		SetHL(ans);
+		//Msgf("#CULC A=%d : %d * %f =%d.\r\n", amul, frq, facc, ans);
+
+		Poke(0xaf80, 0xc9); // RETにする
+
+							//pc = 0xafb3;				// retの位置まで飛ばす
+	}
+}
+
+
+// MUCOM88em版
+void mucomvm::ExecuteModCLUC()
+{
+	int CULC = 0xAF12;
+	int CULLP2 = 0xAF24;
+	int FRQBEF = 0xAF8C;
+
+	if (pc == CULC) {
+		int amul = GetA();
+		int val = Peekw(CULLP2 + 1);
+		int frq = Peekw(FRQBEF);
+		int ans, count;
+		float facc;
+		float frqbef = (float)frq;
+		facc = (val == 0x0A1BB) ? 0.943874f : 1.059463f;
+		
+		for (count = 0; count < amul; count++) {
+			frqbef = frqbef * facc;
+		}
+		ans = int(frqbef);
+		SetHL(ans);
+		//Msgf("#CULC A=%d : %d * %f =%d.\r\n", amul, frq, facc, ans);
+
+		Poke(CULC, 0xc9); // RETにする
+
+							//pc = 0xafb3;				// retの位置まで飛ばす
+	}
 }
 
 
@@ -745,6 +792,20 @@ int mucomvm::CallAndHaltWithA(uint16_t adr, uint8_t areg)
 	return (int)GetIX();
 }
 
+int mucomvm::CallAndHaltWithB(uint16_t adr, uint8_t val)
+{
+	uint16_t tempadr = 0xf000;
+	uint8_t* p = mem + tempadr;
+	*p++ = 0x06;				// ld b
+	*p++ = val;
+	*p++ = 0xcd;				// Call
+	*p++ = (adr & 0xff);
+	*p++ = ((adr >> 8) & 0xff);
+	*p++ = 0x76;				// Halt
+	SetPC(tempadr);
+	ExecUntilHalt();
+	return (int)GetIX();
+}
 
 int mucomvm::LoadMem(const char *fname, int adr, int size)
 {

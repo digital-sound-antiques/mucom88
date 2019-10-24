@@ -205,19 +205,16 @@ EXPORT BOOL WINAPI mucompreparebuf() {
 // メッセージバッファサイズ取得
 EXPORT int WINAPI mucomgetmsgsize() {
 	if (!mucom) return 0;
-	return mucom->GetMessageBufferSize();
+	return mucom->GetMessageBufferSize() + 2;
 }
 
 // メッセージバッファ取得
 EXPORT int WINAPI mucomgetmsg(char *message, int length) {
 	if (!mucom || length == 0) return 0;
 	const char* p = mucom->GetMessageBuffer();
-	int l = strlen(p);
+	int l = mucom->GetMessageBufferSize();
 
-	if (length <= l) l = length;
-
-	memcpy(message, p, l);
-	message[l - 1] = 0;
+	strcpy(message, p);
 	return 0;
 }
 

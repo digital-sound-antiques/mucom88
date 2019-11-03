@@ -69,6 +69,7 @@ public:
 	int LoadPcmFromMem(const char *buf, int sz, int maxpcm = 32);
 	int LoadMem(const char *fname, int adr, int size);
 	int SendMem(const unsigned char *src, int adr, int size);
+	int RecvMem(unsigned char* mem, int adr, int size);
 	int SaveMem(const char *fname,int adr, int size);
 	int SaveMemExpand(const char *fname, int adr, int size, char *header, int hedsize, char *footer, int footsize, char *pcm, int pcmsize);
 	int StoreMemExpand(CMemBuf *buf, int adr, int size, char *header, int hedsize, char *footer, int footsize, char *pcm, int pcmsize);
@@ -140,6 +141,8 @@ public:
 
 	void SetOrignalMode();
 
+	// その他処理
+	void ConvertVoice();
 
 	//		CHDATA用
 	void InitChData(int chmax, int chsize);

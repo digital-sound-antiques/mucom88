@@ -1591,7 +1591,23 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 
 void CMucom::InitCompiler()
 {
+	if (original_mode) {
+		vm->CallAndHalt(0x9600); // CINT コンパイラ初期化
+		return;
+	}
+
+	unsigned char* ssgdat = new unsigned char[0x200];
+	unsigned char* voicedat = new unsigned char[0x2000];
+	vm->RecvMem(ssgdat, 0x5e00, 0x200);
+	vm->RecvMem(voicedat, 0x6000, 0x2000);
+
+	// 再配置
+	vm->SendMem(voicedat, 0xc200, 0x2000);
 	vm->CallAndHalt(0x9600); // CINT コンパイラ初期化
+	vm->SendMem(ssgdat, 0xc200, 0x200);
+
+	delete[] ssgdat;
+	delete[] voicedat;
 }
 
 

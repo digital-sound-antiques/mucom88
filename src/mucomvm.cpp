@@ -587,25 +587,7 @@ int mucomvm::ExecUntilHalt(int times)
 #endif
 
 #if 1
-		if (pc == 0xde06) {				
-			// CONVERT(音色定義コンバート)
-			//	出力データが大きい場合、DE06H～とかぶるので代替コードで実行する
-			// $6001～ 38byteの音色データを25byteに圧縮する->$6001から書き込む
-
-			// 音色は表メモリでの処理になる
-			MUCOM88_VOICEFORMAT *v = (MUCOM88_VOICEFORMAT *)(memprg + 0x6000);
-			unsigned char *src = mem + 0x6001;
-			v->ar_op1 = *src++;  v->dr_op1 = *src++; v->sr_op1 = *src++; v->rr_op1 = *src++; v->sl_op1 = *src++; v->tl_op1 = *src++; v->ks_op1 = *src++; v->ml_op1 = *src++; v->dt_op1 = *src++;
-			v->ar_op2 = *src++;  v->dr_op2 = *src++; v->sr_op2 = *src++; v->rr_op2 = *src++; v->sl_op2 = *src++; v->tl_op2 = *src++; v->ks_op2 = *src++; v->ml_op2 = *src++; v->dt_op2 = *src++;
-			v->ar_op3 = *src++;  v->dr_op3 = *src++; v->sr_op3 = *src++; v->rr_op3 = *src++; v->sl_op3 = *src++; v->tl_op3 = *src++; v->ks_op3 = *src++; v->ml_op3 = *src++; v->dt_op3 = *src++;
-			v->ar_op4 = *src++;  v->dr_op4 = *src++; v->sr_op4 = *src++; v->rr_op4 = *src++; v->sl_op4 = *src++; v->tl_op4 = *src++; v->ks_op4 = *src++; v->ml_op4 = *src++; v->dt_op4 = *src++;
-			v->fb = *src++; v->al = *src++;
-			memcpy(mem + 0x6000, memprg + 0x6000, 26);
-
-			SetHL(0x6001);
-			Poke(0xde06, 0xc9);
-			// pc = 0xafb3;				// retの位置まで飛ばす($c9のコードなら何でもいい)
-		}
+		ConvertVoice();
 #endif
 #if 0
 		if (pc == 0xde06) {				// CONVERT(音色定義コンバート)
@@ -647,6 +629,35 @@ int mucomvm::ExecUntilHalt(int times)
 	return 0;
 }
 
+// アドレスを元に設定
+#define CONVERT 0xde06
+
+void mucomvm::ConvertVoice()
+{
+	// em版ではスキップ
+	if (!original_mode) return;
+
+	if (pc == CONVERT) {
+		// CONVERT(音色定義コンバート)
+		//	出力データが大きい場合、DE06H～とかぶるので代替コードで実行する
+		// $6001～ 38byteの音色データを25byteに圧縮する->$6001から書き込む
+
+		// 音色は表メモリでの処理になる
+		MUCOM88_VOICEFORMAT* v = (MUCOM88_VOICEFORMAT*)(memprg + 0x6000);
+		unsigned char* src = mem + 0x6001;
+		v->ar_op1 = *src++;  v->dr_op1 = *src++; v->sr_op1 = *src++; v->rr_op1 = *src++; v->sl_op1 = *src++; v->tl_op1 = *src++; v->ks_op1 = *src++; v->ml_op1 = *src++; v->dt_op1 = *src++;
+		v->ar_op2 = *src++;  v->dr_op2 = *src++; v->sr_op2 = *src++; v->rr_op2 = *src++; v->sl_op2 = *src++; v->tl_op2 = *src++; v->ks_op2 = *src++; v->ml_op2 = *src++; v->dt_op2 = *src++;
+		v->ar_op3 = *src++;  v->dr_op3 = *src++; v->sr_op3 = *src++; v->rr_op3 = *src++; v->sl_op3 = *src++; v->tl_op3 = *src++; v->ks_op3 = *src++; v->ml_op3 = *src++; v->dt_op3 = *src++;
+		v->ar_op4 = *src++;  v->dr_op4 = *src++; v->sr_op4 = *src++; v->rr_op4 = *src++; v->sl_op4 = *src++; v->tl_op4 = *src++; v->ks_op4 = *src++; v->ml_op4 = *src++; v->dt_op4 = *src++;
+		v->fb = *src++; v->al = *src++;
+		memcpy(mem + 0x6000, memprg + 0x6000, 26);
+
+		SetHL(0x6001);
+		Poke(CONVERT, 0xc9);
+		// pc = 0xafb3;				// retの位置まで飛ばす($c9のコードなら何でもいい)
+	}
+}
+
 void mucomvm::ExecuteCLUC()
 {
 	if (pc == 0xaf80) {				// expand内のCULC: を置き換える
@@ -675,14 +686,14 @@ void mucomvm::ExecuteCLUC()
 	}
 }
 
+// ソースを元にこれを設定する
+#define CULC 0xAF82
+#define CULLP2 0xAF94
+#define FRQBEF 0xAFFC
 
 // MUCOM88em版
 void mucomvm::ExecuteModCLUC()
 {
-	// ソースを元にこれを設定する
-	int CULC = 0xAF82;
-	int CULLP2 = 0xAF94;
-	int FRQBEF = 0xAFFC;
 
 	if (pc == CULC) {
 		int amul = GetA();
@@ -701,8 +712,6 @@ void mucomvm::ExecuteModCLUC()
 		//Msgf("#CULC A=%d : %d * %f =%d.\r\n", amul, frq, facc, ans);
 
 		Poke(CULC, 0xc9); // RETにする
-
-							//pc = 0xafb3;				// retの位置まで飛ばす
 	}
 }
 
@@ -932,6 +941,11 @@ int mucomvm::SendMem(const unsigned char *src, int adr, int size)
 	return 0;
 }
 
+int mucomvm::RecvMem(unsigned char* mem, int adr, int size)
+{
+	CopyMemFromVm(mem, adr, size);
+	return 0;
+}
 
 int mucomvm::SaveMem(const char *fname, int adr, int size)
 {

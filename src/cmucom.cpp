@@ -302,7 +302,8 @@ void CMucom::LoadModBinary()
 {
 	// 外部ファイル
 	if (!original_mode) {
-		vm->SendMem(bin_expand_em, 0xaa80, expand_em_size);
+		// 読み出し位置をソースに従って設定する
+		vm->SendMem(bin_expand_em, 0xaaf0, expand_em_size);
 		vm->SendMem(bin_errmsg_em, 0x8800, errmsg_em_size);
 		vm->SendMem(bin_msub_em, 0x9000, msub_em_size);
 		vm->SendMem(bin_muc88_em, 0x9600, muc88_em_size);
@@ -312,9 +313,15 @@ void CMucom::LoadModBinary()
 
 		vm->SendMem(bin_music_em, 0xb000, music_em_size);
 
-		vm->LoadMem("msubM", 0x9000, 0);
-		vm->LoadMem("muc88M", 0x9600, 0);
-		vm->LoadMem("musicM", 0xb000, 0);
+		vm->LoadMem("expand", 0xaaf0, 0);
+		vm->LoadMem("errmsg", 0x8800, 0);
+		vm->LoadMem("msub", 0x9000, 0);
+		vm->LoadMem("muc88", 0x9600, 0);
+		vm->LoadMem("ssgdat", 0x5e00, 0);
+		vm->LoadMem("time", 0xe400, 0);
+		vm->LoadMem("smon", 0xde00, 0);
+
+		vm->LoadMem("music", 0xb000, 0);
 
 		GetExtramVector();
 	}
@@ -520,7 +527,8 @@ void CMucom::SetOriginalMode()
 
 void CMucom::GetExtramVector()
 {
-	int eram_tbl = 0xafb0;
+	// ソースの位置を確認
+	int eram_tbl = 0x95A0;
 	if (vm->Peek(eram_tbl) != 0xc3) return;
 	if (vm->Peek(eram_tbl + 9) != 0xc3) return;
 	use_extram = true;

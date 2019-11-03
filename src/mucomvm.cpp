@@ -679,9 +679,10 @@ void mucomvm::ExecuteCLUC()
 // MUCOM88em版
 void mucomvm::ExecuteModCLUC()
 {
-	int CULC = 0xAF12;
-	int CULLP2 = 0xAF24;
-	int FRQBEF = 0xAF8C;
+	// ソースを元にこれを設定する
+	int CULC = 0xAF82;
+	int CULLP2 = 0xAF94;
+	int FRQBEF = 0xAFFC;
 
 	if (pc == CULC) {
 		int amul = GetA();

@@ -63,6 +63,10 @@
 #define MUCOM_OPTION_FASTFW 4
 #define MUCOM_OPTION_STEP 8
 
+#define MUCOM_EM_MUBSIZE_MAX (0x8000-0x0000)
+#define MUCOM_EM_BASICSIZE_MAX 0x8000
+
+
 #define MUCOM_MUBSIZE_MAX (0xE300-0xC200)
 #define MUCOM_BASICSIZE_MAX 0x6000
 
@@ -253,6 +257,7 @@ public:
 	int CompileMem(char *mem, int option=0);
 	int Compile(char *text, const char *filename, int option=0);
 	int Compile(char* text, int option = 0, bool writeMub=false, const char *filenamw = NULL);
+	void PutMucomHeader(const char *stmp);
 	int ProcessFile(const char *fname);
 	int ProcessHeader(char *text);
 	int SaveMusic(const char *fname, int start, int length, int option = 0);

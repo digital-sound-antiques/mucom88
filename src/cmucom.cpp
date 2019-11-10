@@ -768,11 +768,11 @@ int CMucom::GetStatus(int option)
 	case MUCOM_STATUS_MUBSIZE:
 		return mubsize;
 	case MUCOM_STATUS_MUBRATE:
-		return mubsize * 100 / MUCOM_MUBSIZE_MAX;
+		return original_mode ? (mubsize * 100 / MUCOM_MUBSIZE_MAX) : (mubsize * 100 / MUCOM_EM_MUBSIZE_MAX);
 	case MUCOM_STATUS_BASICSIZE:
 		return basicsize;
 	case MUCOM_STATUS_BASICRATE:
-		return basicsize * 100 / MUCOM_BASICSIZE_MAX;
+		return original_mode ? (basicsize * 100 / MUCOM_BASICSIZE_MAX) : (basicsize * 100 / MUCOM_EM_BASICSIZE_MAX);
 	case MUCOM_STATUS_AUDIOMS:
 		return vm->GetAudioOutputMs();
 	default:
@@ -1518,7 +1518,11 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 
 	char stmp[128];
 	vm->PeekToStr(stmp, 0xf3c8, 80);		// 画面最上段のメッセージ
-	PRINTF("%s\r\n", stmp);
+	if (original_mode) {
+		PRINTF("%s\r\n", stmp);
+	} else {
+		PutMucomHeader(stmp);
+	}
 
 	workadr = 0xf320;
 	fmvoice = vm->Peek(workadr + 50);
@@ -1587,6 +1591,18 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 	NoticePlugins(MUCOM88IF_NOTICE_COMPEND);
 
 	return !writeMub ? 0 : SaveMusic(filename, start, length, option | pcmflag);
+}
+
+void CMucom::PutMucomHeader(const char *stmp)
+{
+	const char* mpos = strstr(stmp, "MUCOM88");
+
+	if (mpos == NULL) {
+		PRINTF("%s\r\n", stmp);
+		return;
+	}
+
+	PRINTF("[  %s\r\n", mpos);
 }
 
 void CMucom::InitCompiler()

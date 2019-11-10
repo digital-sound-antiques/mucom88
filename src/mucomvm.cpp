@@ -533,6 +533,7 @@ int mucomvm::ExecUntilHalt(int times)
         return 0;
     }
 
+	int last_pc = 0x0;
 	int cnt=0;
 	int id = 0;
 	msgid = 0;
@@ -611,7 +612,7 @@ int mucomvm::ExecUntilHalt(int times)
 				printf("#VOICECONV1 %04x.\r\n", pc);
 		}
 #endif
-
+		last_pc = pc;
 		Execute(times);
 		if (m_flag == VMFLAG_HALT) break;
 		cnt++;

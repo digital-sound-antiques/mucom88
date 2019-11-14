@@ -170,6 +170,8 @@ public:
 	// データ取得
 	void GetFMRegMemory(unsigned char* data, int address, int length);
 	void GetMemory(unsigned char *data, int address, int length);
+	void GetMainMemory(unsigned char* data, int address, int length);
+	void GetExtMemory(unsigned char* data, int bank, int address, int length);
 
 private:
 	//		Z80

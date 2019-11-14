@@ -112,12 +112,46 @@ void mucomvm::GetMemory(unsigned char *data, int address, int length)
 	}
 	if (address + length >= 0x10000) {
 		int actual_size = 0x10000 - address;
+		RecvMem(data, address, actual_size);
+		memset(data + actual_size, 0, length - actual_size);
+		return;
+	}
+
+	RecvMem(data, address, length);
+}
+
+void mucomvm::GetMainMemory(unsigned char* data, int address, int length)
+{
+	if (address < 0 || 0x10000 <= address) {
+		memset(data, 0, length);
+		return;
+	}
+	if (address + length >= 0x10000) {
+		int actual_size = 0x10000 - address;
 		memcpy(data, mem + address, actual_size);
 		memset(data + actual_size, 0, length - actual_size);
 		return;
 	}
-	memcpy(data, mem+address, length);
+
+	memcpy(data, mem + address, length);
 }
+
+void mucomvm::GetExtMemory(unsigned char* data, int bank, int address, int length)
+{
+	if (address < 0 || 0x8000 <= address) {
+		memset(data, 0, length);
+		return;
+	}
+
+	if (address + length >= 0x8000) {
+		int actual_size = 0x8000 - address;
+		memcpy(data, extram[bank] + address, actual_size);
+		memset(data + actual_size, 0, length - actual_size);
+		return;
+	}
+	memcpy(data, extram[bank] + address, length);
+}
+
 
 
 void mucomvm::SetMucomInstance(CMucom *mucom)

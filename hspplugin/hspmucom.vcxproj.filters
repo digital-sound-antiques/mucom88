@@ -167,6 +167,7 @@
     <ClInclude Include="..\src\plugin\plugin.h">
       <Filter>plugin</Filter>
     </ClInclude>
+    <ClInclude Include="hspmucom.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Z80">

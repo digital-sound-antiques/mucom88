@@ -226,6 +226,22 @@ EXPORT BOOL WINAPI mucomgetmemory(unsigned char *data, int address, int length)
 	return 0;
 }
 
+EXPORT BOOL WINAPI mucomgetmainmemory(unsigned char* data, int address, int length)
+{
+	if (!mucom) return -1;
+	mucom->GetMainMemory(data, address, length);
+	return 0;
+}
+
+
+EXPORT BOOL WINAPI mucomgetextmemory(unsigned char* data, int bank, int address, int length)
+{
+	if (!mucom) return -1;
+	mucom->GetExtMemory(data, bank, address, length);
+	return 0;
+}
+
+
 EXPORT BOOL WINAPI mucomgetfmmem(unsigned char* data, int address, int length)
 {
 	if (!mucom) return -1;

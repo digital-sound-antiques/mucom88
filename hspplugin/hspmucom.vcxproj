@@ -113,6 +113,7 @@
     <ClInclude Include="..\src\win32\soundds.h" />
     <ClInclude Include="..\src\Z80\Z80.h" />
     <ClInclude Include="hspdll.h" />
+    <ClInclude Include="hspmucom.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\adpcm.cpp" />

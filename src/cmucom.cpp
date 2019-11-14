@@ -480,6 +480,14 @@ void CMucom::GetMemory(unsigned char *data, int address, int length) {
 	vm->GetMemory(data, address, length);
 }
 
+void CMucom::GetMainMemory(unsigned char* data, int address, int length) {
+	vm->GetMainMemory(data, address, length);
+}
+
+void CMucom::GetExtMemory(unsigned char* data, int bank, int address, int length) {
+	vm->GetExtMemory(data, bank, address, length);
+}
+
 void CMucom::SetChMute(int ch, bool sw)
 {
 	vm->SetChMute(ch, sw);

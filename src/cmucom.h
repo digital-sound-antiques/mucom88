@@ -338,6 +338,8 @@ public:
 	// Other Service
 	void GetFMRegMemory(unsigned char* data, int address, int length);
 	void GetMemory(unsigned char *data, int address, int length);
+	void GetMainMemory(unsigned char* data, int address, int length);
+	void GetExtMemory(unsigned char* data, int bank, int address, int length);
 	void SetChMute(int ch, bool sw);
 	bool GetChMute(int ch);
 	void FMRegDataOut(int reg, int data);

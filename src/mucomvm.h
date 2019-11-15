@@ -69,6 +69,7 @@ public:
 	int LoadPcmFromMem(const char *buf, int sz, int maxpcm = 32);
 	int LoadMem(const char *fname, int adr, int size);
 	int SendMem(const unsigned char *src, int adr, int size);
+	int SendExtMem(const unsigned char* src, int bank, int adr, int size);
 	int RecvMem(unsigned char* mem, int adr, int size);
 	int SaveMem(const char *fname,int adr, int size);
 	int SaveMemExpand(const char *fname, int adr, int size, char *header, int hedsize, char *footer, int footsize, char *pcm, int pcmsize);
@@ -134,6 +135,7 @@ public:
 	void ChangeBank(int bank);
 
 	void CopyMemToVm(const uint8_t * src, int address, int length);
+	void CopyMemToExtRam(const uint8_t* src, int bank, int address, int length);
 	void CopyMemFromVm(uint8_t * dest, int address, int length);
 
 	void ChangeExtRamBank(uint8_t bank);

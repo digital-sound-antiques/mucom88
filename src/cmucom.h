@@ -100,6 +100,8 @@
 #define MUCOM_COMPILE_IGNOREPCM 2
 #define MUCOM_COMPILE_TO_MUSBUFFER 8
 
+#define MUCOM_FMVOICE_ROOM_ADR 0xC200 // コンパイル初期化前アドレス(em版)
+
 #define MUCOM_FMVOICE_ADR 0x6000
 #define MUCOM_FMVOICE_SIZE 0x2000
 #define MUCOM_FMVOICE_MAXNO 256
@@ -325,6 +327,7 @@ public:
 	MUCOM88_VOICEFORMAT *GetFMVoice(int no);
 	int UpdateFMVoice(int no, MUCOM88_VOICEFORMAT *voice);
 	int StoreFMVoiceFromEmbed(void);
+	int SendFMVoiceMemory(const unsigned char* src, int offset, int size);
 	const char *GetVoiceFileName(void) { return voicefilename.c_str(); }
 	const char *GetVoicePathName(void) { return voice_pathname.c_str(); }
 	MUCOM88_VOICEFORMAT *GetVoiceData(void) { return fmvoice_internal; }
@@ -370,6 +373,7 @@ private:
 	WavWriter *p_wav;
 
 	bool original_mode; // original mode
+	bool compiler_initialized; // 初期化後
 	bool use_extram;
 	int extram_disable_vec;
 	int extram_enable_vec;

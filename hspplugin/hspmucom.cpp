@@ -218,7 +218,7 @@ EXPORT int WINAPI mucomgetmsg(char *message, int length) {
 	return 0;
 }
 
-
+// VMメモリを取得する
 EXPORT BOOL WINAPI mucomgetmemory(unsigned char *data, int address, int length)
 {
 	if (!mucom) return -1;
@@ -226,6 +226,7 @@ EXPORT BOOL WINAPI mucomgetmemory(unsigned char *data, int address, int length)
 	return 0;
 }
 
+// メインメモリを取得する
 EXPORT BOOL WINAPI mucomgetmainmemory(unsigned char* data, int address, int length)
 {
 	if (!mucom) return -1;
@@ -234,6 +235,7 @@ EXPORT BOOL WINAPI mucomgetmainmemory(unsigned char* data, int address, int leng
 }
 
 
+// 拡張メモリを取得する
 EXPORT BOOL WINAPI mucomgetextmemory(unsigned char* data, int bank, int address, int length)
 {
 	if (!mucom) return -1;
@@ -241,7 +243,7 @@ EXPORT BOOL WINAPI mucomgetextmemory(unsigned char* data, int bank, int address,
 	return 0;
 }
 
-
+// OPNAレジスタを取得する
 EXPORT BOOL WINAPI mucomgetfmmem(unsigned char* data, int address, int length)
 {
 	if (!mucom) return -1;
@@ -249,6 +251,7 @@ EXPORT BOOL WINAPI mucomgetfmmem(unsigned char* data, int address, int length)
 	return 0;
 }
 
+// チャンネルワークを取得する
 EXPORT BOOL WINAPI mucomgetchwork(int channel, PCHDATA *chwork)
 {
 	if (!mucom) return -1;

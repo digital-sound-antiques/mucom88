@@ -115,6 +115,7 @@ int CMucom::strpick_spc(char *target, char *dest, int strmax)
 CMucom::CMucom( void )
 {
 	original_mode = false;
+	compiler_initialized = false;
 	use_extram = false;
 	flag = 0;
 	vm = NULL;
@@ -826,8 +827,8 @@ int CMucom::SaveFMVoice(bool sw)
 	//	保存
 	res = 0;
 	if (sw) {
-		vm->SendMem((unsigned char *)fmvoice_internal, MUCOM_FMVOICE_ADR, MUCOM_FMVOICE_SIZE);
-		res = vm->SaveMem(voicefilename.c_str(), MUCOM_FMVOICE_ADR, MUCOM_FMVOICE_SIZE);
+		SendFMVoiceMemory((unsigned char*)fmvoice_internal, 0, MUCOM_FMVOICE_SIZE);
+		res = vm->SaveToFile(voicefilename.c_str(), (unsigned char*)fmvoice_internal, MUCOM_FMVOICE_SIZE);
 		//Alertf("[%s]%s", voice_pathname.c_str(), voicefilename.c_str());
 	}
 
@@ -850,7 +851,7 @@ void CMucom::StoreFMVoice(unsigned char *voice)
 	//	FM音色データをメモリに転送する
 	//
 	if (voice == NULL) return;
-	vm->SendMem(voice, MUCOM_FMVOICE_ADR, MUCOM_FMVOICE_SIZE);
+	SendFMVoiceMemory(voice, 0, MUCOM_FMVOICE_SIZE);
 	memcpy(fmvoice_internal, voice, MUCOM_FMVOICE_SIZE);
 }
 
@@ -949,8 +950,8 @@ int CMucom::UpdateFMVoice(int no, MUCOM88_VOICEFORMAT *voice)
 
 	if (tempfilename.empty() == false) {
 		fmvoice_mode = MUCOM_FMVOICE_MODE_INTERNAL;
-		vm->SendMem((unsigned char *)fmvoice_internal, MUCOM_FMVOICE_ADR, MUCOM_FMVOICE_SIZE);
-		return vm->SaveMem((char *)tempfilename.c_str(), MUCOM_FMVOICE_ADR, MUCOM_FMVOICE_SIZE);
+		SendFMVoiceMemory((unsigned char*)fmvoice_internal, 0, MUCOM_FMVOICE_SIZE);
+		return vm->SaveToFile((char*)tempfilename.c_str(), (unsigned char*)fmvoice_internal, MUCOM_FMVOICE_SIZE);
 	}
 	vm->ChangeDirectory(curdir);
 
@@ -991,6 +992,7 @@ void CMucom::DumpFMVoice(int no)
 	PRINTF("  %02d, %02d, %02d, %02d, %02d, %02d, %02d, %02d, %02d, \"%s\"}\r\n", v->ar_op4, v->dr_op4, v->sr_op4, v->rr_op4, v->sl_op4, v->tl_op4, v->ks_op4, v->ml_op4, v->dt_op4,name);
 }
 
+// 曲データのアドレス
 int CMucom::GetSongAddress() {
 	return use_extram ? 0x0000 : 0xc200;
 }
@@ -1019,8 +1021,8 @@ int CMucom::StoreFMVoiceFromEmbed(void)
 		no = (int)hedmusic->ext_fmvoice[i] - 1;
 		fmvoice_use[i] = (unsigned char)no;
 		v = (char *)GetFMVoice(no);
-		vmmem = no * sizeof(MUCOM88_VOICEFORMAT) + MUCOM_FMVOICE_ADR;
-		vm->SendMem( (unsigned char *)v, vmmem, sizeof(MUCOM88_VOICEFORMAT));
+		vmmem = no * sizeof(MUCOM88_VOICEFORMAT);
+		SendFMVoiceMemory( (unsigned char *)v, vmmem, sizeof(MUCOM88_VOICEFORMAT));
 		v++;
 		for (j = 0; j < 25; j++) {			// 25byteの音色データをコピー
 			*v++ = vm->Peek(vdata++);
@@ -1029,6 +1031,25 @@ int CMucom::StoreFMVoiceFromEmbed(void)
 
 	return result;
 }
+
+
+int CMucom::SendFMVoiceMemory(const unsigned char* src, int offset, int size)
+{
+	if (original_mode) {
+		vm->SendMem(src, MUCOM_FMVOICE_ADR + offset, size);
+		return 0;
+	}
+
+	if (!compiler_initialized) {
+		vm->SendMem(src, MUCOM_FMVOICE_ROOM_ADR + offset, size);
+		return 0;
+	} 
+	
+	// コンパイラ初期化後
+	vm->SendExtMem(src, 1, MUCOM_FMVOICE_ADR + offset, size);	
+	return 0;
+}
+
 
 
 int CMucom::LoadFMVoiceFromTAG(void)
@@ -1615,28 +1636,26 @@ void CMucom::PutMucomHeader(const char *stmp)
 
 void CMucom::InitCompiler()
 {
+	// オリジナル
 	if (original_mode) {
 		vm->CallAndHalt(0x9600); // CINT コンパイラ初期化
+		compiler_initialized = true;
 		return;
 	}
 
 	unsigned char* ssgdat = new unsigned char[0x200];
-	unsigned char* voicedat = new unsigned char[0x2000];
 	unsigned char* smon = new unsigned char[0x500];
 
 	vm->RecvMem(smon, 0xde00, 0x500);
 	vm->RecvMem(ssgdat, 0x5e00, 0x200);
-	vm->RecvMem(voicedat, 0x6000, 0x2000);
 
 	// 再配置
-	vm->SendMem(voicedat, 0xc200, 0x2000);
 	vm->CallAndHalt(0x9600); // CINT コンパイラ初期化
 	vm->SendMem(ssgdat, 0xc200, 0x200);
 	vm->SendMem(smon, 0xde00, 0x500);
 
 	delete[] smon;
 	delete[] ssgdat;
-	delete[] voicedat;
 }
 
 

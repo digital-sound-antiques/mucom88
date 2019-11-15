@@ -976,6 +976,13 @@ int mucomvm::SendMem(const unsigned char *src, int adr, int size)
 	return 0;
 }
 
+int mucomvm::SendExtMem(const unsigned char* src, int bank, int adr, int size)
+{
+	CopyMemToVm(src, adr, size);
+	return 0;
+}
+
+
 int mucomvm::RecvMem(unsigned char* mem, int adr, int size)
 {
 	CopyMemFromVm(mem, adr, size);
@@ -1024,6 +1031,16 @@ void mucomvm::CopyMemToVm(const uint8_t * src, int address, int length)
 		left -= block_size;
 	}
 }
+
+void mucomvm::CopyMemToExtRam(const uint8_t* src, int bank, int address, int length)
+{
+	if (bank < 0 || 4 <= bank) return;
+	if (address < 0 || 0x8000 <= address) return;
+
+	int block_size = address + length < 0x8000 ? length : 0x8000 - address;
+	memcpy(extram[bank] + address, src, block_size);
+}
+
 
 void mucomvm::CopyMemFromVm(uint8_t *dest, int address, int length) 
 {

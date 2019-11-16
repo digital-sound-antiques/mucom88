@@ -17,6 +17,8 @@ src/miniplay.exe
 src/pcmtool
 src/pcmtool.exe
 
+build
+
 xcode/miniosx.xcodeproj/xcuserdata
 xcode/DerivedData
 xcode/miniosx.xcodeproj/project.xcworkspace/xcuserdata

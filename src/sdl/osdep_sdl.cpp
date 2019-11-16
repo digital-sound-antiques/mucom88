@@ -257,4 +257,12 @@ int OsDependentSdl::KillFile(const char *filename)
 }
 
 
+bool OsDependentSdl::SetBreakHook()
+{
+	return true;
+}
 
+bool OsDependentSdl::GetBreakStatus()
+{
+	return false;
+}

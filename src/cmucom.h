@@ -356,8 +356,8 @@ public:
 	//
 	void SetOriginalMode();
 	void GetExtramVector();
-	void PrepareSongMemory();
-	void BackToMainMemory();
+	void ChangeBankToExtram();
+	void ChangeBankToMainRam();
 	int GetSongAddress();
 
 private:

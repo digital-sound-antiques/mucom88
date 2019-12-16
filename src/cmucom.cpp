@@ -421,12 +421,12 @@ int CMucom::Play(int num)
 
 	LoadFMVoiceFromTAG();
 
-	PrepareSongMemory();
+	ChangeBankToExtram();
 	int song_address = GetSongAddress();
 	PRINTF("#Load song:%04x size:%04x\r\n", song_address, datasize);
 
 	vm->SendMem((const unsigned char *)data, song_address, datasize);
-	BackToMainMemory();
+	ChangeBankToMainRam();
 
 	StoreFMVoiceFromEmbed();
 
@@ -545,13 +545,13 @@ void CMucom::GetExtramVector()
 	extram_disable_vec = eram_tbl;
 }
 
-void CMucom::PrepareSongMemory()
+void CMucom::ChangeBankToExtram()
 {
 	if (!use_extram) return;
 	vm->CallAndHalt(extram_enable_vec);
 }
 
-void CMucom::BackToMainMemory()
+void CMucom::ChangeBankToMainRam()
 {
 	if (!use_extram) return;
 	vm->CallAndHalt(extram_disable_vec);
@@ -1010,10 +1010,10 @@ int CMucom::StoreFMVoiceFromEmbed(void)
 
 	int song_address = GetSongAddress();
 
-	PrepareSongMemory();
+	ChangeBankToExtram();
 	int vdata = vm->Peekw(song_address + 1) + song_address;
 	int result = vm->Peek(vdata++);
-	BackToMainMemory();
+	ChangeBankToMainRam();
 
 	fmvoice_usemax = result;
 
@@ -1835,9 +1835,9 @@ int CMucom::SaveMusic(const char *fname,int start, int length, int option)
 
 		int num = 0;
 		CMemBuf *buf = new CMemBuf();
-		PrepareSongMemory();
+		ChangeBankToExtram();
 		res = vm->StoreMemExpand(buf, start, length, header, hedsize, footer, footsize, pcmdata, pcmsize);
-		BackToMainMemory();
+		ChangeBankToMainRam();
 		if (res) {
 			PRINTF("#Memory write error.\r\n");
 			return -2;
@@ -1849,10 +1849,10 @@ int CMucom::SaveMusic(const char *fname,int start, int length, int option)
 		NoticePlugins(MUCOM88IF_NOTICE_LOADMUB);
 	}
 	else {
-		PrepareSongMemory();
+		ChangeBankToExtram();
 		//res = vm->SaveMem(filename, start, length);
 		res = vm->SaveMemExpand(fname, start, length, header, hedsize, footer, footsize, pcmdata, pcmsize);
-		BackToMainMemory();
+		ChangeBankToMainRam();
 
 		if (res) {
 			PRINTF("#File write error [%s].\r\n", fname);

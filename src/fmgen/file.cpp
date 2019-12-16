@@ -36,11 +36,13 @@ FileIO::~FileIO()
 bool FileIO::Open(const char* filename, uint flg)
 {
     Close();
+
     strncpy(path, filename, _MAXPATH);
 
     fp = fopen(filename, "rb");
-    if (!fp) return false;
-
+    if (!fp)
+        return false;
+    
     SetLogicalOrigin(0);
 
     return true;
@@ -53,11 +55,13 @@ bool FileIO::Open(const char* filename, uint flg)
 bool FileIO::CreateNew(const char* filename)
 {
     Close();
+
     strncpy(path, filename, _MAXPATH);
 
     fp = fopen(filename, "wb");
-    if (!fp) return false;
-
+    if (!fp)
+        return false;
+    
     SetLogicalOrigin(0);
 
     return !!(flags & open);
@@ -78,9 +82,12 @@ bool FileIO::Reopen(uint flg)
 
 void FileIO::Close()
 {
-    if (fp) fclose(fp);
+    if (fp)
+        fclose(fp);
+    
     fp = NULL;
- }
+    
+}
 
 // ---------------------------------------------------------------------------
 //	ファイルからの読み出し
@@ -96,22 +103,36 @@ int32 FileIO::Read(void* dest, int32 size)
 }
 
 // ---------------------------------------------------------------------------
+//	ファイルへの書き出し
+// ---------------------------------------------------------------------------
+
+int32 FileIO::Write(const void* dest, int32 size)
+{
+    if (!fp)
+        return -1;
+    
+    int len = (int)fwrite(dest, 1, size, fp);
+    return len;
+}
+
+// ---------------------------------------------------------------------------
 //	ファイルをシーク
 // ---------------------------------------------------------------------------
 
 bool FileIO::Seek(int32 pos, SeekMethod method)
 {
-    if (!fp) return false;
-
+    if (!fp)
+        return -1;
+    
     switch (method)
     {
-    case begin:
+    case begin:	
         fseek(fp, pos, SEEK_SET);
         break;
     case current:
         fseek(fp, pos, SEEK_CUR);
         break;
-    case end:
+    case end:		
         fseek(fp, pos, SEEK_END);
         break;
     default:
@@ -127,8 +148,9 @@ bool FileIO::Seek(int32 pos, SeekMethod method)
 
 int32 FileIO::Tellp()
 {
-    if (!fp) return -1;
-
+    if (!fp)
+        return -1;
+    
     return (int)ftell(fp);
 }
 

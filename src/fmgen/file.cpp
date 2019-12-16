@@ -122,7 +122,7 @@ int32 FileIO::Write(const void* dest, int32 size)
 bool FileIO::Seek(int32 pos, SeekMethod method)
 {
     if (!fp)
-        return -1;
+        return false;
     
     switch (method)
     {

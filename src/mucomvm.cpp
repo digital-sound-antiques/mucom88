@@ -299,6 +299,9 @@ void mucomvm::Reset(void)
 
 	p = &mem[0];
 	memset(p, 0, 0x10000);		// CLEAR
+
+	ResetExtRam();
+
 	ClearBank();
 	bankprg = VMPRGBANK_MAIN;
 
@@ -321,6 +324,14 @@ void mucomvm::Reset(void)
 	*p++ = 0xfb;		// JR LABEL1
 #endif
 	ResetMessageBuffer();
+}
+
+void mucomvm::ResetExtRam()
+{
+	int i;
+	for (i = 0; i < 4; i++) {
+		memset(extram[i], 0, 0x8000);
+	}
 }
 
 void mucomvm::ResetMessageBuffer(void) {
@@ -458,6 +469,11 @@ void mucomvm::ChangeExtRamBank(uint8_t bank)
 	}
 }
 
+int mucomvm::GetExtRamBank()
+{
+	return extram_bank_no;
+}
+
 void mucomvm::ChangeExtRamMode(uint8_t mode)
 {
 	extram_bank_mode = mode;
@@ -543,6 +559,14 @@ void mucomvm::Poke(uint16_t adr, uint8_t data)
 	membank[adr >> 12][adr & 0xfff] = data;
 }
 
+void mucomvm::FillMem(uint16_t adr, uint8_t value, uint16_t length)
+{
+	int i;
+	for (i = 0; i < length; i++) {
+		Poke(adr + i, value);
+	}
+}
+
 
 void mucomvm::Pokew(uint16_t adr, uint16_t data)
 {
@@ -614,48 +638,14 @@ int mucomvm::ExecUntilHalt(int times)
 
 		if (original_mode) ExecuteCLUC(); else ExecuteModCLUC();
 
-#if 0
-		if (pc == 0x9000) {				// MWRITE(コマンド書き込みメイン)
-			int mdata = Peekw(0x0f320);
-			printf("#MWRITE MDATA$%04x.\r\n", mdata);
-		}
-#endif
-
 #if 1
 		ConvertVoice();
 #endif
-#if 0
-		if (pc == 0xde06) {				// CONVERT(音色定義コンバート)
-			//	出力データが大きい場合、DE06H～とかぶるので別バンクで実行する
-			bankprg = VMPRGBANK_SHADOW;
-		}
-		if (pc == 0xe132) {				// CONVERT(音色定義コンバート終了)
-			bankprg = VMPRGBANK_MAIN;
-		}
-#endif
 
-#if 0
-		if (pc==0x979c) {				// COMPST(コンパイラメイン)
-			int ch = Peek(0x0f330);
-			int line = Peekw(0x0f32b);
-			int link = Peekw(0x0f354);
-			int mdata = Peekw(0x0f320);
-			printf("#CMPST $%04x LINKPT%04x CH%d LINE%04x MDATA%04x.\r\n", pc, link, ch, line,mdata);
-		}
-		if ((pc >= 0xAD86) && (pc < 0xb000)) {
-				printf("#VOICECONV1 %04x.\r\n", pc);
-		}
-#endif
 		last_pc = pc;
 		Execute(times);
 		if (m_flag == VMFLAG_HALT) break;
 		cnt++;
-#if 0
-		if ( cnt>=0x100000) {
-			Msgf( "#Force halted.\n" );
-			break;
-		}
-#endif
 	}
 #ifdef DEBUGZ80_TRACE
 	membuf->SaveFile("trace.txt");
@@ -667,9 +657,9 @@ int mucomvm::ExecUntilHalt(int times)
 // アドレスを元に設定
 #define CONVERT 0xde06
 
+// 音色変換 em版ではスキップ
 void mucomvm::ConvertVoice()
 {
-	// em版ではスキップ
 	if (!original_mode) return;
 
 	if (pc == CONVERT) {
@@ -717,37 +707,32 @@ void mucomvm::ExecuteCLUC()
 
 		Poke(0xaf80, 0xc9); // RETにする
 
-							//pc = 0xafb3;				// retの位置まで飛ばす
+		//pc = 0xafb3;				// retの位置まで飛ばす
 	}
 }
 
-// ソースを元にこれを設定する
-#define CULC 0xAF82
-#define CULLP2 0xAF94
-#define FRQBEF 0xAFFC
 
 // MUCOM88em版
 void mucomvm::ExecuteModCLUC()
 {
+	if (pc != MUCOM_EM_CULC) { return; }
 
-	if (pc == CULC) {
-		int amul = GetA();
-		int val = Peekw(CULLP2 + 1);
-		int frq = Peekw(FRQBEF);
-		int ans, count;
-		float facc;
-		float frqbef = (float)frq;
-		facc = (val == 0x0A1BB) ? 0.943874f : 1.059463f;
+	int amul = GetA();
+	int val = Peekw(MUCOM_EM_CULLP2 + 1);
+	int frq = Peekw(MUCOM_EM_FRQBEF);
+	int ans, count;
+	float facc;
+	float frqbef = (float)frq;
+	facc = (val == 0x0A1BB) ? 0.943874f : 1.059463f;
 		
-		for (count = 0; count < amul; count++) {
-			frqbef = frqbef * facc;
-		}
-		ans = int(frqbef);
-		SetHL(ans);
-		//Msgf("#CULC A=%d : %d * %f =%d.\r\n", amul, frq, facc, ans);
-
-		Poke(CULC, 0xc9); // RETにする
+	for (count = 0; count < amul; count++) {
+		frqbef = frqbef * facc;
 	}
+	ans = int(frqbef);
+	SetHL(ans);
+	//Msgf("#CULC A=%d : %d * %f =%d.\r\n", amul, frq, facc, ans);
+
+	Poke(MUCOM_EM_CULC, 0xc9); // RETにする	
 }
 
 

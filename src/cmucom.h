@@ -126,6 +126,67 @@
 
 
 
+// 共通
+#define MUCOM_ADDRESS_BASIC 0x1000
+#define MUCOM_ADDRESS_POLL_VECTOR 0x0eea8
+
+
+// em 開始アドレス
+#define MUCOM_ADDRESS_EM_EXPAND 0xAAF0
+#define MUCOM_ADDRESS_EM_ERRMSG 0x8800
+#define MUCOM_ADDRESS_EM_MSUB 0x9000
+#define MUCOM_ADDRESS_EM_MUC88 0x9600
+#define MUCOM_ADDRESS_EM_SSGDAT 0x5E00
+#define MUCOM_ADDRESS_EM_TIME 0xE400
+#define MUCOM_ADDRESS_EM_SMON 0xDE00
+
+#define MUCOM_ADDRESS_EM_MUSIC 0xb000
+
+#define MUCOM_ADDRESS_EM_SSGDAT_AFTER 0xc200
+
+
+// ルーチン
+#define MUCOM_ADDRESS_EM_ERAM_TABLE 0x95A0 // 拡張RAM切り替えルーチン テーブル
+
+#define MUCOM_ADDRESS_EM_CINT 0x9600 // コンパイラ初期化
+#define MUCOM_ADDRESS_EM_WKGET 0xB02A
+
+
+
+// オリジナル 開始アドレス
+#define MUCOM_ADDRESS_EXPAND 0xab00
+#define MUCOM_ADDRESS_ERRMSG 0x8800
+#define MUCOM_ADDRESS_MSUB 0x9000
+#define MUCOM_ADDRESS_MUC88 0x9600
+#define MUCOM_ADDRESS_SSGDAT 0x5e00
+#define MUCOM_ADDRESS_TIME 0xe400
+#define MUCOM_ADDRESS_SMON 0xde00
+
+#define MUCOM_ADDRESS_MUSIC 0xb000
+
+// ルーチン
+#define MUCOM_ADDRESS_CINT 0x9600 // コンパイラ初期化
+#define MUCOM_ADDRESS_RETW 0xb00c // music2:RETW
+
+// 曲データアドレス
+#define MUCOM_ADDRESS_SONG 0xc200
+#define MUCOM_ADDRESS_EM_SONG 0x0000
+
+// ワークアドレス
+#define MUCOM_ADDRESS_JCLOCK 0x8c90
+#define MUCOM_ADDRESS_JPLINE 0x8c92
+#define MUCOM_ADDRESS_DEFVOICE 0x8c50
+
+
+// 曲再生ルーチン オフセット
+#define MUCOM_MUSIC_OFFSET_MSTART 0x0000
+#define MUCOM_MUSIC_OFFSET_MSTOP 0x0003
+#define MUCOM_MUSIC_OFFSET_MFADE 0x0006
+
+
+
+
+
 //	MUBHED structure
 //
 typedef struct
@@ -233,6 +294,8 @@ public:
 	//	MUCOM88 main service
 	void Init(void *window = NULL, int option = 0, int Rate = 0);
 	void Reset(int option=0);
+	void LoadPlayer(int option);
+	void SetChannelWork();
 	int Play(int num=0);
 	int Stop(int option=0);
 	int Restart(void);
@@ -378,6 +441,8 @@ private:
 	int extram_disable_vec;
 	int extram_enable_vec;
 
+	int music_start_address;
+
 	//		FM voice status
 	//
 	int fmvoice_mode;
@@ -431,7 +496,7 @@ private:
 	bool hasMacro(char *text);
 
 	void InitCompiler();
-	void LoadModBinary();
+	void LoadModBinary(int option);
 	void LoadExternalCompiler();
 	void LoadInternalCompiler();
 

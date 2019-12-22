@@ -42,6 +42,11 @@ enum {
 #define OPNACH_ADPCM 10
 #define OPNAREG_MAX 0x200
 
+// CULC関連のアドレス
+#define MUCOM_EM_CULC 0xAF82
+#define MUCOM_EM_CULLP2 0xAF94
+#define MUCOM_EM_FRQBEF 0xAFFC
+
 class mucomvm : public Z80 {
 public:
 	mucomvm();
@@ -64,6 +69,7 @@ public:
 
 	//		仮想マシンコントロール
 	void Reset(void);
+	void ResetExtRam();
 	void ResetFM(void);
 	int LoadPcm(const char *fname, int maxpcm = 32);
 	int LoadPcmFromMem(const char *buf, int sz, int maxpcm = 32);
@@ -93,6 +99,7 @@ public:
 	int Peek(uint16_t adr);
 	int Peekw(uint16_t adr);
 	void Poke(uint16_t adr, uint8_t data);
+	void FillMem(uint16_t adr, uint8_t value, uint16_t length);
 	void Pokew(uint16_t adr, uint16_t data);
 	void PeekToStr(char *out, uint16_t adr, uint16_t length);
 	void BackupMem(uint8_t *mem_bak);
@@ -139,6 +146,7 @@ public:
 	void CopyMemFromVm(uint8_t * dest, int address, int length);
 
 	void ChangeExtRamBank(uint8_t bank);
+	int GetExtRamBank();
 	void ChangeExtRamMode(uint8_t mode);
 
 	void SetOrignalMode();
@@ -195,7 +203,7 @@ private:
 	uint8_t mem[0x10000];				// メインメモリ
 	uint8_t vram[VMBANK_MAX][0x4000];	// GVRAM(3:退避/012=BRG)
 	uint8_t memprg[0x10000];			// メインメモリ(プログラム実行用のシャドーコピー)
-	uint8_t extram[4][0x8000];
+	uint8_t extram[4][0x8000];			// 拡張メモリ
 
 	// バンク機能
 	uint8_t *membank[0x10];

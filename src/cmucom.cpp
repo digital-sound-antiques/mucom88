@@ -314,6 +314,7 @@ void CMucom::LoadModBinary(int option)
 	vm->SendMem(bin_smon_em, MUCOM_ADDRESS_EM_SMON, smon_em_size);
 
 	vm->SendMem(bin_music_em, MUCOM_ADDRESS_EM_MUSIC, music_em_size);
+	StoreFMVoice((unsigned char*)bin_voice_dat);
 
 	if (option & MUCOM_CMPOPT_USE_EXTROM) {
 		vm->LoadMem("expand", MUCOM_ADDRESS_EM_EXPAND, 0);
@@ -325,10 +326,17 @@ void CMucom::LoadModBinary(int option)
 		vm->LoadMem("smon", MUCOM_ADDRESS_EM_SMON, 0);
 
 		vm->LoadMem("music", MUCOM_ADDRESS_EM_MUSIC, 0);
+
+		LoadFMVoice(MUCOM_DEFAULT_VOICEFILE, true);
 	}
 
+	vm->FillMem(MUCOM_ADDRESS_BASIC, 0xc9, 0x4000);
+
+	vm->SetSP(0x9000);
+
 	GetExtramVector();
-	
+
+
 }
 
 void CMucom::LoadExternalCompiler()
@@ -1003,7 +1011,7 @@ void CMucom::DumpFMVoice(int no)
 
 // 曲データのアドレス
 int CMucom::GetSongAddress() {
-	return !original_mode ? MUCOM_ADDRESS_SONG : MUCOM_ADDRESS_EM_SONG;
+	return original_mode ? MUCOM_ADDRESS_SONG : MUCOM_ADDRESS_EM_SONG;
 }
 
 int CMucom::StoreFMVoiceFromEmbed(void)
@@ -1048,13 +1056,7 @@ int CMucom::SendFMVoiceMemory(const unsigned char* src, int offset, int size)
 		vm->SendMem(src, MUCOM_FMVOICE_ADR + offset, size);
 		return 0;
 	}
-
-	if (!compiler_initialized) {
-		vm->SendMem(src, MUCOM_FMVOICE_ROOM_ADR + offset, size);
-		return 0;
-	} 
 	
-	// コンパイラ初期化後
 	vm->SendExtMem(src, 1, MUCOM_FMVOICE_ADR + offset, size);	
 	return 0;
 }
@@ -1667,19 +1669,7 @@ void CMucom::InitCompiler()
 		return;
 	}
 
-	unsigned char* ssgdat = new unsigned char[0x200];
-	unsigned char* smon = new unsigned char[0x500];
-
-	vm->RecvMem(smon, MUCOM_ADDRESS_EM_SMON, 0x500);
-	vm->RecvMem(ssgdat, MUCOM_ADDRESS_EM_SSGDAT, 0x200);
-
-	// 再配置
 	vm->CallAndHalt(MUCOM_ADDRESS_EM_CINT); // CINT コンパイラ初期化
-	vm->SendMem(ssgdat, MUCOM_ADDRESS_EM_SSGDAT_AFTER, 0x200);
-	vm->SendMem(smon, MUCOM_ADDRESS_EM_SMON, 0x500);
-
-	delete[] smon;
-	delete[] ssgdat;
 }
 
 

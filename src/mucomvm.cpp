@@ -406,7 +406,6 @@ int32_t mucomvm::input(uint16_t adr)
 
 void mucomvm::output(uint16_t adr, uint8_t data)
 {
-	//printf("output: %x %x\n", adr, data);
 	int port = adr & 0xff;
 	switch (port)
 	{
@@ -591,6 +590,9 @@ int mucomvm::ExecUntilHalt(int times)
         return 0;
     }
 
+	bool adrmap[0x10000];
+	memset(adrmap, 0, 0x10000);
+
 	int last_pc = 0x0;
 	int cnt=0;
 	int id = 0;
@@ -641,6 +643,11 @@ int mucomvm::ExecUntilHalt(int times)
 #if 1
 		ConvertVoice();
 #endif
+
+		if (!adrmap[pc]) {
+			adrmap[pc] = true;
+			if (verbose) printf("run:pc:%04x\n", pc);
+		}
 
 		last_pc = pc;
 		Execute(times);
@@ -927,7 +934,7 @@ int mucomvm::LoadPcmFromMem(const char *buf, int sz, int maxpcm)
 	pcmmem = (char *)opn->GetADPCMBuffer();
 	memcpy(pcmmem, pcmdat, sz - infosize);
 
-	if (p_log) p_log->WriteAdpcmMemory(pcmdat, sz - infosize);
+	//if (p_log) p_log->WriteAdpcmMemory(pcmdat, sz - infosize);
 
 	if (m_option & VM_OPTION_SCCI) {
 		osd->OutputRealChipAdpcm(pcmdat, sz - infosize);
@@ -963,7 +970,7 @@ int mucomvm::SendMem(const unsigned char *src, int adr, int size)
 
 int mucomvm::SendExtMem(const unsigned char* src, int bank, int adr, int size)
 {
-	CopyMemToVm(src, adr, size);
+	CopyMemToExtRam(src, bank, adr, size);
 	return 0;
 }
 
@@ -1328,7 +1335,7 @@ int mucomvm::FMRegDataGet(int reg)
 
 void mucomvm::FMOutData(int data)
 {
-	//printf("FMReg: %04x = %02x\n", sound_reg_select, data);
+	printf("FMReg: %04x = %02x\n", sound_reg_select, data);
 
 	switch (sound_reg_select) {
 	case 0x28:
@@ -1357,7 +1364,7 @@ void mucomvm::FMOutData(int data)
 //	データ出力(OPNA側)
 void mucomvm::FMOutData2(int data)
 {
-	//printf("FMReg2: %04x = %02x\n", sound_reg_select, data);
+	//if (verbose) printf("FMReg2: %04x = %02x\n", sound_reg_select, data);
 
 	if (sound_reg_select2 == 0x00) {
 		if (chmute[OPNACH_ADPCM]) return;

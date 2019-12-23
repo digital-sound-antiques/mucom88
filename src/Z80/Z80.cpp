@@ -4,6 +4,9 @@
 
 #include "Z80.h"
 
+#include <stdio.h>
+
+
 #ifdef Z80_DEBUG
 #include <stdio.h>
 #include <stdlib.h>
@@ -275,6 +278,7 @@ void Z80::Reset() {
 	SetupFlags(0xff);
 	sp = 0xffff;
 	nmireq = intreq = Iff_set = false;
+	verbose = false;
 }
 
 uint16_t Z80::GetHL(void)
@@ -314,6 +318,16 @@ int32_t Z80::Execute(int32_t n) {
 		if (!rofs) tracep->pc = pc;
 		tracep->acs1 = tracep->acs2 = 0;
 #endif
+
+		if (sp < 0x8000) {
+			printf("sp:%04x pc:%04x\n", sp, pc);
+		}
+
+		if (pc == 0xc7ac) {
+			printf("pc:%04x\n", pc);
+		}
+
+
 		RefReg++;
 		switch (M1) {
 #define RST(i) case 0xc7 + 8 * (i): if (Extender(8 * i)) break; st16(sp -= 2, pc); pc = 8 * i; CLOCK(1); break;
@@ -582,6 +596,9 @@ int32_t Z80::Execute(int32_t n) {
 			case 0xcd: // call nn
 			st16(sp -= 2, pc + 2);
 			tmp2 = IMM16;
+			if (tmp2 < 0x8000) {
+				printf("cd pc:%04x -> %04x\n", tmp2, pc);
+			}
 			pc = tmp2;
 			CLOCK(1);
 			break;
@@ -722,6 +739,7 @@ int32_t Z80::Execute(int32_t n) {
 			case 0xc3: // jp nn
 			tmp2 = IMM16;
 			pc = tmp2;
+			if (verbose) printf("c3 pc:%04x\n", pc);
 			break;
 			// conditional jump
 #define JP_COND(i, cond) case 0xc2 + 8 * (i): tmp2 = IMM16; if (cond) pc = tmp2; break;

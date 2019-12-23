@@ -43,9 +43,9 @@ enum {
 #define OPNAREG_MAX 0x200
 
 // CULC関連のアドレス
-#define MUCOM_EM_CULC 0xAF82
-#define MUCOM_EM_CULLP2 0xAF94
-#define MUCOM_EM_FRQBEF 0xAFFC
+#define MUCOM_EM_CULC 0xBC92
+#define MUCOM_EM_CULLP2 0xBCA4
+#define MUCOM_EM_FRQBEF 0xBD0C
 
 class mucomvm : public Z80 {
 public:

@@ -114,6 +114,9 @@ public:
 	uint16_t GetHL(void);
 	uint8_t GetA(void);
 	uint16_t GetIX(void);
+
+	bool verbose;
+
 #if BUILTIN_MEMORY
 	void SetMemoryPtr(uint8_t *p) { m = p; }
 #endif

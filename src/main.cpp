@@ -304,7 +304,8 @@ int main( int argc, char *argv[] )
 						song_length = RENDER_SECONDS;
 					}
 			}
-			printf( "#Record to %s (%d sec).", wavfile, song_length );
+			if (logfile != NULL) printf("#Record to %s (%d sec).", logfile, song_length);
+			if (wavfile != NULL) printf( "#Record to %s (%d sec).", wavfile, song_length );
 			mucom.Record(song_length);
 
 			// RecordWave(&mucom, wavfile, RENDER_RATE, song_length);

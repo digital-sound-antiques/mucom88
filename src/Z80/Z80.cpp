@@ -323,7 +323,7 @@ int32_t Z80::Execute(int32_t n) {
 			printf("sp:%04x pc:%04x\n", sp, pc);
 		}
 
-		if (pc == 0xc7ac) {
+		if (pc == 0xcec8) {
 			printf("pc:%04x\n", pc);
 		}
 

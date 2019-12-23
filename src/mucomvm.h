@@ -218,9 +218,12 @@ private:
 	//		音源
 	FM::OPNA *opn;
 
+	FILE *trace_fp;
+
 	int sound_reg_select;
 	int sound_reg_select2;
 	void FMOutData(int data);
+	void TraceLog(int data);
 	void FMOutData2(int data);
 	int FMInData();
 	int FMInData2();

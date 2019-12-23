@@ -52,6 +52,7 @@ mucomvm::mucomvm(void)
 	pchdata = NULL;
 
 	playflag = false;
+	trace_fp = NULL;
 
 	ResetMessageBuffer();
 }
@@ -1328,7 +1329,8 @@ int mucomvm::FMRegDataGet(int reg)
 
 void mucomvm::FMOutData(int data)
 {
-	//printf("FMReg: %04x = %02x\n", sound_reg_select, data);
+	printf("FMReg: %04x = %02x\n", sound_reg_select, data);
+	TraceLog(data);
 
 	switch (sound_reg_select) {
 	case 0x28:
@@ -1352,6 +1354,15 @@ void mucomvm::FMOutData(int data)
 	}
 
 	FMRegDataOut(sound_reg_select, data);
+}
+
+void mucomvm::TraceLog(int data)
+{
+	if (trace_fp == NULL) {
+		trace_fp = fopen("tracelog.txt","w");
+	}
+	if (trace_fp != NULL) 
+		fprintf(trace_fp,"FMReg: %04x = %02x\n", sound_reg_select, data);
 }
 
 //	データ出力(OPNA側)

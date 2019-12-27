@@ -38,3 +38,5 @@ hspplugin/*.user
 hspplugin/.vs/
 hspplugin/Debug
 hspplugin/Release
+
+hspplugin/*.user

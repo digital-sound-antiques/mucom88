@@ -73,6 +73,7 @@ public:
 	void ResetFM(void);
 	int LoadPcm(const char *fname, int maxpcm = 32);
 	int LoadPcmFromMem(const char *buf, int sz, int maxpcm = 32);
+	int PeekTableWord(const unsigned char* table, int adr);
 	int LoadMem(const char *fname, int adr, int size);
 	int SendMem(const unsigned char *src, int adr, int size);
 	int SendExtMem(const unsigned char* src, int bank, int adr, int size);

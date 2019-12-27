@@ -403,15 +403,6 @@ int32_t Z80::Execute(int32_t n) {
 		tracep->acs1 = tracep->acs2 = 0;
 #endif
 
-		if (sp < 0x8000) {
-			printf("sp:%04x pc:%04x\n", sp, pc);
-		}
-
-		if (pc == 0xcec8) {
-			printf("pc:%04x\n", pc);
-		}
-
-
 		RefReg++;
 		switch (M1) {
 #define RST(i) case 0xc7 + 8 * (i): if (Extender(8 * i)) break; st16(sp -= 2, pc); pc = 8 * i; CLOCK(1); break;

@@ -957,7 +957,7 @@ void mucomvm::LoadAllocFree(char *ptr)
 	free(ptr);
 }
 
-
+// ADPCM読み出し VMのメモリを経由せずにロードする
 int mucomvm::LoadPcmFromMem(const char *buf, int sz, int maxpcm)
 {
 	//	PCMデータをOPNAのRAMにロード(メモリから)
@@ -970,26 +970,32 @@ int mucomvm::LoadPcmFromMem(const char *buf, int sz, int maxpcm)
 	int inftable;
 	int adr, whl, eadr;
 	char pcmname[17];
+	const unsigned char *table = (const unsigned char*)buf;
+
 
 	infosize = 0x400;
 	inftable = 0xd000;
-	SendMem((const unsigned char *)buf, inftable, infosize);
+	//SendMem((const unsigned char *)buf, inftable, infosize);
 	pcmtable = 0xe300;
 	for (i = 0; i < maxpcm; i++) {
-		adr = Peekw(inftable + 28);
-		whl = Peekw(inftable + 30);
+		//adr = Peekw(inftable + 28);
+		//whl = Peekw(inftable + 30);
+		adr = PeekTableWord(table, 28);
+		whl = PeekTableWord(table, 30);
 		eadr = adr + (whl >> 2);
 		if (buf[i * 32] != 0) {
 			Pokew(pcmtable, adr);
 			Pokew(pcmtable + 2, eadr);
 			Pokew(pcmtable + 4, 0);
-			Pokew(pcmtable + 6, Peekw(inftable + 26));
+			//Pokew(pcmtable + 6, Peekw(inftable + 26));
+			Pokew(pcmtable + 6, PeekTableWord(table,26));
 			memcpy(pcmname, buf + i * 32, 16);
 			pcmname[16] = 0;
 			Msgf("#PCM%d $%04x $%04x %s\r\n", i + 1, adr, eadr, pcmname);
 		}
 		pcmtable += 8;
 		inftable += 32;
+		table += 32;
 	}
 	pcmdat = (char *)buf + infosize;
 	pcmmem = (char *)opn->GetADPCMBuffer();
@@ -1002,6 +1008,11 @@ int mucomvm::LoadPcmFromMem(const char *buf, int sz, int maxpcm)
 	}
 
 	return 0;
+}
+
+int mucomvm::PeekTableWord(const unsigned char* table, int adr)
+{
+	return (table[adr] | (table[adr + 1] << 8));
 }
 
 

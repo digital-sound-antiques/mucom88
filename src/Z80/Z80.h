@@ -139,6 +139,10 @@ public:
 	void DebugRun();
 	void DebugInstExec();
 	void DebugPause();
+	void DebugDisable();
+	void DebugEnable();
+
+
 	void GetRegSet(RegSet *reg);
 	void SetRegSet(RegSet* reg);
 #if BUILTIN_MEMORY
@@ -148,6 +152,7 @@ public:
 	void StopTrace();
 #endif
 protected:
+	bool DebugEnableFlag;
 	bool DebugWaitFlag;
 	bool DebugInstExecFlag;
 	bool EnableBreakPointFlag;

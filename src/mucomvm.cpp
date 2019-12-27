@@ -1,4 +1,4 @@
-
+﻿
 //
 //		PC-8801 virtual machine
 //		(PC-8801FA相当のCPUとOPNAのみをエミュレーションします)
@@ -477,23 +477,58 @@ void mucomvm::output(uint16_t adr, uint8_t data)
 	}
 }
 
+
+
+int mucomvm::GetExtRamBank()
+{
+	return extram_bank_no;
+}
+
+void mucomvm::SetExtRamBank(uint8_t bank)
+{
+	extram_bank_no = bank;
+}
+
+int mucomvm::GetExtRamMode()
+{
+	return extram_bank_mode;
+}
+
+// 拡張RAM切り替え
+void mucomvm::ChangeExtRam(uint8_t mode, uint8_t bank)
+{
+	extram_bank_no = bank;
+	ChangeExtRamMode(mode);
+}
+
+
+// 拡張RAM切り替え
+void mucomvm::ChangeExtRamMode(uint8_t mode)
+{
+	extram_bank_mode = mode;
+	ChangeExtRamBank(extram_bank_no);
+}
+
+// 拡張RAM切り替え
 void mucomvm::ChangeExtRamBank(uint8_t bank)
 {
 	extram_bank_no = bank & 0x3;
-	uint8_t *wrp;
-	uint8_t *rdp;
+	uint8_t* wrp;
+	uint8_t* rdp;
 
 	// bit4 = 書き込み
 	if (extram_bank_mode & 0x10) {
 		wrp = extram[extram_bank_no];
-	} else {
+	}
+	else {
 		wrp = mem;
 	}
 
 	// bit0 = 読み込み
 	if (extram_bank_mode & 0x01) {
 		rdp = extram[extram_bank_no];
-	} else {
+	}
+	else {
 		rdp = mem;
 	}
 
@@ -504,17 +539,7 @@ void mucomvm::ChangeExtRamBank(uint8_t bank)
 	}
 }
 
-int mucomvm::GetExtRamBank()
-{
-	return extram_bank_no;
-}
-
-void mucomvm::ChangeExtRamMode(uint8_t mode)
-{
-	extram_bank_mode = mode;
-	ChangeExtRamBank(extram_bank_no);
-}
-
+// ドライバの種類を設定
 void mucomvm::SetOrignalMode()
 {
 	original_mode = true;
@@ -1263,7 +1288,12 @@ void mucomvm::UpdateTime(int base)
 		audio_output_ms += pass_tick;
 	}
 	tmflag = false;
+}
 
+// Z80の処理を待つ
+void mucomvm::WaitReady(void)
+{
+	while(busyflag) osd->Delay(10);
 }
 
 

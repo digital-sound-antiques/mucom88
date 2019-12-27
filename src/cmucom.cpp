@@ -1,4 +1,4 @@
-
+﻿
 //
 //		MUCOM88 access class
 //		(PC-8801のVMを介してMUCOM88の機能を提供します)
@@ -246,20 +246,7 @@ void CMucom::Reset(int option)
 		PRINTF("#Device error(%d)\r\n", devres);
 	}
 
-	LoadInternalCompiler();
-
-	if (option & MUCOM_CMPOPT_COMPILE) {
-		if (option & MUCOM_CMPOPT_USE_EXTROM) {
-			LoadExternalCompiler();
-		}
-
-		vm->FillMem(MUCOM_ADDRESS_MUSIC, 0xc9, 0x40);
-		vm->FillMem(MUCOM_ADDRESS_BASIC, 0xc9, 0x4000);
-	}
-	
-	LoadPlayer(option);
-
-	LoadModBinary(option);
+	if (original_mode) LoadOriginal(option); else LoadModBinary(option);
 
 
 	//	実行用メモリをシャドーコピーとして保存しておく
@@ -270,6 +257,22 @@ void CMucom::Reset(int option)
 	SetChannelWork();
 
 	NoticePlugins(MUCOM88IF_NOTICE_RESET);
+}
+
+void CMucom::LoadOriginal(int option)
+{
+	LoadInternalCompiler();
+
+	if (option & MUCOM_CMPOPT_COMPILE) {
+		if (option & MUCOM_CMPOPT_USE_EXTROM) {
+			LoadExternalCompiler();
+		}
+
+		vm->FillMem(MUCOM_ADDRESS_MUSIC, 0xc9, 0x40);
+		vm->FillMem(MUCOM_ADDRESS_BASIC, 0xc9, 0x4000);
+	}
+
+	LoadPlayer(option);
 }
 
 void CMucom::LoadPlayer(int option)
@@ -332,12 +335,6 @@ void CMucom::LoadModBinary(int option)
 	}
 
 	vm->FillMem(MUCOM_ADDRESS_BASIC, 0xc9, 0x4000);
-
-	vm->SetSP(0x9000);
-
-	GetExtramVector();
-
-
 }
 
 void CMucom::LoadExternalCompiler()
@@ -437,12 +434,12 @@ int CMucom::Play(int num)
 
 	LoadFMVoiceFromTAG();
 
-	ChangeBankToExtram();
+	ChangeMemoryToSong();
 	int song_address = GetSongAddress();
 	PRINTF("#Load song:%04x size:%04x\r\n", song_address, datasize);
 
 	vm->SendMem((const unsigned char *)data, song_address, datasize);
-	ChangeBankToMainRam();
+	RestoreMemory();
 
 	StoreFMVoiceFromEmbed();
 
@@ -455,7 +452,10 @@ int CMucom::Play(int num)
 	return 0;
 }
 
+// 曲データ再生
 void CMucom::PlayMemory() {
+
+	vm->DebugEnable();
 
 	bool CompileMode = hedmusic == NULL;
 
@@ -572,16 +572,16 @@ void CMucom::GetExtramVector()
 	extram_enable_vec = eram_tbl + 9;
 }
 
-void CMucom::ChangeBankToExtram()
+void CMucom::ChangeMemoryToSong()
 {
-	if (!use_extram) return;
-	vm->CallAndHalt(extram_enable_vec);
+	extram_last_bank = vm->GetExtRamBank();
+	extram_last_mode = vm->GetExtRamMode();
+	vm->ChangeExtRam(0x11, 0x00);
 }
 
-void CMucom::ChangeBankToMainRam()
+void CMucom::RestoreMemory()
 {
-	if (!use_extram) return;
-	vm->CallAndHalt(extram_disable_vec);
+	vm->ChangeExtRam(extram_last_bank, extram_last_mode);
 }
 
 void CMucom::PlayLoop() {
@@ -674,18 +674,15 @@ int CMucom::Stop(int option)
 	//		(戻り値が0以外の場合はエラー)
 	//
 
-	vm->DisableBreakPoint();
+	vm->DebugDisable();
 
 	playflag = false;
-	if (option & 1) {
-		vm->StopINT3();
-		vm->CallAndHalt(music_start_address + MUCOM_MUSIC_OFFSET_MSTOP);
-		vm->ResetFM();
-	}
-	else {
-		vm->StopINT3();
-		vm->CallAndHalt(music_start_address + MUCOM_MUSIC_OFFSET_MSTOP);
-	}
+	vm->WaitReady();
+
+	vm->StopINT3();
+	vm->CallAndHalt(music_start_address + MUCOM_MUSIC_OFFSET_MSTOP);
+	if (option & 1) { vm->ResetFM(); }
+
 	NoticePlugins(MUCOM88IF_NOTICE_STOP);
 	return 0;
 }
@@ -696,11 +693,12 @@ int CMucom::Restart(void)
 	//		MUCOM88音楽再生の再開(停止後)
 	//		(戻り値が0以外の場合はエラー)
 	//
-	vm->DisableBreakPoint();
-
+	vm->DebugDisable();
 
 	NoticePlugins(MUCOM88IF_NOTICE_PLAY); 
 	vm->RestartINT3();
+
+	vm->DebugEnable();
 	playflag = true;
 	return 0;
 }
@@ -711,6 +709,8 @@ int CMucom::Fade(void)
 	//		MUCOM88音楽フェードアウト
 	//		(戻り値が0以外の場合はエラー)
 	//
+	vm->DebugDisable();
+
 	if (playflag == false) return -1;
 	vm->CallAndHalt(music_start_address + MUCOM_MUSIC_OFFSET_MFADE);
 	return 0;
@@ -1043,10 +1043,10 @@ int CMucom::StoreFMVoiceFromEmbed(void)
 
 	int song_address = GetSongAddress();
 
-	ChangeBankToExtram();
+	ChangeMemoryToSong();
 	int vdata = vm->Peekw(song_address + 1) + song_address;
 	int result = vm->Peek(vdata++);
-	ChangeBankToMainRam();
+	RestoreMemory();
 
 	fmvoice_usemax = result;
 
@@ -1558,14 +1558,6 @@ int CMucom::StoreBasicSource(char *text, int line, int add)
 	return mptr;
 }
 
-
-int CMucom::Compile(char *text, const char *filename, int option)
-{
-	return Compile(text, option, true, filename);
-}
-
-int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
-{
 //		MUCOM88コンパイル(Resetが必要)
 //		text         = MML書式のテキストデータ(UTF8)(終端=0)
 //		filename     = 出力される音楽データファイル
@@ -1575,6 +1567,15 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 //		         8   = 演奏バッファ#0に直接保存する
 //		(戻り値が0以外の場合はエラー)
 //
+int CMucom::Compile(char *text, const char *filename, int option)
+{
+	return Compile(text, option, true, filename);
+}
+
+// writeMub = mub出力
+int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
+{
+
 	int i, res;
 	int start, length;
 	char* adr_start;
@@ -1710,6 +1711,8 @@ void CMucom::PutMucomHeader(const char *stmp)
 
 void CMucom::InitCompiler()
 {
+	vm->DebugEnable();
+
 	// オリジナル
 	if (original_mode) {
 		vm->CallAndHalt(MUCOM_ADDRESS_CINT); // CINT コンパイラ初期化
@@ -1897,9 +1900,9 @@ int CMucom::SaveMusic(const char *fname,int start, int length, int option)
 
 		int num = 0;
 		CMemBuf *buf = new CMemBuf();
-		ChangeBankToExtram();
+		ChangeMemoryToSong();
 		res = vm->StoreMemExpand(buf, start, length, header, hedsize, footer, footsize, pcmdata, pcmsize);
-		ChangeBankToMainRam();
+		RestoreMemory();
 		if (res) {
 			PRINTF("#Memory write error.\r\n");
 			return -2;
@@ -1911,10 +1914,10 @@ int CMucom::SaveMusic(const char *fname,int start, int length, int option)
 		NoticePlugins(MUCOM88IF_NOTICE_LOADMUB);
 	}
 	else {
-		ChangeBankToExtram();
+		ChangeMemoryToSong();
 		//res = vm->SaveMem(filename, start, length);
 		res = vm->SaveMemExpand(fname, start, length, header, hedsize, footer, footsize, pcmdata, pcmsize);
-		ChangeBankToMainRam();
+		RestoreMemory();
 
 		if (res) {
 			PRINTF("#File write error [%s].\r\n", fname);

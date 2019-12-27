@@ -116,6 +116,8 @@ public:
 	int GetPassTick(void) { return pass_tick; }
 	int GetAudioOutputMs(void) { return audio_output_ms; }
 
+	void WaitReady(void);
+
 	//		YM2608ステータス
 	void FMRegDataOut(int reg, int data);
 	int FMRegDataGet(int reg);
@@ -145,8 +147,18 @@ public:
 	void CopyMemToExtRam(const uint8_t* src, int bank, int address, int length);
 	void CopyMemFromVm(uint8_t * dest, int address, int length);
 
-	void ChangeExtRamBank(uint8_t bank);
+	// 拡張RAMのバンク番号
 	int GetExtRamBank();
+
+	// 拡張RAMのバンク番号の設定
+	void SetExtRamBank(uint8_t bank);
+
+	// 拡張RAMの現在のモード
+	int GetExtRamMode();
+
+	// バンク切り替え 
+	// mode : 0x11 = 読み書き 0x00 = 無効(メインメモリになる)
+	void ChangeExtRam(uint8_t mode, uint8_t bank);
 	void ChangeExtRamMode(uint8_t mode);
 
 	void SetOrignalMode();
@@ -218,6 +230,7 @@ private:
 	bool original_mode;
 	uint8_t extram_bank_mode;
 	uint8_t extram_bank_no;
+	void ChangeExtRamBank(uint8_t bank);
 
 
 	//		音源

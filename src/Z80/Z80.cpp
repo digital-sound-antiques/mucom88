@@ -1,4 +1,4 @@
-// Portable Z80 emulation class
+﻿// Portable Z80 emulation class
 // Copyright (C) Yasuo Kuwahara 2002-2018
 // version 2.10
 
@@ -263,6 +263,7 @@ Z80::Z80() {
 	trace_enable = true;
 #endif
 
+	DebugEnableFlag = true;
 	DebugWaitFlag = false;
 	DebugInstExecFlag = false;
 	EnableBreakPointFlag = false;
@@ -324,8 +325,8 @@ void Z80::DisableBreakPoint()
 void Z80::DebugRun()
 {
 	// 一つ実行して再度ブレイクポイントまで実行
-	DebugWaitFlag = false;
 	DebugInstExecFlag = true;
+	DebugWaitFlag = false;
 }
 
 void Z80::DebugInstExec()
@@ -338,7 +339,15 @@ void Z80::DebugPause()
 	DebugWaitFlag = true;
 }
 
+void Z80::DebugDisable()
+{
+	DebugEnableFlag = false;
+}
 
+void Z80::DebugEnable()
+{
+	DebugEnableFlag = true;
+}
 
 void Z80::GetRegSet(RegSet* reg)
 {
@@ -379,13 +388,15 @@ int32_t Z80::Execute(int32_t n) {
 	clock = 0;
 #endif
 	do {
-		// ブレイクポイントであれば待機する
-		if (EnableBreakPointFlag && BreakPointAddress == pc) {
-			DebugWaitFlag = true;
+		if (DebugEnableFlag) {
+			// ブレイクポイントであれば待機する
+			if (EnableBreakPointFlag && !DebugInstExecFlag && BreakPointAddress == pc) {
+				DebugWaitFlag = true;
+			}
+			// 待機状態であれば実行しない
+			if (DebugWaitFlag && !DebugInstExecFlag) continue;
+			DebugInstExecFlag = false;
 		}
-		// 待機状態であれば実行しない
-		if (DebugWaitFlag && !DebugInstExecFlag) continue;
-		DebugInstExecFlag = false;
 		
 #ifdef Z80_TRACE
 		if (!rofs) tracep->pc = pc;

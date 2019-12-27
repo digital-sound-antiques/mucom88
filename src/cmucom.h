@@ -297,6 +297,7 @@ public:
 	//	MUCOM88 main service
 	void Init(void *window = NULL, int option = 0, int Rate = 0);
 	void Reset(int option=0);
+	void LoadOriginal(int option);
 	void LoadPlayer(int option);
 	void SetChannelWork();
 	int Play(int num=0);
@@ -427,8 +428,10 @@ public:
 	// ExtRam
 	void SetOriginalMode();
 	void GetExtramVector();
-	void ChangeBankToExtram();
-	void ChangeBankToMainRam();
+
+	void ChangeMemoryToSong();
+	void RestoreMemory();
+
 	int GetSongAddress();
 
 	// Debug
@@ -457,6 +460,9 @@ private:
 	bool use_extram;
 	int extram_disable_vec;
 	int extram_enable_vec;
+
+	int extram_last_bank;
+	int extram_last_mode;
 
 	int music_start_address;
 

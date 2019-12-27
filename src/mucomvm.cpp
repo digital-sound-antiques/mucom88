@@ -153,6 +153,39 @@ void mucomvm::GetExtMemory(unsigned char* data, int bank, int address, int lengt
 	memcpy(data, extram[bank] + address, length);
 }
 
+void mucomvm::SetMainMemory(unsigned char* data, int address, int length)
+{
+	if (address < 0 || 0x10000 <= address) {
+		return;
+	}
+
+	if (address + length >= 0x10000) {
+		int actual_size = 0x10000 - address;
+		memcpy(mem + address, data, actual_size);
+		return;
+	}
+
+	memcpy(mem + address, data, length);
+}
+
+void mucomvm::SetMemory(unsigned char* data, int address, int length)
+{
+}
+
+void mucomvm::SetExtMemory(unsigned char* data, int bank, int address, int length)
+{
+	if (address < 0 || 0x8000 <= address) {
+		return;
+	}
+
+	if (address + length >= 0x8000) {
+		int actual_size = 0x8000 - address;
+		memcpy(extram[bank] + address, data, actual_size);
+		return;
+	}
+	memcpy(extram[bank] + address, data, length);
+}
+
 
 
 void mucomvm::SetMucomInstance(CMucom *mucom)
@@ -1329,8 +1362,8 @@ int mucomvm::FMRegDataGet(int reg)
 
 void mucomvm::FMOutData(int data)
 {
-	printf("FMReg: %04x = %02x\n", sound_reg_select, data);
-	TraceLog(data);
+	//printf("FMReg: %04x = %02x\n", sound_reg_select, data);
+	//TraceLog(data);
 
 	switch (sound_reg_select) {
 	case 0x28:

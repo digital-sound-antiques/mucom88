@@ -259,6 +259,11 @@ Z80::Z80() {
 	tracep = tracebuf;
 	trace_enable = true;
 #endif
+
+	DebugWaitFlag = false;
+	DebugInstExecFlag = false;
+	EnableBreakPointFlag = false;
+	BreakPointAddress = 0x0000;
 }
 
 void Z80::Reset() {
@@ -300,6 +305,66 @@ uint16_t Z80::GetIX(void)
 	return (*(uint16_t *)&r[4 + OFS_IX]);
 }
 
+void Z80::EnableBreakPoint(uint16_t adr)
+{
+	EnableBreakPointFlag = true;
+	BreakPointAddress = adr;
+}
+
+void Z80::DisableBreakPoint()
+{
+	EnableBreakPointFlag = false;
+	DebugWaitFlag = false;
+}
+
+void Z80::DebugRun()
+{
+	// 一つ実行して再度ブレイクポイントまで実行
+	DebugWaitFlag = false;
+	DebugInstExecFlag = true;
+}
+
+void Z80::DebugInstExec()
+{
+	DebugInstExecFlag = true;
+}
+
+void Z80::DebugPause()
+{
+	DebugWaitFlag = true;
+}
+
+
+
+void Z80::GetRegSet(RegSet* reg)
+{
+	reg->pc = pc;
+	reg->sp = sp;
+
+	reg->af = (A << 8 | ResolvFlags());
+	reg->bc = BC;
+	reg->de = DE;
+	reg->hl = HL;
+	reg->ix = GetIX();
+	reg->iy = *(uint16_t*)&r[4 + OFS_IY];
+
+	reg->xaf = (a_ << 8 | f_ << 8);
+	reg->xbc = (*(uint16_t*)&bcde);
+	reg->xde = (*((uint16_t*)&bcde)+1);
+	reg->xhl = (HLfix);
+}
+
+void Z80::SetRegSet(RegSet* reg)
+{
+	pc = reg->pc;
+	sp = reg->sp;
+
+	A = (reg->af >> 8);
+	BC = reg->bc;
+	DE = reg->de;
+	HL = reg->hl;
+}
+
 int32_t Z80::Execute(int32_t n) {
 	int32_t tmp, tmp2, cy;
 	bool halt = false;
@@ -310,6 +375,14 @@ int32_t Z80::Execute(int32_t n) {
 	clock = 0;
 #endif
 	do {
+		// ブレイクポイントであれば待機する
+		if (EnableBreakPointFlag && BreakPointAddress == pc) {
+			DebugWaitFlag = true;
+		}
+		// 待機状態であれば実行しない
+		if (DebugWaitFlag && !DebugInstExecFlag) continue;
+		DebugInstExecFlag = false;
+		
 #ifdef Z80_TRACE
 		if (!rofs) tracep->pc = pc;
 		tracep->acs1 = tracep->acs2 = 0;

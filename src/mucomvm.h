@@ -183,6 +183,11 @@ public:
 	void GetMainMemory(unsigned char* data, int address, int length);
 	void GetExtMemory(unsigned char* data, int bank, int address, int length);
 
+	void SetMainMemory(unsigned char* data, int address, int length);
+	void SetMemory(unsigned char* data, int address, int length);
+	void SetExtMemory(unsigned char* data, int bank, int address, int length);
+
+
 private:
 	//		Z80
 	int32_t load(uint16_t adr);

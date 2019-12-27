@@ -7,6 +7,9 @@
 
 #include <vector>
 #include <string>
+
+#include "Z80/Z80.h"
+
 #include "membuf.h"
 #include "voiceformat.h"
 
@@ -404,8 +407,13 @@ public:
 	// Other Service
 	void GetFMRegMemory(unsigned char* data, int address, int length);
 	void GetMemory(unsigned char *data, int address, int length);
+
 	void GetMainMemory(unsigned char* data, int address, int length);
+	void SetMainMemory(unsigned char* data, int address, int length);
+
 	void GetExtMemory(unsigned char* data, int bank, int address, int length);
+	void SetExtMemory(unsigned char* data, int bank, int address, int length);
+
 	void SetChMute(int ch, bool sw);
 	bool GetChMute(int ch);
 	void FMRegDataOut(int reg, int data);
@@ -416,12 +424,21 @@ public:
 	void Poke(uint16_t adr, uint8_t data);
 	void Pokew(uint16_t adr, uint16_t data);
 
-	//
+	// ExtRam
 	void SetOriginalMode();
 	void GetExtramVector();
 	void ChangeBankToExtram();
 	void ChangeBankToMainRam();
 	int GetSongAddress();
+
+	// Debug
+	void EnableBreakPoint(uint16_t adr);
+	void DisableBreakPoint();
+	void DebugRun();
+	void DebugInstExec();
+	void DebugPause();
+	void GetRegSet(RegSet *reg);
+
 
 private:
 	//		Settings

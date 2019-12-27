@@ -114,6 +114,7 @@ int CMucom::strpick_spc(char *target, char *dest, int strmax)
 
 CMucom::CMucom( void )
 {
+	playflag = false;
 	original_mode = false;
 	compiler_initialized = false;
 	use_extram = false;
@@ -502,8 +503,17 @@ void CMucom::GetMainMemory(unsigned char* data, int address, int length) {
 	vm->GetMainMemory(data, address, length);
 }
 
+void CMucom::SetMainMemory(unsigned char* data, int address, int length) {
+	vm->SetMainMemory(data, address, length);
+}
+
 void CMucom::GetExtMemory(unsigned char* data, int bank, int address, int length) {
 	vm->GetExtMemory(data, bank, address, length);
+}
+
+
+void CMucom::SetExtMemory(unsigned char* data, int bank, int address, int length) {
+	vm->SetExtMemory(data, bank, address, length);
 }
 
 void CMucom::SetChMute(int ch, bool sw)
@@ -663,6 +673,9 @@ int CMucom::Stop(int option)
 	//		MUCOM88音楽再生の停止
 	//		(戻り値が0以外の場合はエラー)
 	//
+
+	vm->DisableBreakPoint();
+
 	playflag = false;
 	if (option & 1) {
 		vm->StopINT3();
@@ -683,7 +696,10 @@ int CMucom::Restart(void)
 	//		MUCOM88音楽再生の再開(停止後)
 	//		(戻り値が0以外の場合はエラー)
 	//
-	NoticePlugins(MUCOM88IF_NOTICE_PLAY);
+	vm->DisableBreakPoint();
+
+
+	NoticePlugins(MUCOM88IF_NOTICE_PLAY); 
 	vm->RestartINT3();
 	playflag = true;
 	return 0;
@@ -1077,6 +1093,38 @@ int CMucom::LoadFMVoiceFromTAG(void)
 
 	return 0;
 }
+
+void CMucom::EnableBreakPoint(uint16_t adr)
+{
+	vm->EnableBreakPoint(adr);
+}
+
+void CMucom::DisableBreakPoint()
+{
+	vm->DisableBreakPoint();
+}
+
+void CMucom::DebugRun()
+{
+	vm->DebugRun();
+}
+
+void CMucom::DebugInstExec()
+{
+	vm->DebugInstExec();
+}
+
+void CMucom::DebugPause()
+{
+	vm->DebugPause();
+}
+
+
+void CMucom::GetRegSet(RegSet* reg)
+{
+	vm->GetRegSet(reg);
+}
+
 
 
 /*------------------------------------------------------------*/

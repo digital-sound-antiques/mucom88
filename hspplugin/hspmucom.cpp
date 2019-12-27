@@ -218,6 +218,22 @@ EXPORT int WINAPI mucomgetmsg(char *message, int length) {
 	return 0;
 }
 
+// メモリを設定
+EXPORT BOOL WINAPI mucomsetmemory(unsigned char* data, int select, int bank, int address, int length)
+{
+	if (!mucom) return -1;
+	switch (select) {
+		case 0:
+			mucom->SetMainMemory(data, address, length);
+		break;
+		case 2:
+			mucom->SetExtMemory(data, bank, address, length);
+			break;
+	}
+	return 0;
+}
+
+
 // VMメモリを取得する
 EXPORT BOOL WINAPI mucomgetmemory(unsigned char *data, int address, int length)
 {
@@ -309,6 +325,55 @@ EXPORT int WINAPI mucompokew(int adr, int data) {
 	return 0;
 }
 
+/*------------------------------------------------------------*/
+// デバッグ
+
+EXPORT BOOL WINAPI mucomenablebreakpoint(int adrs)
+{
+	if (!mucom) return -1;
+	mucom->EnableBreakPoint(adrs);
+	return 0;
+}
+
+EXPORT BOOL WINAPI mucomdisablebreakpoint()
+{
+	if (!mucom) return -1;
+	mucom->DisableBreakPoint();
+	return 0;
+}
+
+EXPORT BOOL WINAPI mucomdebuggo()
+{
+	if (!mucom) return -1;
+	mucom->DebugRun();
+	return 0;
+}
+
+EXPORT BOOL WINAPI mucomdebuginstexec()
+{
+	if (!mucom) return -1;
+	mucom->DebugInstExec();
+	return 0;
+}
+
+EXPORT BOOL WINAPI mucomdebugpause()
+{
+	if (!mucom) return -1;
+	mucom->DebugPause();
+	return 0;
+}
+
+
+EXPORT BOOL WINAPI mucomgetregset(RegSet* reg)
+{
+	if (!mucom) return -1;
+	mucom->GetRegSet(reg);
+	return 0;
+}
+
+
+/*------------------------------------------------------------*/
+// 基本機能関連
 
 EXPORT BOOL WINAPI mucomfade(int p1, int p2, int p3, int p4)
 {

@@ -48,8 +48,6 @@
 		D9429A8F21FD757900F27F87 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9429A8E21FD757900F27F87 /* main.cpp */; };
 		D949331B21FB442C0033EAFA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
 		D949331C21FB44370033EAFA /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
-		D98306832335AD8C00655FCB /* logwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D983067F2335AD8C00655FCB /* logwrite.cpp */; };
-		D98306842335AD8C00655FCB /* logwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D983067F2335AD8C00655FCB /* logwrite.cpp */; };
 		D98306872335AE1600655FCB /* pcmentry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D98306812335AD8C00655FCB /* pcmentry.cpp */; };
 		D983068B2335B40900655FCB /* Z80.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C2A21EE13E50049E59E /* Z80.cpp */; };
 		D983068C2335B40900655FCB /* opna.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3221EE14230049E59E /* opna.cpp */; };
@@ -59,7 +57,6 @@
 		D98306902335B41600655FCB /* psg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3421EE142B0049E59E /* psg.cpp */; };
 		D98306912335B43600655FCB /* osdep_sdl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4621EE17240049E59E /* osdep_sdl.cpp */; };
 		D98306922335B44800655FCB /* audiobuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3721EE16870049E59E /* audiobuffer.cpp */; };
-		D98306932335B45900655FCB /* logwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D983067F2335AD8C00655FCB /* logwrite.cpp */; };
 		D98306942335B46600655FCB /* audiotime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C3921EE16870049E59E /* audiotime.cpp */; };
 		D9BF58C221FCAA720060B63D /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D55BDF21EE04F30049E59E /* SDLMain.m */; };
 		D9BF58C321FCAA720060B63D /* osdep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C0D21EE0F000049E59E /* osdep.cpp */; };
@@ -85,6 +82,15 @@
 		D9BF58D921FCAA720060B63D /* mucomvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 73D55C4A21EE25150049E59E /* mucomvm.cpp */; };
 		D9BF58DB21FCAA720060B63D /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE221EE08230049E59E /* SDL.framework */; };
 		D9BF58DC21FCAA720060B63D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73D55BE421EE0A650049E59E /* Cocoa.framework */; };
+		D9DA33B323C96A8100FBAB60 /* s98write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B023C96A8100FBAB60 /* s98write.cpp */; };
+		D9DA33B423C96A8100FBAB60 /* vgmwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B123C96A8100FBAB60 /* vgmwrite.cpp */; };
+		D9DA33B523C96A8100FBAB60 /* wavwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B223C96A8100FBAB60 /* wavwrite.cpp */; };
+		D9DA33B623C96E2900FBAB60 /* vgmwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B123C96A8100FBAB60 /* vgmwrite.cpp */; };
+		D9DA33B723C96E2E00FBAB60 /* s98write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B023C96A8100FBAB60 /* s98write.cpp */; };
+		D9DA33B823C96E3C00FBAB60 /* wavwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B223C96A8100FBAB60 /* wavwrite.cpp */; };
+		D9DA33BA23C9710500FBAB60 /* s98write.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B023C96A8100FBAB60 /* s98write.cpp */; };
+		D9DA33BB23C9710800FBAB60 /* vgmwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B123C96A8100FBAB60 /* vgmwrite.cpp */; };
+		D9DA33BC23C9710B00FBAB60 /* wavwrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9DA33B223C96A8100FBAB60 /* wavwrite.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -174,11 +180,13 @@
 		D91D0D8D23319ED80012562A /* pcmtool_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmtool_main.cpp; path = ../../src/utils/pcmtool_main.cpp; sourceTree = "<group>"; };
 		D91D0D8E23319ED80012562A /* pcmtool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmtool.cpp; path = ../../src/utils/pcmtool.cpp; sourceTree = "<group>"; };
 		D9429A8E21FD757900F27F87 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../src/main.cpp; sourceTree = "<group>"; };
-		D983067F2335AD8C00655FCB /* logwrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = logwrite.cpp; path = ../../src/utils/logwrite.cpp; sourceTree = "<group>"; };
 		D98306802335AD8C00655FCB /* logwrite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = logwrite.h; path = ../../src/utils/logwrite.h; sourceTree = "<group>"; };
 		D98306812335AD8C00655FCB /* pcmentry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pcmentry.cpp; path = ../../src/utils/pcmentry.cpp; sourceTree = "<group>"; };
 		D98306822335AD8C00655FCB /* pcmentry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pcmentry.h; path = ../../src/utils/pcmentry.h; sourceTree = "<group>"; };
 		D9BF58E121FCAA720060B63D /* mucom88 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mucom88; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9DA33B023C96A8100FBAB60 /* s98write.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = s98write.cpp; path = ../../src/utils/s98write.cpp; sourceTree = "<group>"; };
+		D9DA33B123C96A8100FBAB60 /* vgmwrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vgmwrite.cpp; path = ../../src/utils/vgmwrite.cpp; sourceTree = "<group>"; };
+		D9DA33B223C96A8100FBAB60 /* wavwrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wavwrite.cpp; path = ../../src/utils/wavwrite.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -344,8 +352,8 @@
 		D983067E2335AD3900655FCB /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				D9DA33B923C970FE00FBAB60 /* log */,
 				D98306882335AF1500655FCB /* header */,
-				D983067F2335AD8C00655FCB /* logwrite.cpp */,
 				D98306812335AD8C00655FCB /* pcmentry.cpp */,
 				D91D0D8E23319ED80012562A /* pcmtool.cpp */,
 			);
@@ -390,6 +398,16 @@
 				D91D0D8D23319ED80012562A /* pcmtool_main.cpp */,
 			);
 			name = main;
+			sourceTree = "<group>";
+		};
+		D9DA33B923C970FE00FBAB60 /* log */ = {
+			isa = PBXGroup;
+			children = (
+				D9DA33B023C96A8100FBAB60 /* s98write.cpp */,
+				D9DA33B123C96A8100FBAB60 /* vgmwrite.cpp */,
+				D9DA33B223C96A8100FBAB60 /* wavwrite.cpp */,
+			);
+			name = log;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -487,16 +505,18 @@
 			files = (
 				73D55BE021EE04F30049E59E /* SDLMain.m in Sources */,
 				73D55C1721EE0F000049E59E /* osdep.cpp in Sources */,
+				D9DA33B523C96A8100FBAB60 /* wavwrite.cpp in Sources */,
 				73D55C3521EE142B0049E59E /* psg.cpp in Sources */,
 				73D55C3121EE141B0049E59E /* fmtimer.cpp in Sources */,
+				D9DA33B323C96A8100FBAB60 /* s98write.cpp in Sources */,
 				73D55C0521EE0EBF0049E59E /* md5.c in Sources */,
 				73D55C4721EE17240049E59E /* osdep_sdl.cpp in Sources */,
 				73D55C3C21EE16870049E59E /* audiosdl.cpp in Sources */,
 				73D55C4521EE16FC0049E59E /* mucom_module.cpp in Sources */,
 				73D55BFB21EE0E9E0049E59E /* cmucom.cpp in Sources */,
 				73D55C3D21EE16870049E59E /* audiotime.cpp in Sources */,
-				D98306832335AD8C00655FCB /* logwrite.cpp in Sources */,
 				73D55BFA21EE0E9E0049E59E /* callback.cpp in Sources */,
+				D9DA33B423C96A8100FBAB60 /* vgmwrite.cpp in Sources */,
 				73D55C2D21EE13F60049E59E /* fmgen.cpp in Sources */,
 				73D55BF921EE0E9E0049E59E /* adpcm.cpp in Sources */,
 				73D55C2F21EE140B0049E59E /* file.cpp in Sources */,
@@ -518,7 +538,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D98306942335B46600655FCB /* audiotime.cpp in Sources */,
-				D98306932335B45900655FCB /* logwrite.cpp in Sources */,
 				D98306922335B44800655FCB /* audiobuffer.cpp in Sources */,
 				D98306912335B43600655FCB /* osdep_sdl.cpp in Sources */,
 				D983068D2335B41600655FCB /* file.cpp in Sources */,
@@ -528,7 +547,10 @@
 				D983068B2335B40900655FCB /* Z80.cpp in Sources */,
 				D983068C2335B40900655FCB /* opna.cpp in Sources */,
 				D91D0D9523319F690012562A /* pcmtool.cpp in Sources */,
+				D9DA33BB23C9710800FBAB60 /* vgmwrite.cpp in Sources */,
+				D9DA33BC23C9710B00FBAB60 /* wavwrite.cpp in Sources */,
 				D91D0D9323319F5F0012562A /* pcmtool_main.cpp in Sources */,
+				D9DA33BA23C9710500FBAB60 /* s98write.cpp in Sources */,
 				D98306872335AE1600655FCB /* pcmentry.cpp in Sources */,
 				D91D0D7723319E7F0012562A /* osdep.cpp in Sources */,
 				D91D0D7823319E7F0012562A /* md5.c in Sources */,
@@ -555,9 +577,11 @@
 				D9BF58CF21FCAA720060B63D /* file.cpp in Sources */,
 				D9BF58D421FCAA720060B63D /* plugin.cpp in Sources */,
 				D9BF58D621FCAA720060B63D /* audiobuffer.cpp in Sources */,
+				D9DA33B723C96E2E00FBAB60 /* s98write.cpp in Sources */,
 				D9BF58C721FCAA720060B63D /* osdep_sdl.cpp in Sources */,
 				D9BF58C821FCAA720060B63D /* audiosdl.cpp in Sources */,
-				D98306842335AD8C00655FCB /* logwrite.cpp in Sources */,
+				D9DA33B623C96E2900FBAB60 /* vgmwrite.cpp in Sources */,
+				D9DA33B823C96E3C00FBAB60 /* wavwrite.cpp in Sources */,
 				D9BF58CB21FCAA720060B63D /* audiotime.cpp in Sources */,
 				D9BF58D821FCAA720060B63D /* Z80.cpp in Sources */,
 				D9BF58C321FCAA720060B63D /* osdep.cpp in Sources */,

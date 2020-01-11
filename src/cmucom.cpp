@@ -42,6 +42,13 @@
 #include "bin_em/bin_smon_em.h"
 #include "bin_em/bin_music_em.h"
 
+#ifdef __APPLE__
+#define STRCASECMP strcasecmp
+#else
+#define STRCASECMP strcmpi
+#endif
+
+
 
 #define PRINTF vm->Msgf
 
@@ -150,7 +157,7 @@ void CMucom::SetLogFilename(const char *filename) {
 
 	bool use_vgm = false;
 
-	if (p != NULL && strcmpi(p, ".vgm") == 0) use_vgm = true;
+	if (p != NULL && STRCASECMP(p, ".vgm") == 0) use_vgm = true;
 
 	if (use_vgm) {
 		p_log = new VGMWrite();

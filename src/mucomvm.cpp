@@ -341,7 +341,7 @@ void mucomvm::Reset(void)
 
 	// バンクをリセット
 	int i = 0;
-	for (int i = 0; i < 0x10; i++) {
+	for (i = 0; i < 0x10; i++) {
 		membank[i] = &mem[i * 0x1000];
 		membank_wr[i] = &mem[i * 0x1000];
 	}

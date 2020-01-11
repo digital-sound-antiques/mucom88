@@ -26,6 +26,12 @@
 #define RENDER_RATE 44100
 #define RENDER_SECONDS 90
 
+#ifdef __APPLE__
+#define STRCASECMP strcasecmp
+#else
+#define STRCASECMP strcmpi
+#endif
+
 /*----------------------------------------------------------*/
 
 static void usage1( void )
@@ -248,7 +254,7 @@ int main( int argc, char *argv[] )
 	const char* ext = strrchr(fname, '.');
 
 	// mmlファイルはコンパイルをするようにする
-	if (ext != NULL && strcmpi(ext, ".muc") == 0) cmpopt |= MUCOM_CMPOPT_COMPILE;
+	if (ext != NULL && STRCASECMP(ext, ".muc") == 0) cmpopt |= MUCOM_CMPOPT_COMPILE;
 
 	if (cmpopt & MUCOM_CMPOPT_COMPILE) {
 		if (ppopt == 0) {

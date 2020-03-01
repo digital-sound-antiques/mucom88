@@ -67,7 +67,15 @@
     <ClCompile Include="utils\pcmentry.cpp" />
     <ClCompile Include="utils\pcmtool_main.cpp" />
     <ClCompile Include="utils\pcmtool.cpp" />
-    <ClCompile Include="utils\logwrite.cpp" />
+    <ClCompile Include="utils\s98write.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\vgmwrite.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\wavwrite.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bin_errmsg.h" />
@@ -171,7 +179,18 @@
     </ClInclude>
     <ClInclude Include="utils\pcmentry.h" />
     <ClInclude Include="utils\pcmtool.h" />
-    <ClInclude Include="utils\logwrite.h" />
+    <ClInclude Include="utils\logwrite.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\s98write.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\vgmwrite.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\wavwrite.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Z80">
@@ -188,6 +207,9 @@
     </Filter>
     <Filter Include="win32">
       <UniqueIdentifier>{33210cf8-78bb-49fc-908d-1f7ba9402f7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{ff695ab5-531c-4d4d-a42d-09f65ebafac5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

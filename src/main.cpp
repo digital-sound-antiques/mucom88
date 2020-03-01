@@ -10,6 +10,15 @@
 #include <string.h>
 #include <ctype.h>
 
+#ifdef WIN32
+#include <direct.h>
+#define getcwd _getcwd
+#define CHDIR _chdir
+#else
+#include <unistd.h>
+#define CHDIR chdir
+#endif
+
 #include "cmucom.h"
 #include "wavout.h"
 
@@ -32,6 +41,10 @@
 #define STRCASECMP strcmpi
 #endif
 
+#ifndef _MAX_PATH
+#define _MAX_PATH	1024
+#endif
+
 /*----------------------------------------------------------*/
 
 static void usage1( void )
@@ -48,6 +61,7 @@ static const char *p[] = {
 #ifdef MUCOM88WIN
 	"       -a [filename] add external plugin",
 #endif
+	"       -r [pathname] set rhythm WAV pathname",
 	"       -e Use external ROM files",
 	"       -s Use SCCI device",
 	"       -k Skip PCM load",
@@ -78,7 +92,8 @@ int main( int argc, char *argv[] )
 	const char *wavfile;
 	const char *logfile;
 	const char *voicefile;
-	const char *pluginfile;
+	const char* pluginfile;
+	const char* rhythmdir;
 
 #if defined(USE_SDL) && defined(_WIN32)
 	freopen( "CON", "w", stdout );
@@ -126,6 +141,7 @@ int main( int argc, char *argv[] )
 	logfile = NULL;
 	voicefile = NULL;
 	pluginfile = NULL;
+	rhythmdir = NULL;
 	fname[0] = 0;
 
 	bool compile_only = false;
@@ -191,6 +207,9 @@ int main( int argc, char *argv[] )
 			case '?': case 'h':
 				usage1(); 
 				return -1;
+			case 'r':
+				rhythmdir = argv[b + 1]; b++;
+				break;
 			default:
 				st=1;break;
 			}
@@ -199,6 +218,12 @@ int main( int argc, char *argv[] )
 
 	if (st) { printf("#Illegal switch selected.\n");return 1; }
 	if (fname[0]==0) { printf("#No file name selected.\n");return 1; }
+
+	char mydir[_MAX_PATH];
+	getcwd( mydir, _MAX_PATH );
+	if (rhythmdir) {
+		CHDIR( rhythmdir );							// リズム音源読み込みディレクトリ
+	}
 
 	//		call main
 	CMucom mucom;
@@ -210,7 +235,7 @@ int main( int argc, char *argv[] )
 
 
 	if (cmpopt & MUCOM_CMPOPT_STEP) {
-		mucom.Init(NULL,cmpopt,RENDER_RATE);
+		mucom.Init(NULL, cmpopt, RENDER_RATE);
 	}
 	else {
 		if (scci_opt) {
@@ -234,14 +259,18 @@ int main( int argc, char *argv[] )
 
 	if (pluginfile) {
 		printf("#Adding plugin %s.\n", pluginfile);
-		int plgres = mucom.AddPlugins(pluginfile,0);
+		int plgres = mucom.AddPlugins(pluginfile, 0);
 		if (plgres) {
-			printf( "#Error adding plugin.(%d)\n", plgres );
+			printf("#Error adding plugin.(%d)\n", plgres);
 		}
 	}
 
 	mucom.Reset(cmpopt);
 	st = 0;
+
+	if (rhythmdir) {
+		CHDIR(mydir);								// カレントに戻す
+	}
 
 	if (cmpopt & MUCOM_CMPOPT_INFO) {
 		mucom.ProcessFile(fname);
@@ -305,10 +334,10 @@ int main( int argc, char *argv[] )
 		if (cmpopt & MUCOM_CMPOPT_STEP) {
 			if (song_length <= 0) {
 				const char* timetag = mucom.GetInfoBufferByName("time");
-					song_length = atoi(timetag);
-					if (song_length <= 0) {
-						song_length = RENDER_SECONDS;
-					}
+				song_length = atoi(timetag);
+				if (song_length <= 0) {
+					song_length = RENDER_SECONDS;
+				}
 			}
 			if (logfile != NULL) printf("#Record to %s (%d sec).", logfile, song_length);
 			if (wavfile != NULL) printf( "#Record to %s (%d sec).", wavfile, song_length );

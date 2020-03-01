@@ -118,6 +118,7 @@ public:
 	int GetAudioOutputMs(void) { return audio_output_ms; }
 
 	void WaitReady(void);
+	int GetDriverStatus(int option);
 
 	//		YM2608ステータス
 	void FMRegDataOut(int reg, int data);

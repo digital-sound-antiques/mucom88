@@ -230,12 +230,6 @@ int main( int argc, char *argv[] )
 	//		call main
 	CMucom mucom;
 
-	if (original_mode) {
-		mucom.SetOriginalMode();
-	}
-
-
-
 	if (cmpopt & MUCOM_CMPOPT_STEP) {
 		mucom.Init(NULL, cmpopt, RENDER_RATE);
 	}
@@ -306,12 +300,6 @@ int main( int argc, char *argv[] )
 		puts(mucom.GetMessageBuffer());
 		return 0;
 	}
-
-	bool play_memory = false;
-	const char* ext = strrchr(fname, '.');
-
-	// mmlファイルはコンパイルをするようにする
-	if (ext != NULL && STRCASECMP(ext, ".muc") == 0) cmpopt |= MUCOM_CMPOPT_COMPILE;
 
 	if (cmpopt & MUCOM_CMPOPT_COMPILE) {
 		if (ppopt == 0) {

@@ -1051,18 +1051,6 @@ int mucomvm::SendExtMem(const unsigned char* src, int bank, int adr, int size)
 	return 0;
 }
 
-int mucomvm::SendExtMem(const unsigned char* src, int bank, int adr, int size)
-{
-	CopyMemToExtRam(src, bank, adr, size);
-	return 0;
-}
-
-
-int mucomvm::RecvMem(unsigned char* mem, int adr, int size)
-{
-	CopyMemFromVm(mem, adr, size);
-	return 0;
-}
 
 int mucomvm::RecvMem(unsigned char* mem, int adr, int size)
 {

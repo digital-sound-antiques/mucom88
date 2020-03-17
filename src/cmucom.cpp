@@ -42,7 +42,6 @@
 #include "bin_17/bin_voice.h"
 #include "bin_17/bin_smon.h"
 
-
 #include "bin_em/bin_expand_em.h"
 #include "bin_em/bin_errmsg_em.h"
 #include "bin_em/bin_msub_em.h"
@@ -359,9 +358,6 @@ void CMucom::LoadModBinary(int option)
 
 		LoadFMVoice(MUCOM_DEFAULT_VOICEFILE, true);
 	}
-}
-
-	vm->FillMem(MUCOM_ADDRESS_BASIC, 0xc9, 0x4000);
 }
 
 void CMucom::LoadExternalCompiler()

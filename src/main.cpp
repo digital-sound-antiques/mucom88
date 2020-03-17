@@ -1,8 +1,9 @@
 
 //
 //	mucom : OpenMucom88 Command Line Tool
-//			MUCOM88 by Yuzo Koshiro Copyright 1987-2019(C) 
-//			Windows version by onion software/onitama 2018/11
+//			MUCOM88 by Yuzo Koshiro Copyright 1987-2020(C) 
+//			Windows version by onion software/onitama since 2018/11
+//			Special thanks to : WING☆, Makoto Wada (Ancient corp.), boukichi, kumatan
 //
 
 #include <stdio.h>
@@ -38,11 +39,11 @@
 #ifdef __APPLE__
 #define STRCASECMP strcasecmp
 #else
+#ifdef _WIN32
+#define STRCASECMP _strcmpi
+#else
 #define STRCASECMP strcmpi
 #endif
-
-#ifndef _MAX_PATH
-#define _MAX_PATH	1024
 #endif
 
 /*----------------------------------------------------------*/
@@ -62,6 +63,7 @@ static const char *p[] = {
 	"       -a [filename] add external plugin",
 #endif
 	"       -r [pathname] set rhythm WAV pathname",
+	"       -f [drivername] Force driver mode",
 	"       -e Use external ROM files",
 	"       -s Use SCCI device",
 	"       -k Skip PCM load",
@@ -69,8 +71,7 @@ static const char *p[] = {
 	"       -d Dump used voice parameter",
 	"       -l [n] Set recording lengh to n seconds ",
 	"       -g Compile only",
-	"       -z Original mode",
-	"       -?, -h This help message ",
+	"       -?, -h Show help message ",
 	NULL };
 	int i;
 	for (i = 0; p[i]; i++) {
@@ -94,6 +95,7 @@ int main( int argc, char *argv[] )
 	const char *voicefile;
 	const char* pluginfile;
 	const char* rhythmdir;
+	const char* drivername;
 
 #if defined(USE_SDL) && defined(_WIN32)
 	freopen( "CON", "w", stdout );
@@ -142,10 +144,10 @@ int main( int argc, char *argv[] )
 	voicefile = NULL;
 	pluginfile = NULL;
 	rhythmdir = NULL;
+	drivername = NULL;
 	fname[0] = 0;
 
 	bool compile_only = false;
-	bool original_mode = false;
 
 	int song_length = 0;
 
@@ -174,6 +176,9 @@ int main( int argc, char *argv[] )
 			case 'a':
 				pluginfile = argv[b + 1]; b++;
 				break;
+			case 'f':
+				drivername = argv[b + 1]; b++;
+				break;
 			case 'l':
 				song_length = atoi(argv[b + 1]); b++;
 				break;
@@ -200,9 +205,6 @@ int main( int argc, char *argv[] )
 				break;
 			case 'd':
 				dumpopt = 1;
-				break;
-			case 'z':
-				original_mode = true;
 				break;
 			case '?': case 'h':
 				usage1(); 
@@ -264,6 +266,32 @@ int main( int argc, char *argv[] )
 			printf("#Error adding plugin.(%d)\n", plgres);
 		}
 	}
+
+
+	bool play_memory = false;
+	const char* ext = strrchr(fname, '.');
+
+	// mmlファイルはコンパイルをするようにする
+	if (ext != NULL && STRCASECMP(ext, ".muc") == 0) cmpopt |= MUCOM_CMPOPT_COMPILE;
+
+	int driver_mode;
+	if (drivername != NULL) {
+		driver_mode = mucom.GetDriverModeString(drivername);
+	}
+	else {
+		if (cmpopt & MUCOM_CMPOPT_COMPILE) {
+			driver_mode = mucom.GetDriverMode(fname);
+		}
+		else {
+			driver_mode = mucom.GetDriverModeMUB(fname);
+		}
+	}
+
+	if (driver_mode >= MUCOM_DRIVER_MUCOMDOTNET) {
+		printf("#Error MucomDotNet driver specified, Trying normal driver instead.\n");
+	}
+	mucom.SetDriverMode(driver_mode);
+
 
 	mucom.Reset(cmpopt);
 	st = 0;

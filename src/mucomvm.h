@@ -163,7 +163,8 @@ public:
 	void ChangeExtRam(uint8_t mode, uint8_t bank);
 	void ChangeExtRamMode(uint8_t mode);
 
-	void SetOrignalMode();
+	// オリジナル/拡張モードの設定
+	void SetOrignalMode(bool mode=true);
 
 	// その他処理
 	void ConvertVoice();

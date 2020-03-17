@@ -42,7 +42,7 @@ mucomvm::mucomvm(void)
 	osd = NULL;
 	master_window = NULL;
 
-	original_mode = false;
+	original_mode = true;
 
 	extram_bank_mode = 0;
 	extram_bank_no = 0;
@@ -540,9 +540,9 @@ void mucomvm::ChangeExtRamBank(uint8_t bank)
 }
 
 // ドライバの種類を設定
-void mucomvm::SetOrignalMode()
+void mucomvm::SetOrignalMode( bool mode )
 {
-	original_mode = true;
+	original_mode = mode;
 }
 
 void mucomvm::Halt(void)
@@ -687,6 +687,10 @@ int mucomvm::ExecUntilHalt(int times)
 				else {
 					Msgf("#Unknown message [%s].\r\n", stmp);
 				}
+			}
+			else if (pc == 0x18) {
+				//Msgf("#RST 18H Trap at $%04x.\r\n", GetA());
+				return -1;
 			}
 			else if (pc == 0x3b3) {
 				Msgf("#Error trap at $%04x.\r\n", pc);
@@ -858,6 +862,7 @@ int mucomvm::CallAndHalt2(uint16_t adr,uint8_t code)
 {
 	uint16_t tempadr = 0xf000;
 	uint8_t *p = mem + tempadr;
+
 	*p++ = 0x21;				// ld hl
 	*p++ = 0x10;
 	*p++ = 0xf0;
@@ -1046,6 +1051,18 @@ int mucomvm::SendExtMem(const unsigned char* src, int bank, int adr, int size)
 	return 0;
 }
 
+int mucomvm::SendExtMem(const unsigned char* src, int bank, int adr, int size)
+{
+	CopyMemToExtRam(src, bank, adr, size);
+	return 0;
+}
+
+
+int mucomvm::RecvMem(unsigned char* mem, int adr, int size)
+{
+	CopyMemFromVm(mem, adr, size);
+	return 0;
+}
 
 int mucomvm::RecvMem(unsigned char* mem, int adr, int size)
 {

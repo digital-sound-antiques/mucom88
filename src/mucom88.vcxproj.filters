@@ -65,6 +65,9 @@
     <ClCompile Include="plugin\plugin.cpp">
       <Filter>plugin</Filter>
     </ClCompile>
+    <ClCompile Include="utils\pcmentry.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
     <ClCompile Include="utils\s98write.cpp">
       <Filter>utils</Filter>
     </ClCompile>
@@ -167,10 +170,13 @@
     <ClInclude Include="voiceformat.h">
       <Filter>mucom88</Filter>
     </ClInclude>
-    <ClInclude Include="utils\s98write.h">
+    <ClInclude Include="utils\logwrite.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="utils\logwrite.h">
+    <ClInclude Include="utils\pcmentry.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\s98write.h">
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="utils\vgmwrite.h">
@@ -197,7 +203,7 @@
       <UniqueIdentifier>{33210cf8-78bb-49fc-908d-1f7ba9402f7c}</UniqueIdentifier>
     </Filter>
     <Filter Include="utils">
-      <UniqueIdentifier>{b8fad1af-f9e9-4a3f-9c37-49529b7a0ef1}</UniqueIdentifier>
+      <UniqueIdentifier>{4c10f201-8b9f-4cbc-a37b-3e72434b2b53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

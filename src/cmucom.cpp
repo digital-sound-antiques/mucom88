@@ -21,6 +21,16 @@
 #include "mucomerror.h"
 #include "md5.h"
 
+#include "bin_15/bin_music2_15.h"
+
+#include "bin_15/bin_expand15.h"
+#include "bin_15/bin_errmsg15.h"
+#include "bin_15/bin_msub15.h"
+#include "bin_15/bin_muc88_15.h"
+#include "bin_15/bin_ssgdat15.h"
+#include "bin_15/bin_time15.h"
+#include "bin_15/bin_voice15.h"
+
 #include "bin_17/bin_music2.h"
 
 #include "bin_17/bin_expand.h"
@@ -45,7 +55,11 @@
 #ifdef __APPLE__
 #define STRCASECMP strcasecmp
 #else
+#ifdef _WIN32
+#define STRCASECMP _strcmpi
+#else
 #define STRCASECMP strcmpi
+#endif
 #endif
 
 
@@ -122,7 +136,9 @@ int CMucom::strpick_spc(char *target, char *dest, int strmax)
 CMucom::CMucom( void )
 {
 	playflag = false;
-	original_mode = false;
+	original_mode = true;
+	octreverse_mode = false;
+	original_ver = MUCOM_ORIGINAL_VER_17;
 	compiler_initialized = false;
 	use_extram = false;
 	flag = 0;
@@ -239,6 +255,9 @@ void CMucom::Reset(int option)
 	//		         2,3 = コンパイラを初期化
 	//
 	int devres;
+
+	vm->SetOrignalMode(original_mode);
+
 	vm->SetLogWriter(p_log);
 	vm->SetWavWriter(p_wav);
 
@@ -340,6 +359,7 @@ void CMucom::LoadModBinary(int option)
 
 		LoadFMVoice(MUCOM_DEFAULT_VOICEFILE, true);
 	}
+}
 
 	vm->FillMem(MUCOM_ADDRESS_BASIC, 0xc9, 0x4000);
 }
@@ -363,16 +383,29 @@ void CMucom::LoadInternalCompiler()
 {
 	if (!original_mode) { return; }
 
-	//	内部のコンパイラを読む
-	vm->SendMem(bin_expand, MUCOM_ADDRESS_EXPAND, expand_size);
-	vm->SendMem(bin_errmsg, MUCOM_ADDRESS_ERRMSG, errmsg_size);
-	vm->SendMem(bin_msub, MUCOM_ADDRESS_MSUB, msub_size);
-	vm->SendMem(bin_muc88, MUCOM_ADDRESS_MUC88, muc88_size);
-	vm->SendMem(bin_ssgdat, MUCOM_ADDRESS_SSGDAT, ssgdat_size);
-	vm->SendMem(bin_time, MUCOM_ADDRESS_TIME, time_size);
-	vm->SendMem(bin_smon, MUCOM_ADDRESS_SMON, smon_size);
-	//vm->SendMem(bin_voice_dat, 0x6000, voice_dat_size);
-	StoreFMVoice((unsigned char*)bin_voice_dat);
+	if (original_ver == MUCOM_ORIGINAL_VER_17) {
+		//	内部のコンパイラを読む(1.7)
+		vm->SendMem(bin_expand, MUCOM_ADDRESS_EXPAND, expand_size);
+		vm->SendMem(bin_errmsg, MUCOM_ADDRESS_ERRMSG, errmsg_size);
+		vm->SendMem(bin_msub, MUCOM_ADDRESS_MSUB, msub_size);
+		vm->SendMem(bin_muc88, MUCOM_ADDRESS_MUC88, muc88_size);
+		vm->SendMem(bin_ssgdat, MUCOM_ADDRESS_SSGDAT, ssgdat_size);
+		vm->SendMem(bin_time, MUCOM_ADDRESS_TIME, time_size);
+		vm->SendMem(bin_smon, MUCOM_ADDRESS_SMON, smon_size);
+		StoreFMVoice((unsigned char*)bin_voice_dat);
+	}
+
+	if (original_ver == MUCOM_ORIGINAL_VER_15) {
+		//	内部のコンパイラを読む(1.5)
+		vm->SendMem(bin15_expand, MUCOM_ADDRESS_EXPAND, expand_size15);
+		vm->SendMem(bin15_errmsg, MUCOM_ADDRESS_ERRMSG, errmsg_size15);
+		vm->SendMem(bin15_msub, MUCOM_ADDRESS_MSUB, msub_size15);
+		vm->SendMem(bin15_muc88, MUCOM_ADDRESS_MUC88, muc88_size15);
+		vm->SendMem(bin15_ssgdat, MUCOM_ADDRESS_SSGDAT, ssgdat_size15);
+		vm->SendMem(bin15_time, MUCOM_ADDRESS_TIME, time_size15);
+		vm->SendMem(bin_smon, MUCOM_ADDRESS_SMON, smon_size);
+		StoreFMVoice((unsigned char*)bin15_voice_dat);
+	}
 }
 
 void CMucom::SetUUID(char *uuid)
@@ -396,7 +429,7 @@ int CMucom::GetMessageBufferSize(void)
 }
 
 
-int CMucom::Play(int num)
+int CMucom::Play(int num, bool start)
 {
 	//		MUCOM88音楽再生
 	//		num : 0   = 音楽No. (0～15)
@@ -452,9 +485,10 @@ int CMucom::Play(int num)
 
 	NoticePlugins(MUCOM88IF_NOTICE_PREPLAY);
 
-	PRINTF("#Play[%d]\r\n", num);
-
-	PlayMemory();
+	if (start) {
+		PRINTF("#Play[%d]\r\n", num);
+		PlayMemory();
+	}
 
 	return 0;
 }
@@ -561,11 +595,6 @@ void CMucom::Poke(uint16_t adr, uint8_t data)
 void CMucom::Pokew(uint16_t adr, uint16_t data)
 {
 	vm->Pokew(adr, data);
-}
-
-void CMucom::SetOriginalMode()
-{
-	original_mode = true;
 }
 
 void CMucom::GetExtramVector()
@@ -1000,6 +1029,20 @@ int CMucom::UpdateFMVoice(int no, MUCOM88_VOICEFORMAT *voice)
 	vm->ChangeDirectory(curdir);
 
 	return 0;
+}
+
+
+char *CMucom::DumpFMVoiceAll(void)
+{
+	//	使用中のFM音色をダンプする
+	//
+	int i, max;
+	vm->ResetMessageBuffer();
+	max = GetUseVoiceMax();
+	for (i = 0; i < max; i++) {
+		DumpFMVoice(GetUseVoiceNum(i));
+	}
+	return (char *)GetMessageBuffer();
 }
 
 
@@ -1613,6 +1656,12 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 
 	InitCompiler();
 	int vec = vm->Peekw(MUCOM_ADDRESS_POLL_VECTOR);
+
+	if (octreverse_mode) {
+		//	#invert onタグがあった場合はpoll iを実行する
+		res = vm->CallAndHalt2(vec, 'I');
+	}
+	
 	PRINTF("#poll a $%x.\r\n", vec);
 
 	int loopst = 0xf25a;
@@ -1699,7 +1748,7 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 	mubsize = length;
 
 	PRINTF("#Data Buffer $%04x-$%04x ($%04x)\r\n", start, start + length - 1, length);
-	PRINTF("#MaxCount:%d Basic:%04x Data:%04x\r\n", maxcount, basicsize, mubsize);
+	PRINTF("#MaxCount:%d Basic:%04x(%d%%) Data:%04x(%d%%)\r\n", maxcount, basicsize, GetStatus(MUCOM_STATUS_BASICRATE), mubsize, GetStatus(MUCOM_STATUS_MUBRATE));
 
 	if (tcount[maxch - 1] == 0) pcmflag = 2;	// PCM chが使われてなければPCM埋め込みはスキップ
 
@@ -1809,6 +1858,124 @@ int CMucom::CompileMem(char *mem, int option)
 	res = Compile(mem, "mem", option| MUCOM_COMPILE_TO_MUSBUFFER);
 	if (res) return res;
 	return 0;
+}
+
+
+int CMucom::GetDriverMode(char *fname)
+{
+	//		MUCOM88 #driverタグ文字列からドライバーモードを取得する(MMLファイルから取得)
+	//		fname      = MMLファイル名
+	//		(戻り値がマイナスの場合はエラー)
+	//		(正常な場合は、MUCOM_DRIVER_* の値が返る)
+	//
+	int res;
+	int sz;
+	char *mml;
+	if (fname == NULL) return -1;
+	mml = vm->LoadAlloc(fname, &sz);
+	if (mml == NULL) {
+		PRINTF("#File not found [%s].\r\n", fname);
+		return -1;
+	}
+	res = GetDriverModeMem(mml);
+	vm->LoadAllocFree(mml);
+	return res;
+}
+
+
+int CMucom::GetDriverModeMUB(char *fname)
+{
+	//		MUCOM88 #driverタグ文字列からドライバーモードを取得する(MUBファイルから取得)
+	//		fname      = MUBファイル名
+	//		(戻り値がマイナスの場合はエラー)
+	//		(正常な場合は、MUCOM_DRIVER_* の値が返る)
+	//
+	int res;
+	if (fname == NULL) return -1;
+
+	res = LoadMusic(fname,0);
+	if (res) {
+		PRINTF("#File not found [%s].\r\n", fname);
+		return -1;
+	}
+	LoadTagFromMusic(0);
+
+	res = GetDriverModeMem(NULL);
+	return res;
+}
+
+
+int CMucom::GetDriverModeMem(char *mem)
+{
+	//		MUCOM88 #driverタグ文字列からドライバーモードを取得する(MMLからダイレクトに取得)
+	//				#octaveタグ文字列からオクターブモードを反映させる
+	//		mem     = MMLデータ
+	//		(戻り値がマイナスの場合はエラー)
+	//		(正常な場合は、MUCOM_DRIVER_* の値が返る)
+	//
+	int res;
+	const char *driver;
+	const char *octave;
+	if (mem) {
+		res = ProcessHeader(mem);
+		if (res) return res;
+	}
+
+	//		#octaveタグを解析する
+	//		-> octreverse_modeに反映させる
+	octave = GetInfoBufferByName("invert");
+	if (STRCASECMP(octave, "on") == 0) {
+		octreverse_mode = true;
+	}
+	else {
+		octreverse_mode = false;
+	}
+
+	driver = GetInfoBufferByName("driver");
+	res = GetDriverModeString(driver);
+	return res;
+}
+
+
+int CMucom::GetDriverModeString(const char* name)
+{
+	//		MUCOM88 #driverタグ文字列からドライバーモードを取得する(文字列をダイレクトに指定)
+	//		name     = タグ文字列
+	//		(戻り値がマイナスの場合はエラー)
+	//		(正常な場合は、MUCOM_DRIVER_* の値が返る)
+	//
+	int res = MUCOM_DRIVER_UNKNOWN;
+
+	if (*name == 0) res = MUCOM_DRIVER_NONE;
+	if (STRCASECMP(name, "mucom88") == 0) res = MUCOM_DRIVER_MUCOM88;
+	if (STRCASECMP(name, "mucom88e") == 0) res = MUCOM_DRIVER_MUCOM88E;
+	if (STRCASECMP(name, "mucom88em") == 0) res = MUCOM_DRIVER_MUCOM88EM;
+	if (STRCASECMP(name, "mucomdotnet") == 0) res = MUCOM_DRIVER_MUCOMDOTNET;
+	return res;
+}
+
+
+void CMucom::SetDriverMode(int driver)
+{
+	//		ドライバーモード(MUCOM_DRIVER_*)から適切な設定を行う
+	//		(original_mode,original_verが設定される)
+	//
+	bool orig = true;
+	int ver = MUCOM_ORIGINAL_VER_17;
+	switch (driver) {
+	case MUCOM_DRIVER_MUCOM88EM:
+		orig = false;
+		break;
+	case MUCOM_DRIVER_MUCOM88E:
+		ver = MUCOM_ORIGINAL_VER_15;
+		break;
+	case MUCOM_DRIVER_MUCOMDOTNET:
+	case MUCOM_DRIVER_UNKNOWN:
+	default:
+		break;
+	}
+	original_mode = orig;
+	original_ver = ver;
 }
 
 

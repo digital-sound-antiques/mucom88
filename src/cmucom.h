@@ -129,6 +129,76 @@
 #define MUCOM_EDIT_OPTION_SJIS 0	// 編集中MMLの文字コードはSJIS
 #define MUCOM_EDIT_OPTION_UTF8 1	// 編集中MMLの文字コードはUTF-8
 
+#define MUCOM_DRIVER_UNKNOWN -1 	// 不明
+#define MUCOM_DRIVER_NONE 0 		// 未定義
+#define MUCOM_DRIVER_MUCOM88 1		// オリジナルのドライバ(1.7)
+#define MUCOM_DRIVER_MUCOM88E 2		// オリジナルのドライバ(1.5)
+#define MUCOM_DRIVER_MUCOM88EM 4	// 拡張メモリ版ドライバ(1.7)
+#define MUCOM_DRIVER_MUCOMDOTNET 8	// MucomDotNET
+
+#define MUCOM_ORIGINAL_VER_17 0		// Mucom88オリジナルのドライバ(1.7)
+#define MUCOM_ORIGINAL_VER_15 1		// Mucom88オリジナルのドライバ(1.5)
+
+
+// 共通
+#define MUCOM_ADDRESS_BASIC 0x1000
+#define MUCOM_ADDRESS_POLL_VECTOR 0x0eea8
+
+
+// em 開始アドレス
+#define MUCOM_ADDRESS_EM_EXPAND 0xB800
+#define MUCOM_ADDRESS_EM_ERRMSG 0x8800
+#define MUCOM_ADDRESS_EM_MSUB 0x9000
+#define MUCOM_ADDRESS_EM_MUC88 0x9600
+#define MUCOM_ADDRESS_EM_SSGDAT 0xBE00
+#define MUCOM_ADDRESS_EM_TIME 0xE400
+#define MUCOM_ADDRESS_EM_SMON 0xDE00
+
+#define MUCOM_ADDRESS_EM_MUSIC 0xC000
+
+#define MUCOM_ADDRESS_EM_SSGDAT_AFTER 0xc200
+
+
+// ルーチン
+#define MUCOM_ADDRESS_EM_ERAM_TABLE 0x95A0 // 拡張RAM切り替えルーチン テーブル
+#define MUCOM_ADDRESS_EM_CINT 0x9600 // コンパイラ初期化
+
+#define MUCOM_ADDRESS_EM_WKGET 0xC02A
+
+
+
+// オリジナル 開始アドレス
+#define MUCOM_ADDRESS_EXPAND 0xab00
+#define MUCOM_ADDRESS_ERRMSG 0x8800
+#define MUCOM_ADDRESS_MSUB 0x9000
+#define MUCOM_ADDRESS_MUC88 0x9600
+#define MUCOM_ADDRESS_SSGDAT 0x5e00
+#define MUCOM_ADDRESS_TIME 0xe400
+#define MUCOM_ADDRESS_SMON 0xde00
+
+#define MUCOM_ADDRESS_MUSIC 0xb000
+
+// ルーチン
+#define MUCOM_ADDRESS_CINT 0x9600 // コンパイラ初期化
+#define MUCOM_ADDRESS_RETW 0xb00c // music2:RETW
+
+// 曲データアドレス
+#define MUCOM_ADDRESS_SONG 0xc200
+#define MUCOM_ADDRESS_EM_SONG 0x0000
+
+// ワークアドレス
+#define MUCOM_ADDRESS_JCLOCK 0x8c90
+#define MUCOM_ADDRESS_JPLINE 0x8c92
+#define MUCOM_ADDRESS_DEFVOICE 0x8c50
+
+
+// 曲再生ルーチン オフセット
+#define MUCOM_MUSIC_OFFSET_MSTART 0x0000
+#define MUCOM_MUSIC_OFFSET_MSTOP 0x0003
+#define MUCOM_MUSIC_OFFSET_MFADE 0x0006
+
+
+
 
 
 // 共通
@@ -302,7 +372,7 @@ public:
 	void LoadOriginal(int option);
 	void LoadPlayer(int option);
 	void SetChannelWork();
-	int Play(int num=0);
+	int Play(int num=0, bool start=true);
 	int Stop(int option=0);
 	int Restart(void);
 	int Fade(void);
@@ -393,6 +463,7 @@ public:
 	int SaveFMVoice(bool sw = true);
 	void StoreFMVoice(unsigned char *voice);
 	void DumpFMVoice(int no);
+	char *DumpFMVoiceAll(void);
 	MUCOM88_VOICEFORMAT *GetFMVoice(int no);
 	int UpdateFMVoice(int no, MUCOM88_VOICEFORMAT *voice);
 	int StoreFMVoiceFromEmbed(void);
@@ -427,8 +498,14 @@ public:
 	void Poke(uint16_t adr, uint8_t data);
 	void Pokew(uint16_t adr, uint16_t data);
 
+	//	driver selector
+	int GetDriverMode(char* fname);
+	int GetDriverModeMUB(char* fname);
+	int GetDriverModeMem(char* mem);
+	int GetDriverModeString(const char* name);
+	void SetDriverMode(int driver);
+
 	// ExtRam
-	void SetOriginalMode();
 	void GetExtramVector();
 
 	void ChangeMemoryToSong();
@@ -458,8 +535,10 @@ private:
 	WavWriter *p_wav;
 
 	bool original_mode; // original mode
+	bool octreverse_mode; // octave reverse mode
 	bool compiler_initialized; // 初期化後
 	bool use_extram;
+	int  original_ver;	// original mode version (MUCOM_ORIGINAL_VER_*)
 	int extram_disable_vec;
 	int extram_enable_vec;
 

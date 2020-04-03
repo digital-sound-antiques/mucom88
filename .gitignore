@@ -40,3 +40,6 @@ hspplugin/Debug
 hspplugin/Release
 
 hspplugin/*.user
+
+src/tests/objs
+src/tests/modtest

@@ -103,7 +103,6 @@
     <ClCompile Include="utils\s98write.cpp" />
     <ClCompile Include="utils\vgmwrite.cpp" />
     <ClCompile Include="utils\wavwrite.cpp" />
-    <ClCompile Include="wavout.cpp" />
     <ClCompile Include="win32\osdep_win.cpp" />
     <ClCompile Include="win32\realchip.cpp" />
     <ClCompile Include="win32\soundds.cpp" />
@@ -139,7 +138,6 @@
     <ClInclude Include="utils\vgmwrite.h" />
     <ClInclude Include="utils\wavwrite.h" />
     <ClInclude Include="voiceformat.h" />
-    <ClInclude Include="wavout.h" />
     <ClInclude Include="win32\osdep_win.h" />
     <ClInclude Include="win32\realchip.h" />
     <ClInclude Include="win32\scci.h" />

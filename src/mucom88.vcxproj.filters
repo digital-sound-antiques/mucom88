@@ -59,9 +59,6 @@
     <ClCompile Include="osdep.cpp">
       <Filter>mucom88</Filter>
     </ClCompile>
-    <ClCompile Include="wavout.cpp">
-      <Filter>mucom88</Filter>
-    </ClCompile>
     <ClCompile Include="plugin\plugin.cpp">
       <Filter>plugin</Filter>
     </ClCompile>
@@ -159,9 +156,6 @@
       <Filter>mucom88</Filter>
     </ClInclude>
     <ClInclude Include="callback.h">
-      <Filter>mucom88</Filter>
-    </ClInclude>
-    <ClInclude Include="wavout.h">
       <Filter>mucom88</Filter>
     </ClInclude>
     <ClInclude Include="plugin\plugin.h">

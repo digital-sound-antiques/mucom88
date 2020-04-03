@@ -52,6 +52,10 @@ public:
 	int GetDirectory(char *buf, int size);
 	int ChangeDirectory(const char *dir);
 	int KillFile(const char *filename);
+
+	// その他
+	bool SetBreakHook();
+	bool GetBreakStatus();
 };
 
 #endif

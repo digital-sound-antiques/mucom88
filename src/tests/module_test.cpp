@@ -6,7 +6,6 @@
 #include <SDL.h>
 #endif
 
-
 #include "mucom_module.h"
 
 void WriteWORD(unsigned char *p, unsigned short v) {
@@ -51,32 +50,32 @@ void WriteWavHeader(FILE *fp, int frequency, int bits, int channels, long sample
   fseek(fp, 0, SEEK_END);
 }
 
-void recordWav(const char *outputFilename, MucomModule *m,int seconds) {
+void RecordWav(const char *outputFilename, MucomModule *m,int seconds) {
     FILE *fp = fopen(outputFilename,"wb");
     if (fp == NULL) return;
 
     int rate = 44100;
     int bits = 16;
     int channels = 2;
-    long total_samples = 0;
+    long totalSamples = 0;
 
-    WriteWavHeader(fp, rate, bits, channels, total_samples);
+    WriteWavHeader(fp, rate, bits, channels, totalSamples);
 
     long ms = 0;
     int samples = 128;
     short out[512];
     
-    while(total_samples < rate * seconds) {
+    while(totalSamples < rate * seconds) {
         m->Mix(out, samples);
         fwrite(out, samples*4, 1, fp);
-        total_samples += samples;
+        totalSamples += samples;
     }
 
-	WriteWavHeader(fp, rate, bits, channels, total_samples);
+	WriteWavHeader(fp, rate, bits, channels, totalSamples);
     fclose(fp);
 }
 
-int compileWav(const char *filename, const char *wavFilename) {
+int CompileWav(const char *filename, const char *wavFilename) {
     MucomModule *module = new MucomModule();
     // module->SetVolume(1.0);
     printf("File:%s\n", filename);
@@ -86,11 +85,18 @@ int compileWav(const char *filename, const char *wavFilename) {
     if (!r) return -1;
     r = module->Play();
     if (!r) return -1;
-    printf("recordWav\n");
-    recordWav(wavFilename, module, 30);
+    printf("RecordWav\n");
+    RecordWav(wavFilename, module, 30);
     printf("close\n");
     module->Close();
     delete module;
+}
+
+int CompileSong() {
+    if (CompileWav("sampl1.muc","sampl1.wav") < 0) return -1; 
+    if (CompileWav("sampl2.muc","sampl2.wav") < 0) return -1; 
+    if (CompileWav("sampl3.muc","sampl3.wav") < 0) return -1; 
+    return 0;
 }
 
 int main(int argc, char *argv[])
@@ -101,9 +107,7 @@ int main(int argc, char *argv[])
 #endif
 
     printf("MucomModule Test\n");
-    if (compileWav("sampl1.muc","sampl1.wav") < 0) return -1; 
-    if (compileWav("sampl2.muc","sampl2.wav") < 0) return -1; 
-    if (compileWav("sampl3.muc","sampl3.wav") < 0) return -1; 
+    if (CompileSong() < 0) return -1;
     return 0;
 }
 

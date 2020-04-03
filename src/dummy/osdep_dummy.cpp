@@ -117,11 +117,19 @@ int OsDependentDummy::KillFile(const char *filename)
 	return 0;
 }
 
-int OsDependentSdl::GetStatus(int option)
+int OsDependentDummy::GetStatus(int option)
 {
 	// OsDep内部パラメーター読み込みhub
 	//
 	return 0;
 }
 
+bool OsDependentDummy::SetBreakHook()
+{
+	return true;
+}
 
+bool OsDependentDummy::GetBreakStatus()
+{
+	return false;
+}

@@ -43,3 +43,4 @@ hspplugin/*.user
 
 src/tests/objs
 src/tests/modtest
+src/tests/compile

@@ -1351,13 +1351,18 @@ int CMucom::GetMultibyteCharacter(const unsigned char *text)
 #endif
 
 #ifdef MUCOM88UTF8
-	if (a1 >= 128) {				// 全角文字チェック(UTF8)
+	if (a1 & 0x80) {				// 全角文字チェック(UTF8)
+		int utf8bytes = 0;
+		if ((a1 & 0xe0) == 0x0c0) utf8bytes = 1;
+		if ((a1 & 0xf0) == 0x0e0) utf8bytes = 2;
+		if ((a1 & 0xf8) == 0x0f0) utf8bytes = 3;
+
 		int utf8cnt = 0;
-		if ((a1 >= 192) && (p[1] != 0)) utf8cnt++;
-		if ((a1 >= 224) && (p[2] != 0)) utf8cnt++;
-		if ((a1 >= 240) && (p[3] != 0)) utf8cnt++;
-		if ((a1 >= 248) && (p[4] != 0)) utf8cnt++;
-		if ((a1 >= 252) && (p[5] != 0)) utf8cnt++;
+		while(utf8bytes > 0) {
+			if ((*(++p) & 0xc0) != 0x80) break;
+			utf8cnt++;
+			utf8bytes--;
+		}
 		mulchr += utf8cnt;
 	}
 #endif
@@ -1591,10 +1596,18 @@ int CMucom::StoreBasicSource(char *text, int line, int add)
 		i = 0;
 		while (1) {
 			a1 = linebuf[i];
+
+			if (a1 == ';') {
+				while(a1 != 0) {
+					a1 = linebuf[++i];
+				}
+			}
+
 			if (a1 == 0) {
 				vm->Poke(mptr++, 0);
 				break;
 			}
+
 			mulchr = GetMultibyteCharacter(linebuf+i);
 			i += mulchr;
 			if ( mulchr==1) {

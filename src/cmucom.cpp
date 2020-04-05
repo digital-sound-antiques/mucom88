@@ -64,6 +64,7 @@
 
 
 #define PRINTF vm->Msgf
+#define PRINTF_NOCONV vm->MsgfNoConvert
 
 int CMucom::htoi_sub(char hstr)
 {
@@ -1668,7 +1669,7 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 		int line = vm->Peekw(0x0f32e);
 		int msgid = vm->GetMessageId();
 		if (msgid > 0) {
-			PRINTF("#error %d in line %d.\r\n-> %s (%s)\r\n", msgid, line, mucom_geterror_j(msgid), mucom_geterror(msgid));
+			PRINTF_NOCONV("#error %d in line %d.\r\n-> %s (%s)\r\n", msgid, line, mucom_geterror_j(msgid), mucom_geterror(msgid));
 		}
 		else {
 			PRINTF("#unknown error in line %d.\r\n", line);
@@ -1708,7 +1709,7 @@ int CMucom::Compile(char *text, int option, bool writeMub, const char *filename)
 		if (voiceid <= 1) badvoice = true;
 	}
 	if (badvoice) {
-		PRINTF("#Abort: bad voice No. detected.\r\n-> 音色番号 @0 は使用できません。\r\n");
+		PRINTF_NOCONV("#Abort: bad voice No. detected.\r\n-> 音色番号 @0 は使用できません。\r\n");
 		return -1;
 	}
 

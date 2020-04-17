@@ -74,6 +74,9 @@
     <ClCompile Include="utils\wavwrite.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="utils\codeconv\codeconv_dummy.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fmgen\types.h" />
@@ -177,6 +180,9 @@
       <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="utils\wavwrite.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\codeconv\codeconv_dummy.h">
       <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>

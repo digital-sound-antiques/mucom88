@@ -332,21 +332,22 @@ void CMucom::SetChannelWork()
 
 void CMucom::LoadModBinary(int option)
 {
-	// 外部ファイル
 	if (original_mode) { return; }
 
-	vm->SendMem(bin_expand_em, MUCOM_ADDRESS_EM_EXPAND, expand_em_size);
-	vm->SendMem(bin_errmsg_em, MUCOM_ADDRESS_EM_ERRMSG, errmsg_em_size);
-	vm->SendMem(bin_msub_em, MUCOM_ADDRESS_EM_MSUB, msub_em_size);
-	vm->SendMem(bin_muc88_em, MUCOM_ADDRESS_EM_MUC88, muc88_em_size);
-	vm->SendMem(bin_ssgdat_em, MUCOM_ADDRESS_EM_SSGDAT, ssgdat_em_size);
-	vm->SendMem(bin_time_em, MUCOM_ADDRESS_EM_TIME, time_em_size);
-	vm->SendMem(bin_smon_em, MUCOM_ADDRESS_EM_SMON, smon_em_size);
+	// 内蔵バイナリの読み込み
+	if (!(option & MUCOM_CMPOPT_USE_EXTROM)) {
+		vm->SendMem(bin_expand_em, MUCOM_ADDRESS_EM_EXPAND, expand_em_size);
+		vm->SendMem(bin_errmsg_em, MUCOM_ADDRESS_EM_ERRMSG, errmsg_em_size);
+		vm->SendMem(bin_msub_em, MUCOM_ADDRESS_EM_MSUB, msub_em_size);
+		vm->SendMem(bin_muc88_em, MUCOM_ADDRESS_EM_MUC88, muc88_em_size);
+		vm->SendMem(bin_ssgdat_em, MUCOM_ADDRESS_EM_SSGDAT, ssgdat_em_size);
+		vm->SendMem(bin_time_em, MUCOM_ADDRESS_EM_TIME, time_em_size);
+		vm->SendMem(bin_smon_em, MUCOM_ADDRESS_EM_SMON, smon_em_size);
 
-	vm->SendMem(bin_music_em, MUCOM_ADDRESS_EM_MUSIC, music_em_size);
-	StoreFMVoice((unsigned char*)bin_voice_dat);
-
-	if (option & MUCOM_CMPOPT_USE_EXTROM) {
+		vm->SendMem(bin_music_em, MUCOM_ADDRESS_EM_MUSIC, music_em_size);
+		StoreFMVoice((unsigned char*)bin_voice_dat);
+	} else {
+		// 外部ファイルの読み込み
 		vm->LoadMem("expand", MUCOM_ADDRESS_EM_EXPAND, 0);
 		vm->LoadMem("errmsg", MUCOM_ADDRESS_EM_ERRMSG, 0);
 		vm->LoadMem("msub", MUCOM_ADDRESS_EM_MSUB, 0);
@@ -1119,11 +1120,13 @@ int CMucom::StoreFMVoiceFromEmbed(void)
 
 int CMucom::SendFMVoiceMemory(const unsigned char* src, int offset, int size)
 {
+	// オリジナルはメインRAMの0x6000に転送
 	if (original_mode) {
 		vm->SendMem(src, MUCOM_FMVOICE_ADR + offset, size);
 		return 0;
 	}
-	
+
+	// emは拡張RAM バンク1の0x6000に転送
 	vm->SendExtMem(src, 1, MUCOM_FMVOICE_ADR + offset, size);	
 	return 0;
 }

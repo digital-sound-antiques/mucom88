@@ -156,11 +156,9 @@
 
 #define MUCOM_ADDRESS_EM_MUSIC 0xC000
 
-#define MUCOM_ADDRESS_EM_SSGDAT_AFTER 0xc200
 
-
-// ルーチン
-#define MUCOM_ADDRESS_EM_ERAM_TABLE 0x95A0 // 拡張RAM切り替えルーチン テーブル
+// em ルーチン
+#define MUCOM_ADDRESS_EM_ERAM_TABLE 0x95A0 // 拡張RAM切り替えルーチン テーブル(msubの最後)
 #define MUCOM_ADDRESS_EM_CINT 0x9600 // コンパイラ初期化
 
 #define MUCOM_ADDRESS_EM_WKGET 0xC02A

@@ -175,7 +175,9 @@ int Adpcm::encode(short *pSrc,unsigned char *pDis,DWORD iSampleSize){
 		// エンコード処理
 		dn = *pSrc - xn;		// 差分抽出
 		pSrc++;
-		i = (abs((int)dn) << 16) / (stepSize << 14);
+
+		// マイナス値になるケースがあるのを修正
+		i = (abs((int)dn) << 2) / stepSize;
 		if(i > 7){
 			i = 7;
 		}
@@ -187,6 +189,11 @@ int Adpcm::encode(short *pSrc,unsigned char *pDis,DWORD iSampleSize){
 		}else{
 			xn += i;
 		}
+
+		// クリッピング処理
+		if (xn > 32767) xn = 32767;
+		else if (xn < -32768) xn = -32768;
+
 		stepSize = (stepsizeTable[adpcm] * stepSize) / 64;
 		if(stepSize < 127){
 			stepSize = 127;

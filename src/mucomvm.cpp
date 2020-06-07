@@ -1022,7 +1022,8 @@ int mucomvm::LoadPcmFromMem(const char *buf, int sz, int maxpcm)
 	pcmmem = (char *)opn->GetADPCMBuffer();
 	memcpy(pcmmem, pcmdat, sz - infosize);
 
-	//if (p_log) p_log->WriteAdpcmMemory(pcmdat, sz - infosize);
+	// ログ用にADPCMを転送する
+	if (p_log) p_log->WriteAdpcmMemory(pcmdat, sz - infosize);
 
 	if (m_option & VM_OPTION_SCCI) {
 		osd->OutputRealChipAdpcm(pcmdat, sz - infosize);

@@ -19,9 +19,10 @@ src/pcmtool.exe
 
 build
 
-xcode/miniosx.xcodeproj/xcuserdata
+xcode/mucom88.xcodeproj/xcuserdata
 xcode/DerivedData
-xcode/miniosx.xcodeproj/project.xcworkspace/xcuserdata
+xcode/mucom88.xcodeproj/project.xcworkspace/xcuserdata
+xcode/mucom88.xcodeproj/xcuserdata
 
 src/*.user
 src/.vs/

@@ -45,3 +45,4 @@ hspplugin/*.user
 src/tests/objs
 src/tests/modtest
 src/tests/compile
+src/SDL-1.2.15

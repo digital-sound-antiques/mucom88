@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mucom88", "mucom88.vcxproj", "{DC3A1DD3-7664-48A9-88C2-AB16D9CACCE1}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pcmtool", "pcmtool.vcxproj", "{C876B26D-73E7-46B9-9F14-D11E5CF66B39}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mucom88_sdl", "mucom88_sdl.vcxproj", "{21283ADE-FF2D-4BC9-A369-525D83FC9DD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DC3A1DD3-7664-48A9-88C2-AB16D9CACCE1}.Debug|Win32.ActiveCfg = Debug|Win32
-		{DC3A1DD3-7664-48A9-88C2-AB16D9CACCE1}.Debug|Win32.Build.0 = Debug|Win32
-		{DC3A1DD3-7664-48A9-88C2-AB16D9CACCE1}.Release|Win32.ActiveCfg = Release|Win32
-		{DC3A1DD3-7664-48A9-88C2-AB16D9CACCE1}.Release|Win32.Build.0 = Release|Win32
 		{C876B26D-73E7-46B9-9F14-D11E5CF66B39}.Debug|Win32.ActiveCfg = Debug|Win32
 		{C876B26D-73E7-46B9-9F14-D11E5CF66B39}.Debug|Win32.Build.0 = Debug|Win32
 		{C876B26D-73E7-46B9-9F14-D11E5CF66B39}.Release|Win32.ActiveCfg = Release|Win32
 		{C876B26D-73E7-46B9-9F14-D11E5CF66B39}.Release|Win32.Build.0 = Release|Win32
+		{21283ADE-FF2D-4BC9-A369-525D83FC9DD6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{21283ADE-FF2D-4BC9-A369-525D83FC9DD6}.Debug|Win32.Build.0 = Debug|Win32
+		{21283ADE-FF2D-4BC9-A369-525D83FC9DD6}.Release|Win32.ActiveCfg = Release|Win32
+		{21283ADE-FF2D-4BC9-A369-525D83FC9DD6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

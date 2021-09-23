@@ -30,7 +30,6 @@ public:
     /// <summary>
     /// フェーダー使用？
     /// </summary>
-    /// <param name="val"></param>
     void UseFader(bool enable);
 
     /// <summary>
@@ -41,25 +40,21 @@ public:
     /// <summary>
     /// シーク(秒数) 実験版
     /// </summary>
-    /// <param name="pos"></param>
     void Seek(int pos);
 
     /// <summary>
     /// 再生位置(秒数)
     /// </summary>
-    /// <returns></returns>
     int GetPosition();
 
     /// <summary>
     /// 終了？
     /// </summary>
-    /// <returns></returns>
     bool IsEnd();
 
     /// <summary>
     /// 曲の長さ(秒数) (#timeタグ内容 or デフォルト値)
     /// </summary>
-    /// <returns></returns>
     int GetLength();
 
     /// <summary>

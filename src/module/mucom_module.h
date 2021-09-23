@@ -20,7 +20,6 @@ public:
     bool OpenMemory(uint8_t* data, int size, const char* path);
     bool Open(const char *workingDirectory, const char *songFilename);
 
-
     void SetRate(int rate);
     void SetPCM(const char *file);
     void SetVoice(const char *file);
@@ -52,7 +51,13 @@ public:
     int GetPosition();
 
     /// <summary>
-    /// 曲秒数(#timeタグ内容 or デフォルト)
+    /// 終了？
+    /// </summary>
+    /// <returns></returns>
+    bool IsEnd();
+
+    /// <summary>
+    /// 曲の長さ(秒数) (#timeタグ内容 or デフォルト値)
     /// </summary>
     /// <returns></returns>
     int GetLength();
@@ -69,9 +74,15 @@ public:
     const char *GetResult();
 private:
 
+    void LoadTag();
+
+    int GetLengthFromTag();
+
     void LoadSongTag(const char* songFilename);
 
     int defaultLength;
+
+    int length;
 
     double volume;
     bool enableFade;

@@ -90,10 +90,23 @@ int MucomModule::GetPosition() {
 	return playedFrames / audioRate;
 }
 
+bool MucomModule::IsEnd()
+{
+	int pos = GetPosition();
+	return length <= pos;
+}
+
 /// <summary>
 /// 曲の秒数を得る
 /// </summary>
 int MucomModule::GetLength() {
+	return length;
+}
+
+/// <summary>
+/// 曲の秒数を得る
+/// </summary>
+int MucomModule::GetLengthFromTag() {
 	std::string time = tag->time;
 	if (time.length() > 0) {
 		return std::atoi(time.c_str());
@@ -123,7 +136,7 @@ void MucomModule::LoadSongTag(const char* songFilename) {
 	}
 
 	// タグの取得
-	tag->LoadTag(mucom);
+	LoadTag();
 }
 
 bool MucomModule::Open(const char* songFilename)
@@ -193,7 +206,8 @@ bool MucomModule::OpenMemory(uint8_t *data, int size, const char *path)
 		driverMode = mucom->GetDriverModeMem((char *)data);
 
 		// タグの取得
-		tag->LoadTag(mucom);
+		LoadTag();
+
 		mucom->SetDriverMode(driverMode);
 
 		mucom->Reset(cmpopt);
@@ -212,7 +226,8 @@ bool MucomModule::OpenMemory(uint8_t *data, int size, const char *path)
 		mucom->Init(NULL, cmpopt, audioRate);
 
 		driverMode = mucom->GetDriverModeMemMUB(data, size);
-		tag->LoadTag(mucom);
+		LoadTag();
+
 		mucom->SetDriverMode(driverMode);
 	}
 
@@ -220,6 +235,12 @@ bool MucomModule::OpenMemory(uint8_t *data, int size, const char *path)
 	mucom->Reset(0);
 
 	return true;
+}
+
+void MucomModule::LoadTag()
+{
+	tag->LoadTag(mucom);
+	length = GetLengthFromTag();
 }
 
 

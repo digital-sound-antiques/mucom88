@@ -3,7 +3,25 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#ifndef _WIN32
 #include <unistd.h>
+#define _CHDIR chdir
+#else
+#include <direct.h>
+#define _CHDIR _chdir
+#endif
+
+// 大小区別なし
+#ifdef __APPLE__
+#define STRCASECMP strcasecmp
+#else
+#ifdef _WIN32
+#define STRCASECMP _strcmpi
+#else
+#define STRCASECMP strcasecmp
+#endif
+#endif
 
 #include "mucom_module.h"
 
@@ -11,120 +29,248 @@
 #define DEFAULT_OUTFILE "mucom88.mub"
 
 MucomModule::MucomModule() {
-  audioRate = 44100;
-  pcmfile = MUCOM_DEFAULT_PCMFILE;
-  outfile = DEFAULT_OUTFILE;
-  voicefile = NULL;
-  resultText = NULL;
-  volume = 1.0f;
+	audioRate = 44100;
+	pcmfile = MUCOM_DEFAULT_PCMFILE;
+	outfile = DEFAULT_OUTFILE;
+	voicefile = NULL;
+	resultText = NULL;
+	volume = 1.0f;
+	fade = nullptr;
+
+	tag = new MucomTag();
+
+	enableFade = false;
+	playedFrames = 0;
+	defaultLength = 180;
+	seekPosition = -1;
 }
 
 MucomModule::~MucomModule() {
-  Close();
+	Close();
+}
+
+void MucomModule::SetWorkDir(const char* workingDirectory) {
+	_CHDIR(workingDirectory);
 }
 
 void MucomModule::SetRate(int rate) {
-  audioRate = rate;
+	audioRate = rate;
 }
 
-void MucomModule::SetPCM(const char *file) {
-  pcmfile = file;
+void MucomModule::SetPCM(const char* file) {
+	pcmfile = file;
 }
 
-void MucomModule::SetVoice(const char *file) {
-  voicefile = file;
+void MucomModule::SetVoice(const char* file) {
+	voicefile = file;
 }
 
 void MucomModule::SetVolume(double vol) {
-  volume = vol;
+	volume = vol;
 }
 
-
-bool MucomModule::Open(const char *workingDirectory, const char *songFilename) {
-  chdir(workingDirectory);
-  mucom = new CMucom();
-  int cmpopt = MUCOM_CMPOPT_COMPILE;
-  mucom->Init(NULL,cmpopt,audioRate);
-  mucom->Reset(cmpopt);
-  if (pcmfile) mucom->LoadPCM(pcmfile);
-  if (voicefile) mucom->LoadFMVoice(voicefile);
-  int cr = mucom->CompileFile(songFilename, outfile);
-
-  AddResultBuffer(GetMucomMessage());
-  FreeMucom();
-
-  if (cr != 0) return false; 
-
-  // 再生用に再度準備
-  mucom = new CMucom();
-  cmpopt = MUCOM_CMPOPT_STEP;
-  mucom->Init(NULL,cmpopt,audioRate);
-  mucom->Reset(0);
-  if (mucom->LoadMusic(outfile) < 0) {
-      AddResultBuffer(GetMucomMessage());
-    return false;
-  }
-  return true;
+int MucomModule::GetRate() {
+	return audioRate;
 }
 
-const char *MucomModule::GetMucomMessage() {
-  mucom->PrintInfoBuffer();
-  return mucom->GetMessageBuffer();
+void MucomModule::UseFader(bool enable) {
+	enableFade = enable;
 }
 
-void MucomModule::AddResultBuffer(const char *text) {
-  int len = strlen(text);
-  if (resultText != NULL) len += strlen(resultText);
-  char *ptr = new char[len+1];
-  if (resultText != NULL) strcpy(ptr, resultText); else  ptr[0] = 0x00;
-  strcat(ptr, text);
-  FreeResultBuffer();
-  resultText = ptr;
+void MucomModule::SetDefaultLength(int length) {
+	defaultLength = length;
+}
+
+void MucomModule::Seek(int pos)
+{
+	seekPosition = pos;
+}
+
+int MucomModule::GetPosition() {
+	return playedFrames / audioRate;
+}
+
+/// <summary>
+/// 曲の秒数を得る
+/// </summary>
+int MucomModule::GetLength() {
+	std::string time = tag->time;
+	if (time.length() > 0) {
+		return std::atoi(time.c_str());
+	}
+	return defaultLength;
+}
+
+bool MucomModule::Open(const char* workingDirectory, const char* songFilename) {
+	SetWorkDir(workingDirectory);
+	return Open(songFilename);
+}
+
+/// <summary>
+/// 曲タグの取得
+/// </summary>
+void MucomModule::LoadSongTag(const char* songFilename) {
+
+	char fname[_MAX_PATH];
+	strcpy(fname, songFilename);
+
+	// ドライバモードの取得
+	if (cmpopt & MUCOM_CMPOPT_COMPILE) {
+		driverMode = mucom->GetDriverMode(fname);
+	}
+	else {
+		driverMode = mucom->GetDriverModeMUB(fname);
+	}
+
+	// タグの取得
+	tag->LoadTag(mucom);
+}
+
+bool MucomModule::Open(const char* songFilename)
+{
+	mucom = new CMucom();
+	cmpopt = MUCOM_CMPOPT_COMPILE;
+	mucom->Init(NULL, cmpopt, audioRate);
+
+	const char *ext = strrchr(songFilename, '.');
+	bool is_mub = (ext != NULL && STRCASECMP(ext, ".mub") == 0);
+
+	// 入力ファイルがMMLの場合
+	if (!is_mub) {
+		LoadSongTag(songFilename);
+		mucom->SetDriverMode(driverMode);
+
+		mucom->Reset(cmpopt);
+		if (pcmfile) mucom->LoadPCM(pcmfile);
+		if (voicefile) mucom->LoadFMVoice(voicefile);
+		int cr = mucom->CompileFile(songFilename, outfile);
+
+		AddResultBuffer(GetMucomMessage());
+
+		FreeMucom();
+
+		if (cr != 0) return false;
+	}
+
+	// 再生用に再度準備
+	mucom = new CMucom();
+
+	cmpopt = MUCOM_CMPOPT_STEP;
+	mucom->Init(NULL, cmpopt, audioRate);
+
+	// 入力ファイルがMUBの場合
+	if (is_mub) {
+		LoadSongTag(songFilename);
+	}
+
+	mucom->SetDriverMode(driverMode);
+
+	mucom->Reset(0);
+	if (mucom->LoadMusic(outfile) < 0) {
+		AddResultBuffer(GetMucomMessage());
+		return false;
+	}
+	return true;
+}
+
+const char* MucomModule::GetMucomMessage() {
+	mucom->PrintInfoBuffer();
+	return mucom->GetMessageBuffer();
+}
+
+void MucomModule::AddResultBuffer(const char* text) {
+	int len = strlen(text);
+	if (resultText != NULL) len += strlen(resultText);
+	char* ptr = new char[len + 1];
+	if (resultText != NULL) strcpy(ptr, resultText); else ptr[0] = 0x00;
+	strcat(ptr, text);
+	FreeResultBuffer();
+	resultText = ptr;
 }
 
 bool MucomModule::Play() {
-    if (!mucom) return false;
-    if (mucom->Play(0) < 0) return false;
-    return true;
+	if (!mucom) return false;
+	if (mucom->Play(0) < 0) return false;
+	playedFrames = 0;
+	// フェーダー
+	if (fade != nullptr) { delete fade;  fade = nullptr; }
+	fade = new Fade(audioRate, GetLength() - 3);
+	fade->enable = enableFade;
+
+	return true;
 }
 
 
 void MucomModule::Close() {
-  FreeMucom();
-  FreeResultBuffer();
+	FreeMucom();
+	FreeResultBuffer();
 }
 
 void MucomModule::FreeMucom() {
-  if (!mucom) return;
-  delete mucom;
-  mucom = NULL;
+	if (!mucom) return;
+	delete mucom;
+	mucom = NULL;
 }
 
 void MucomModule::FreeResultBuffer() {
-  if (!resultText) return;
-  delete[] resultText;
-  resultText = NULL;
+	if (!resultText) return;
+	delete[] resultText;
+	resultText = NULL;
 }
 
-const char *MucomModule::GetResult() {
-  if (!resultText) return "";
-  return resultText;
+const char* MucomModule::GetResult() {
+	if (!resultText) return "";
+	return resultText;
 }
 
-void MucomModule::Mix(short *data, int samples) {
+void MucomModule::Mix(short* data, int samples) {
 	int buf[128];
 
-  int index = 0;
-  while(samples > 0) {
-      int s = samples < 16 ? samples : 16;
-      mucom->RenderAudio(buf, s);
+	int index = 0;
+	int skipSamples = 0;
 
-      for(int i=0; i < s*2; i++) {
-          int v=(buf[i]*volume);
+	if (seekPosition >= 0) {
+		int skipFrames = (seekPosition * audioRate) - (playedFrames);
+		if (skipFrames > 0) {
+			playedFrames += skipFrames;
+			fade->Step(skipFrames);
+		}
+		// スキップするサンプル数 - 再生したサンプル数
+		skipSamples = skipFrames * 2;
+		if (skipSamples < 0) skipSamples = 0;
+		seekPosition = -1;
+	}
 
-          data[index] = v > 32767 ? 32767 : (v < -32768 ? -32768 : v);
-          index++;
-      }
-      samples -= s;
-  }
+	// スキップ
+	while (skipSamples > 0) {
+		// 16サンプルを超過しない
+		int s = skipSamples < 16 ? skipSamples : 16;
+		mucom->RenderAudio(buf, s);
+		skipSamples -= s;
+	}
+
+
+
+	while (samples > 0) {
+		// 16サンプルを超過しない
+		int s = samples < 16 ? samples : 16;
+		mucom->RenderAudio(buf, s);
+
+		for (int i = 0; i < s * 2;) {
+			double vol = volume;
+			vol *= fade->volume;
+			fade->Step(1);
+
+			// 1フレーム処理
+			for (int j = 0; j < 2; i++, j++) {
+				int v = (int)(buf[i] * vol);
+
+				data[index] = v > 32767 ? 32767 : (v < -32768 ? -32768 : v);
+				index++;
+			}
+			playedFrames++;
+		}
+
+		samples -= s;
+	}
 }

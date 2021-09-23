@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="sdl\audiobuffer.cpp">
+      <Filter>SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\audiotime.cpp">
+      <Filter>SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\osdep_sdl.cpp">
+      <Filter>SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\sdl_stdio.cpp">
+      <Filter>SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\audiosdl.cpp">
+      <Filter>SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl\miniplay.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sdl\audiotime.h">
+      <Filter>SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="sdl\audiobuffer.h">
+      <Filter>SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="sdl\osdep_sdl.h">
+      <Filter>SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="sdl\audiosdl.h">
+      <Filter>SDL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SDL">
+      <UniqueIdentifier>{454deb8d-1b4f-4de7-85aa-c88b67644f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{53f427ba-8229-4890-bde8-c3445735da8f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

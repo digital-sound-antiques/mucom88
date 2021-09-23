@@ -45,4 +45,9 @@ hspplugin/*.user
 src/tests/objs
 src/tests/modtest
 src/tests/compile
+
 src/SDL-1.2.15
+src/SDL2-2.0.16
+src/mucom_lib/Debug
+src/mucom_lib/Release
+src/mucom_lib/mucom_lib.vcxproj.user

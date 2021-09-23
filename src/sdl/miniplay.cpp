@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <SDL.h>
 #include "audiosdl.h"
-#include "mucom_module.h"
+#include "../module/mucom_module.h"
+#include "../utils/pathutil.h"
 
 class Player {
 public:
@@ -56,18 +57,55 @@ int Player::Play(const char *filename) {
     module = new MucomModule();
 
     printf("File:%s\n", filename);
-    bool r = module->Open(".", filename);
+
+    auto path = new PathUtil(filename);
+
+    const char* dir = path->GetDirectory();
+    const char* name = path->GetFilename();
+    module->SetWorkDir(dir);
+
+    bool r = module->Open(name);
     puts(module->GetResult());
+
+    if (!r) {
+        printf("Compile error!\n");
+        return -1;
+    }
+
+    // 曲名表示
+    const char *title = module->tag->title.c_str();
+    const char *composer = module->tag->composer.c_str();
+    const char *author = module->tag->author.c_str();
+    printf("Title:%s Composer:%s Author:%s\n", title, composer, author);
+
+    // フェーダーとデフォルト秒数設定
+    module->UseFader(true);
+    // module->SetDefaultLength(180);
+
+    int rate = module->GetRate();
+    int length = module->GetLength();
+
     if (!r) return -1;
     r = module->Play();
     if (!r) return -1;
 
-    sdl->Open(44100);
+    // シーク
+    //module->Seek(3);
+    //module->Mix(NULL, 0);
+
+    sdl->Open(rate);
 
     // イベントループ
     printf("Playing..\n");
-    while(1) {
+    int pos = -1;
+
+    while(pos < length) {
         if (EventCheck()) break;
+        int newPos = module->GetPosition();
+        if (pos != newPos) {
+            pos = newPos;
+            printf("%d / %d\r", pos, length);
+        }
         SDL_Delay(20);
     }
     return 0;
@@ -84,14 +122,17 @@ void Player::Stop() {
 }
 
 
-int main(int argc,char *argv[]) {
+int main(int argc, char *argv[]) {
 #if defined(USE_SDL) && defined(_WIN32)
     freopen("CON", "w", stdout);
     freopen("CON", "w", stderr );
+
+    char* res = setlocale(LC_ALL, ".UTF8");
+
 #endif
     printf("MUCOM88 miniplay\n");
     if (argc < 2) {
-        printf("usage miniplay <song.muc>\n");
+        printf("usage miniplay <song.muc|song.mub>\n");
         return 0;
     }
     Player *p = new Player();

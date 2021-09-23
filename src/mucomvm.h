@@ -16,7 +16,7 @@
 #include "utils/logwrite.h"
 #include "utils/wavwrite.h"
 
-#include "codeconv.h"
+#include "utils/codeconv/codeconv.h"
 
 //#define DEBUGZ80_TRACE
 

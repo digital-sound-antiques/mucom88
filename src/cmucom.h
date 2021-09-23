@@ -325,6 +325,7 @@ public:
 
 	//	MUCOM88 MUC/MUB service
 	int LoadMusic(const char *fname, int num = 0);
+	int LoadMusicMem(uint8_t* data, int size, int num);
 	int CompileFile(const char *fname, const char *sname, int option=0);
 	int CompileMemory(const char* fname, int option = 0);
 	int CompileMem(char *mem, int option=0);
@@ -434,6 +435,7 @@ public:
 	//	driver selector
 	int GetDriverMode(char* fname);
 	int GetDriverModeMUB(char* fname);
+	int GetDriverModeMemMUB(uint8_t* data, int size);
 	int GetDriverModeMem(char* mem);
 	int GetDriverModeString(const char* name);
 	void SetDriverMode(int driver);

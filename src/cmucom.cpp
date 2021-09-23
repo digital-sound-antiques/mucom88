@@ -792,6 +792,29 @@ int CMucom::LoadMusic(const char * fname, int num)
 	return 0;
 }
 
+int CMucom::LoadMusicMem(uint8_t *data, int size, int num)
+{
+	//		音楽データ読み込み
+	//		data = 音楽データ
+	//		num : 0   = 音楽No. (0～15)
+	//		(戻り値が0以外の場合はエラー)
+	//
+	if ((num < 0) || (num >= MUCOM_MUSICBUFFER_MAX)) return -1;
+
+	CMemBuf* buf = new CMemBuf();
+	buf->PutData(data, size);
+
+	if (musbuf[num] != NULL) {
+		delete musbuf[num];
+	}
+
+	musbuf[num] = buf;
+
+	NoticePlugins(MUCOM88IF_NOTICE_LOADMUB);
+
+	return 0;
+}
+
 void CMucom::MusicBufferInit(void)
 {
 	for (int i = 0; i < MUCOM_MUSICBUFFER_MAX; i++) {
@@ -1939,6 +1962,26 @@ int CMucom::GetDriverModeMUB(char *fname)
 	res = LoadMusic(fname,0);
 	if (res) {
 		PRINTF("#File not found [%s].\r\n", fname);
+		return -1;
+	}
+	LoadTagFromMusic(0);
+
+	res = GetDriverModeMem(NULL);
+	return res;
+}
+
+int CMucom::GetDriverModeMemMUB(uint8_t *data, int size)
+{
+	//		MUCOM88 #driverタグ文字列からドライバーモードを取得する(MUBファイルから取得)
+	//		fname      = MUBファイル名
+	//		(戻り値がマイナスの場合はエラー)
+	//		(正常な場合は、MUCOM_DRIVER_* の値が返る)
+	//
+	int res;
+
+	res = LoadMusicMem(data, size, 0);
+	if (res) {
+		PRINTF("#LoadMusicMem error.\r\n");
 		return -1;
 	}
 	LoadTagFromMusic(0);

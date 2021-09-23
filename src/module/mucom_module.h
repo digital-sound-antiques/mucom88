@@ -17,6 +17,7 @@ public:
     void SetWorkDir(const char* workingDirectory);
 
     bool Open(const char* songFilename);
+    bool OpenMemory(uint8_t* data, int size, const char* path);
     bool Open(const char *workingDirectory, const char *songFilename);
 
 

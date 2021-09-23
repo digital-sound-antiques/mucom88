@@ -173,6 +173,56 @@ bool MucomModule::Open(const char* songFilename)
 	return true;
 }
 
+
+/// <summary>
+/// 曲データ(.mub/.muc)をバイナリで開く
+/// .mucの場合は末端を\0でターミネートすること
+/// </summary>
+bool MucomModule::OpenMemory(uint8_t *data, int size, const char *path)
+{
+	mucom = new CMucom();
+
+	const char* ext = strrchr(path, '.');
+	bool is_mub = (ext != NULL && STRCASECMP(ext, ".mub") == 0);
+
+	// 入力ファイルがMMLの場合
+	if (!is_mub) {
+		cmpopt = MUCOM_CMPOPT_COMPILE | MUCOM_CMPOPT_STEP;
+		mucom->Init(NULL, cmpopt, audioRate);
+
+		driverMode = mucom->GetDriverModeMem((char *)data);
+
+		// タグの取得
+		tag->LoadTag(mucom);
+		mucom->SetDriverMode(driverMode);
+
+		mucom->Reset(cmpopt);
+		if (pcmfile) mucom->LoadPCM(pcmfile);
+		if (voicefile) mucom->LoadFMVoice(voicefile);
+		int cr = mucom->CompileMem((char *)data);
+
+		AddResultBuffer(GetMucomMessage());
+
+		if (cr != 0) return false;
+	}
+
+	// 入力ファイルがMUBの場合
+	if (is_mub) {
+		cmpopt = MUCOM_CMPOPT_STEP;
+		mucom->Init(NULL, cmpopt, audioRate);
+
+		driverMode = mucom->GetDriverModeMemMUB(data, size);
+		tag->LoadTag(mucom);
+		mucom->SetDriverMode(driverMode);
+	}
+
+
+	mucom->Reset(0);
+
+	return true;
+}
+
+
 const char* MucomModule::GetMucomMessage() {
 	mucom->PrintInfoBuffer();
 	return mucom->GetMessageBuffer();

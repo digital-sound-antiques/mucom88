@@ -64,7 +64,31 @@ int Player::Play(const char *filename) {
     const char* name = path->GetFilename();
     module->SetWorkDir(dir);
 
+#ifndef OPEN_FILE
+
+    // メモリ上再生
+    FILE *fp = fopen(name, "rb");
+    if (fp == NULL) {
+        printf("File open error\n");
+        return -1;
+    }
+
+    fseek(fp, 0, SEEK_END);
+    long size = ftell(fp);
+    rewind(fp);
+
+    uint8_t* data = new uint8_t[size + 1];
+    fread(data, size, 1, fp);
+    data[size] = 0;
+    fclose(fp);
+
+    // 開く
+    bool r = module->OpenMemory(data, size, name);
+#else 
+
     bool r = module->Open(name);
+#endif
+
     puts(module->GetResult());
 
     if (!r) {

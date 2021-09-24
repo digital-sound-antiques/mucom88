@@ -43,6 +43,9 @@ MucomModule::MucomModule() {
 	playedFrames = 0;
 	defaultLength = 180;
 	seekPosition = -1;
+
+	playing = false;
+	mucom = NULL;
 }
 
 MucomModule::~MucomModule() {
@@ -267,7 +270,7 @@ bool MucomModule::Play() {
 	if (fade != nullptr) { delete fade;  fade = nullptr; }
 	fade = new Fade(audioRate, GetLength() - 3);
 	fade->enable = enableFade;
-
+	playing = true;
 	return true;
 }
 
@@ -280,6 +283,7 @@ void MucomModule::Close() {
 void MucomModule::FreeMucom() {
 	if (!mucom) return;
 	delete mucom;
+	playing = false;
 	mucom = NULL;
 }
 
@@ -296,32 +300,23 @@ const char* MucomModule::GetResult() {
 
 void MucomModule::Mix(short* data, int samples) {
 	int buf[128];
+	if (!mucom) return;
+
+	// 再生前
+	if (!playing) {
+		for (int i = 0; i < samples * 2; i++) {
+			data[i] = 0;
+		}
+		return;
+	}
 
 	int index = 0;
-	int skipSamples = 0;
 
-	if (seekPosition >= 0) {
-		int skipFrames = (seekPosition * audioRate) - (playedFrames);
-		if (skipFrames > 0) {
-			playedFrames += skipFrames;
-			fade->Step(skipFrames);
-		}
-		// スキップするサンプル数 - 再生したサンプル数
-		skipSamples = skipFrames * 2;
-		if (skipSamples < 0) skipSamples = 0;
-		seekPosition = -1;
+	if (seekPosition > 0) {
+		Skip();
 	}
 
-	// スキップ
-	while (skipSamples > 0) {
-		// 16サンプルを超過しない
-		int s = skipSamples < 16 ? skipSamples : 16;
-		mucom->RenderAudio(buf, s);
-		skipSamples -= s;
-	}
-
-
-
+	// レンダリング
 	while (samples > 0) {
 		// 16サンプルを超過しない
 		int s = samples < 16 ? samples : 16;
@@ -343,5 +338,33 @@ void MucomModule::Mix(short* data, int samples) {
 		}
 
 		samples -= s;
+	}
+}
+
+void MucomModule::Skip()
+{
+	int skipSamples = 0;
+
+	if (seekPosition >= 0) {
+		int skipFrames = (seekPosition * audioRate) - (playedFrames);
+		if (skipFrames > 0) {
+			playedFrames += skipFrames;
+			fade->Step(skipFrames);
+		}
+		// スキップするサンプル数 - 再生したサンプル数
+		skipSamples = skipFrames * 2;
+		if (skipSamples < 0) skipSamples = 0;
+		seekPosition = -1;
+	}
+
+	int buf[128];
+
+
+	// スキップ
+	while (skipSamples > 0) {
+		// 16サンプルを超過しない
+		int s = skipSamples < 16 ? skipSamples : 16;
+		mucom->RenderAudio(buf, s);
+		skipSamples -= s;
 	}
 }

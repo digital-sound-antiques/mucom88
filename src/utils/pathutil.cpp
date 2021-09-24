@@ -12,13 +12,22 @@
 
 #include "pathutil.h"
 
-PathUtil::PathUtil(const char* filename)
+#include <string>
+
+PathUtil::PathUtil() {}
+
+PathUtil::PathUtil(char* filename)
 {
     Split(filename);
 }
 
 void PathUtil::Split(const char* filename) {
-    _splitpath(filename, drive, dir, name, ext);
+    std::string path(filename);
+    if (path.find("file://") == 0) {
+        path = path.substr(7);
+    }
+
+    _splitpath(path.c_str(), drive, dir, name, ext);
     _makepath(directoryName, drive, dir, NULL, NULL);
     _makepath(fileName, NULL, NULL, name, ext);
 }

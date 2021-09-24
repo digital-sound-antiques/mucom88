@@ -28,41 +28,43 @@ public:
     int GetRate();
 
     /// <summary>
-    /// ƒtƒF[ƒ_[g—pH
+    /// ãƒ•ã‚§ãƒ¼ãƒ€ãƒ¼ä½¿ç”¨ï¼Ÿ
     /// </summary>
     void UseFader(bool enable);
 
     /// <summary>
-    /// ƒfƒtƒHƒ‹ƒg‚Ì‹È•b”
+    /// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®æ›²ç§’æ•°
     /// </summary>
     void SetDefaultLength(int length);
 
     /// <summary>
-    /// ƒV[ƒN(•b”) ÀŒ±”Å
+    /// ã‚·ãƒ¼ã‚¯(ç§’æ•°) å®Ÿé¨“ç‰ˆ
     /// </summary>
     void Seek(int pos);
 
     /// <summary>
-    /// Ä¶ˆÊ’u(•b”)
+    /// å†ç”Ÿä½ç½®(ç§’æ•°)
     /// </summary>
     int GetPosition();
 
     /// <summary>
-    /// I—¹H
+    /// çµ‚äº†ï¼Ÿ
     /// </summary>
     bool IsEnd();
 
     /// <summary>
-    /// ‹È‚Ì’·‚³(•b”) (#timeƒ^ƒO“à—e or ƒfƒtƒHƒ‹ƒg’l)
+    /// æ›²ã®é•·ã•(ç§’æ•°) (#timeã‚¿ã‚°å†…å®¹ or ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤)
     /// </summary>
     int GetLength();
 
     /// <summary>
-    /// ƒ^ƒOæ“¾
+    /// ã‚¿ã‚°å–å¾—
     /// </summary>
     MucomTag *tag;
 
     void Mix(short *buffer, int samples);
+
+    void Skip();
 
     bool Play();
     void Close();
@@ -106,6 +108,8 @@ private:
     int cmpopt;
 
     int playedFrames;
+
+    bool playing;
 };
 
 #endif

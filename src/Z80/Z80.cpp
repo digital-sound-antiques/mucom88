@@ -671,9 +671,9 @@ int32_t Z80::Execute(int32_t n) {
 			case 0xcd: // call nn
 			st16(sp -= 2, pc + 2);
 			tmp2 = IMM16;
-			if (tmp2 < 0x8000) {
-				printf("cd pc:%04x -> %04x\n", tmp2, pc);
-			}
+			// if (tmp2 < 0x8000) {
+			// 	printf("cd pc:%04x -> %04x\n", tmp2, pc);
+			// }
 			pc = tmp2;
 			CLOCK(1);
 			break;

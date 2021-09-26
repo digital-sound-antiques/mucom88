@@ -62,7 +62,10 @@ public:
     /// </summary>
     MucomTag *tag;
 
-    void Mix(short *buffer, int samples);
+    /// <summary>
+    /// レンダリング (frames = フレーム数、実際のバイト数は*4 (4=2ch*16bit))
+    /// </summary>
+    void Mix(short *buffer, int frames);
 
     void Skip();
 

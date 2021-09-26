@@ -298,13 +298,13 @@ const char* MucomModule::GetResult() {
 	return resultText;
 }
 
-void MucomModule::Mix(short* data, int samples) {
+void MucomModule::Mix(short* data, int frames) {
 	int buf[128];
 	if (!mucom) return;
 
 	// 再生前
 	if (!playing) {
-		for (int i = 0; i < samples * 2; i++) {
+		for (int i = 0; i < frames * 2; i++) {
 			data[i] = 0;
 		}
 		return;
@@ -317,9 +317,9 @@ void MucomModule::Mix(short* data, int samples) {
 	}
 
 	// レンダリング
-	while (samples > 0) {
+	while (frames > 0) {
 		// 16サンプルを超過しない
-		int s = samples < 16 ? samples : 16;
+		int s = frames < 16 ? frames : 16;
 		mucom->RenderAudio(buf, s);
 
 		for (int i = 0; i < s * 2;) {
@@ -337,7 +337,7 @@ void MucomModule::Mix(short* data, int samples) {
 			playedFrames++;
 		}
 
-		samples -= s;
+		frames -= s;
 	}
 }
 

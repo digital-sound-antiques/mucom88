@@ -694,7 +694,9 @@ int CMucom::LoadTagFromMusic(int num)
 	}
 
 	if (hed->tagdata) {
-		infobuf->PutStr(MUBGetTagData(hed, tagsize));
+		if (hed->tagsize > 0) {
+			infobuf->PutStr(MUBGetTagData(hed, tagsize));
+		}
 		infobuf->Put((int)0);
 	}
 

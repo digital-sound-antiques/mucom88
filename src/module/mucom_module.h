@@ -4,9 +4,13 @@
 #ifndef _MUCOM_MODULE_H_
 #define _MUCOM_MODULE_H_
 
-#include "..\cmucom.h"
+#include "../cmucom.h"
 #include "../utils/mucomtag.h"
 #include "../utils/fade.h"
+
+#ifndef _MAX_PATH
+#define _MAX_PATH 1024
+#endif
 
 class MucomModule  {
 public:

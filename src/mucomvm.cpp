@@ -20,6 +20,64 @@
 #include "mucomvm_os.h"
 #include "voiceformat.h"
 
+static int OPNACH_TO_MUCOMCH(int ch) {
+	switch(ch) {
+		case 0: // OPNACH_FM
+			return 0;
+		case 1:
+			return 1;
+		case 2:
+			return 2;
+		case 3: 
+			return 7;
+		case 4:
+			return 8;
+		case 5:
+			return 9;
+		case 6: // OPNACH_PSG
+			return 3;
+		case 7: 
+			return 4;
+		case 8:
+			return 5;
+		case 9: // OPNACH_RHYTHM
+			return 6;
+		case 10: // OPNACH_ADPCM
+			return 10;
+		default:
+			return 10; // ERROR
+	}
+}
+
+static int MUCOMCH_TO_OPNACH(int ch) {
+	switch(ch) {
+		case 0: 
+			return OPNACH_FM + 0;
+		case 1:
+			return OPNACH_FM + 1;
+		case 2:
+			return OPNACH_FM + 2;
+		case 3:
+			return OPNACH_SSG + 0;
+		case 4:
+			return OPNACH_SSG + 1;
+		case 5:
+			return OPNACH_SSG + 2;
+		case 6: 
+			return OPNACH_RHYTHM;
+		case 7: 
+			return OPNACH_FM + 3;
+		case 8:
+			return OPNACH_FM + 4;
+		case 9:
+			return OPNACH_FM + 5;
+		case 10: 
+			return OPNACH_ADPCM;
+		default:
+			return (OPNACH_MAX - 1); // ERROR
+	}
+}
+
 /*------------------------------------------------------------*/
 /*
 interface
@@ -1446,20 +1504,38 @@ void mucomvm::FMOutData(int data)
 	//TraceLog(data);
 
 	switch (sound_reg_select) {
+	case 0x08:
+	case 0x09:
+	case 0x0A:
+	{
+		//      PSG KeyOn (Pseudo)
+		int ch = OPNACH_SSG + sound_reg_select - 0x08;
+		if (chmute[ch]) return;
+		chstat[ch] = data & 0x0f ? 1 : 0;
+		break;
+	}
 	case 0x28:
 	{
 		//		FM KeyOn
-		int ch = data & 7;
-		int slot = data & 0xf0;
-		if (chmute[ch]) return;
-		if (slot) chstat[ch] = 1; else chstat[ch] = 0;
+		int ch = (data & 7);
+		if (ch != 3 && ch != 7) {
+			if (ch > 3) ch--;
+			int slot = data & 0xf0;
+			if (chmute[ch]) return;
+			if (slot) chstat[ch] = 1; else chstat[ch] = 0;
+		}
 		break;
 	}
 	case 0x10:
 	{
 		//		Rhythm KeyOn
 		if (chmute[OPNACH_RHYTHM]) return;
-		if (data & 0x80) chstat[OPNACH_ADPCM] = 1; else chstat[OPNACH_ADPCM] = 0;
+		if (data & 0x80) {
+			chstat[OPNACH_RHYTHM] &= ~(data & 0x3f);
+			chstat[OPNACH_RHYTHM] &= 0x3f;
+		} else {
+			chstat[OPNACH_RHYTHM] |= (data & 0x3f);
+		}
 		break;
 	}
 	default:
@@ -1619,34 +1695,35 @@ void mucomvm::ProcessChData(void)
 	uint8_t *src;
 	uint8_t *dst;
 	uint8_t code;
-	uint8_t keyon;
+	uint8_t note; // 現在発音中のキー。0xffは消音中。
+
 	if (pchdata==NULL) return;
 	if (channel_max == 0) return;
 	for (i = 0; i < channel_max; i++){
 		src = mem + pchadr[i];
 		dst = pchdata + (channel_size*i);
-		if (src[0] > dst[0]) {						// lebgthが更新された
-			keyon = 0;
-			code = src[32];
-			if (i == 10) {
-				keyon = src[1];						// PCMchは音色No.を入れる
-			}
-			else if ( i == 6) {
-				keyon = mem[ pchadr[10] + 38 ];		// rhythmのワーク値を入れる
-			}
-			else {
-				if (code != dst[32]) {
-					keyon = ((code >> 4) * 12) + (code & 15);	// 正規化したキーNo.
-				}
+		note = 0xff;
+		code = src[32];
+		int ch = MUCOMCH_TO_OPNACH(i);
 
+		if (ch != OPNACH_RHYTHM) {
+			if (chstat[ch]) {
+				if (ch == OPNACH_ADPCM) {
+					note = src[1]; // PCMchは音色No.を入れる
+				} else {
+			    	note = ((code >> 4) * 12) + (code & 15);
+				}
 			}
-			src[37] = keyon;						// keyon情報を付加する
-		}
-		else {
-			if (src[0] < src[18]) {				// quantize切れ
-				src[37] = 0;						// keyon情報を付加する
+		} else {
+			// rhythmのワーク値を入れる
+			src[1] = mem[ pchadr[10] + 38 ];
+			if (chstat[ch]) {
+				note = src[1];
 			}
 		}
+
+		src[37] = note; 
+
 		memcpy(dst, src , channel_size);
 	}
 	memcpy( pchwork, mem + pchadr[0] - 16, 16 );	// CHDATAの前にワークがある

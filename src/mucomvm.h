@@ -37,9 +37,22 @@ enum {
 #define VMPRGBANK_MAIN 0
 #define VMPRGBANK_SHADOW 1
 
+// [OPNACH]
+// 0: FM1 
+// 1: FM2 
+// 2: FM3 
+// 3: FM4 
+// 4: FM5 
+// 5: FM6
+// 6: SSG1
+// 7: SSG2
+// 8: SSG3
+// 9: RHYTHM
+// 10: ADPCM
+// 11-15: NOT DEFINED
 #define OPNACH_MAX 16
-#define OPNACH_FM 0
-#define OPNACH_PSG 6
+#define OPNACH_FM 0 
+#define OPNACH_SSG 6
 #define OPNACH_RHYTHM 9
 #define OPNACH_ADPCM 10
 #define OPNAREG_MAX 0x200

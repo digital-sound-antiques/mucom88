@@ -168,7 +168,14 @@ CMucom::~CMucom( void )
 }
 
 void CMucom::SetLogFilename(const char *filename) {
-	if (p_log != NULL) delete p_log;
+	if (p_log != NULL) {
+		delete p_log;
+		p_log = NULL;
+	}
+	if (filename == NULL) {
+		return;
+	}
+
 	const char *p = strrchr(filename, '.');
 
 	bool use_vgm = false;
